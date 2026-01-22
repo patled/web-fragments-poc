@@ -42,7 +42,8 @@ const RAW_RUNTIME_STATE =
           ["shell", "workspace:."],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"],\
           ["typescript-eslint", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:8.53.1"],\
-          ["vite", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:7.3.1"]\
+          ["vite", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:7.3.1"],\
+          ["web-fragments", "npm:0.8.2"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -2912,7 +2913,8 @@ const RAW_RUNTIME_STATE =
           ["shell", "workspace:."],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"],\
           ["typescript-eslint", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:8.53.1"],\
-          ["vite", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:7.3.1"]\
+          ["vite", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:7.3.1"],\
+          ["web-fragments", "npm:0.8.2"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -3209,6 +3211,28 @@ const RAW_RUNTIME_STATE =
           "terser",\
           "tsx",\
           "yaml"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["web-fragments", [\
+      ["npm:0.8.2", {\
+        "packageLocation": "../../../../.yarn/berry/cache/web-fragments-npm-0.8.2-0afdb98055-10c0.zip/node_modules/web-fragments/",\
+        "packageDependencies": [\
+          ["htmlrewriter", [\
+            "wf-htmlrewriter",\
+            "npm:0.0.13"\
+          ]],\
+          ["web-fragments", "npm:0.8.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["wf-htmlrewriter", [\
+      ["npm:0.0.13", {\
+        "packageLocation": "../../../../.yarn/berry/cache/wf-htmlrewriter-npm-0.0.13-d8dca3bfb7-10c0.zip/node_modules/wf-htmlrewriter/",\
+        "packageDependencies": [\
+          ["wf-htmlrewriter", "npm:0.0.13"]\
         ],\
         "linkType": "HARD"\
       }]\

@@ -1691,6 +1691,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"htmlrewriter@npm:wf-htmlrewriter@0.0.13":
+  version: 0.0.13
+  resolution: "wf-htmlrewriter@npm:0.0.13"
+  checksum: 10c0/9a8375152443b42bd475ec0ee13cf3466c748358234c931b7184f8161a6414893feb9049916fc3ea7186bc6f78b724ff2f805a7f2bb4974f816efb59adc8f7f0
+  languageName: node
+  linkType: hard
+
 "http-cache-semantics@npm:^4.1.1":
   version: 4.2.0
   resolution: "http-cache-semantics@npm:4.2.0"
@@ -2416,6 +2423,7 @@ __metadata:
     typescript: "npm:~5.9.3"
     typescript-eslint: "npm:^8.46.4"
     vite: "npm:^7.2.4"
+    web-fragments: "npm:^0.8.2"
   languageName: unknown
   linkType: soft
 
@@ -2655,6 +2663,15 @@ __metadata:
   bin:
     vite: bin/vite.js
   checksum: 10c0/5c7548f5f43a23533e53324304db4ad85f1896b1bfd3ee32ae9b866bac2933782c77b350eb2b52a02c625c8ad1ddd4c000df077419410650c982cd97fde8d014
+  languageName: node
+  linkType: hard
+
+"web-fragments@npm:^0.8.2":
+  version: 0.8.2
+  resolution: "web-fragments@npm:0.8.2"
+  dependencies:
+    htmlrewriter: "npm:wf-htmlrewriter@0.0.13"
+  checksum: 10c0/72505ac20374477d5e4439ed466c67e0b73b0ec83af94808aefbe4439d9d0e621767a5b5a0cd955e5a69e2547296d2a699d5590880f6b61b3739b410c3f77604
   languageName: node
   linkType: hard
 
