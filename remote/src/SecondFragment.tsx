@@ -19,11 +19,11 @@ export default function SecondFragment() {
   const channelRef = useRef<BroadcastChannel | null>(null)
 
   useEffect(() => {
-    // BroadcastChannel für Kommunikation mit Shell erstellen
+    // Create BroadcastChannel for communication with Shell
     const channel = new BroadcastChannel('shell-fragment-communication')
     channelRef.current = channel
 
-    // Nachrichten von der Shell empfangen
+    // Receive messages from Shell
     const handleMessage = (event: MessageEvent) => {
       if (event.data.type === 'shell-to-fragment' && event.data.fragmentId === 'second-example') {
         setReceivedData(event.data.payload)
@@ -98,7 +98,7 @@ export default function SecondFragment() {
             <Stack spacing={2}>
               <Typography variant="h6">Fragment → Shell Communication</Typography>
               <TextField
-                label="Daten an Shell senden"
+                label="Send data to Shell"
                 value={fragmentData}
                 onChange={(event) => setFragmentData(event.target.value)}
                 size="small"
@@ -110,12 +110,12 @@ export default function SecondFragment() {
                 }}
               />
               <Button variant="contained" onClick={sendDataToShell} disabled={!fragmentData.trim()}>
-                An Shell senden
+                Send to Shell
               </Button>
               {receivedData && (
                 <Alert severity="success">
                   <Typography variant="body2">
-                    <strong>Empfangen von Shell:</strong> {receivedData}
+                    <strong>Received from Shell:</strong> {receivedData}
                   </Typography>
                 </Alert>
               )}

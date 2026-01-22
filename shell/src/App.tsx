@@ -9,7 +9,7 @@ function App() {
   const [receivedData, setReceivedData] = useState<string | null>(null)
   const channelRef = useRef<BroadcastChannel | null>(null)
 
-  // Bestimme das aktive Fragment basierend auf der Route
+  // Determine the active fragment based on the route
   let activeFragmentId: string | null = null
   if (isRemoteRoute) {
     activeFragmentId = 'remote-example'
@@ -28,11 +28,11 @@ function App() {
 
   useEffect(() => {
     if (isRemoteRoute || isSecondRoute) {
-      // BroadcastChannel für Kommunikation mit Fragment erstellen
+      // Create BroadcastChannel for communication with Fragment
       const channel = new BroadcastChannel('shell-fragment-communication')
       channelRef.current = channel
 
-      // Nachrichten vom Fragment empfangen
+      // Receive messages from Fragment
       const handleMessage = (event: MessageEvent) => {
         if (event.data.type === 'fragment-to-shell') {
           setReceivedData(event.data.payload)
@@ -97,7 +97,7 @@ function App() {
               type="text"
               value={shellData}
               onChange={(e) => setShellData(e.target.value)}
-              placeholder="Daten an Fragment senden..."
+              placeholder="Send data to Fragment..."
               style={{
                 flex: 1,
                 padding: '0.5rem',
@@ -124,7 +124,7 @@ function App() {
                 opacity: shellData.trim() && activeFragmentId ? 1 : 0.5,
               }}
             >
-              Senden
+              Send
             </button>
           </div>
           {receivedData && (
@@ -137,7 +137,7 @@ function App() {
                 marginTop: '1rem',
               }}
             >
-              <strong>Empfangen vom Fragment:</strong>
+              <strong>Received from Fragment:</strong>
               <div style={{ marginTop: '0.5rem', color: '#1e40af' }}>{receivedData}</div>
             </div>
           )}

@@ -43,24 +43,24 @@ export default defineConfig({
             ? fragmentIdHeader[0]
             : fragmentIdHeader
           
-          // Prüfe, ob es eine Asset-Anfrage ist
+          // Check if it's an asset request
           const isAssetRequest = url.pathname.includes('.') || 
                                  url.pathname.startsWith('/@') ||
                                  url.pathname.startsWith('/node_modules') ||
                                  url.pathname.startsWith('/src')
           
-          // Prüfe, ob es eine Fragment-Route ist
+          // Check if it's a fragment route
           const isFragmentRoute = url.pathname.startsWith('/remote/') || url.pathname.startsWith('/second/')
           
-          // Prüfe, ob es eine direkte Browser-Navigation ist
-          // Das <web-fragment> Element sendet Anfragen in einem IFrame
+          // Check if it's a direct browser navigation
+          // The <web-fragment> element sends requests in an IFrame
           const fetchDest = req.headers['sec-fetch-dest']
           const isIframeRequest = fetchDest === 'iframe'
           const isDirectBrowserNavigation = !requestFragmentId && fetchDest === 'document'
           
-          // Wenn es eine Fragment-Route ist, keine Asset-Anfrage, keine Fragment-ID,
-          // und es ist eine direkte Browser-Navigation, lassen wir die Shell-App rendern
-          // Alle anderen Anfragen (vom <web-fragment> Element) werden weitergeleitet
+          // If it's a fragment route, not an asset request, no fragment ID,
+          // and it's a direct browser navigation, let the shell app render
+          // All other requests (from the <web-fragment> element) are forwarded
           if (isFragmentRoute && !isAssetRequest && !requestFragmentId && !isIframeRequest && isDirectBrowserNavigation) {
             next()
             return
@@ -86,15 +86,15 @@ export default defineConfig({
             init.duplex = 'half'
           }
 
-          // Transformiere /second/ zu /remote/ für Asset-Anfragen, da base: '/remote/' gesetzt ist
-          // Für HTML-Anfragen fügen wir einen Query-Parameter hinzu, damit die App das richtige Fragment rendert
+          // Transform /second/ to /remote/ for asset requests, since base: '/remote/' is set
+          // For HTML requests, add a query parameter so the app renders the correct fragment
           let transformedPath = url.pathname
           const isSecondFragment = matchedFragment.fragmentId === secondFragmentId && url.pathname.startsWith('/second/')
           
           if (isSecondFragment) {
-            // Transformiere Pfad von /second/ zu /remote/ für Assets
+            // Transform path from /second/ to /remote/ for assets
             transformedPath = url.pathname.replace(/^\/second\//, '/remote/')
-            // Füge Query-Parameter für HTML-Anfragen hinzu
+            // Add query parameter for HTML requests
             if (!url.pathname.includes('.')) {
               const searchParams = new URLSearchParams(url.search)
               searchParams.set('_fragment', 'second')
@@ -102,7 +102,7 @@ export default defineConfig({
             }
           }
 
-          // Transformiere URL zum Remote-Endpoint
+          // Transform URL to remote endpoint
           const fragmentEndpoint = matchedFragment.endpoint
           const fragmentUrl = new URL(transformedPath + url.search, fragmentEndpoint)
           const request = new Request(fragmentUrl, init)

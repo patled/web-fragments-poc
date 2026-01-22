@@ -3,12 +3,12 @@ import RemoteFragment from './RemoteFragment'
 import SecondFragment from './SecondFragment'
 
 function App() {
-  // Bestimme basierend auf dem aktuellen Pfad oder Query-Parameter, welche Komponente gerendert werden soll
-  // Das Gateway transformiert /second/ zu /remote/?_fragment=second, daher prüfen wir beide
+  // Determine which component to render based on the current path or query parameter
+  // The gateway transforms /second/ to /remote/?_fragment=second, so we check both
   const isSecondFragment = useMemo(() => {
     const currentPath = globalThis.location.pathname
     const searchParams = new URLSearchParams(globalThis.location.search)
-    // Prüfe sowohl den Pfad als auch den Query-Parameter
+    // Check both the path and the query parameter
     return currentPath.startsWith('/second/') || searchParams.get('_fragment') === 'second'
   }, [])
 

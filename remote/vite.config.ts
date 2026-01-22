@@ -5,21 +5,21 @@ import path from 'node:path'
 
 // https://vite.dev/config/
 export default defineConfig({
-  // base wird benötigt für Asset-Pfade, wenn über Gateway aufgerufen
-  // Für direkten Zugriff auf dem Remote-Server funktionieren beide Routen trotzdem
+  // base is required for asset paths when called via gateway
+  // For direct access on the remote server, both routes still work
   base: '/remote/',
   plugins: [
     react(),
     {
-      // Vite serve't standardmäßig HTML unterhalb von `base` (hier: /remote/).
-      // Damit `http://localhost:5174/second/` in DEV ebenfalls die SPA lädt (und damit
-      // `location.pathname` weiterhin `/second/` ist), serven wir dort ebenfalls `index.html`.
+      // Vite serves HTML below `base` by default (here: /remote/).
+      // So that `http://localhost:5174/second/` also loads the SPA in DEV (and thus
+      // `location.pathname` remains `/second/`), we also serve `index.html` there.
       name: 'serve-second-fragment-spa-route',
       configureServer(server) {
         server.middlewares.use(async (req, res, next) => {
           const url = req.url ?? '/'
 
-          // /second -> /second/ (analog zur Shell)
+          // /second -> /second/ (analogous to Shell)
           if (url === '/second') {
             res.statusCode = 302
             res.setHeader('Location', '/second/')
@@ -32,11 +32,11 @@ export default defineConfig({
             return
           }
 
-          // Keine HTML-Anfrage? Dann Vite normal machen lassen.
+          // Not an HTML request? Then let Vite handle it normally.
           const acceptHeader = req.headers.accept ?? ''
           const wantsHtml = acceptHeader.includes('text/html')
 
-          // Asset/Dev-Requests sollen nicht auf index.html fallen.
+          // Asset/Dev requests should not fall back to index.html.
           const isAssetRequest =
             url.includes('.') ||
             url.startsWith('/second/@') ||
