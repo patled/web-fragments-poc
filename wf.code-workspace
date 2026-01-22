@@ -1,0 +1,33 @@
+{
+	"folders": [
+		{
+			"path": "shell"
+		},
+		{
+			"path": "remote"
+		}
+	],
+	"settings": {
+		"workbench.colorCustomizations": {
+			"activityBar.activeBackground": "#61af6f",
+			"activityBar.background": "#61af6f",
+			"activityBar.foreground": "#15202b",
+			"activityBar.inactiveForeground": "#15202b99",
+			"activityBarBadge.background": "#eceaf4",
+			"activityBarBadge.foreground": "#15202b",
+			"commandCenter.border": "#e7e7e799",
+			"sash.hoverBorder": "#61af6f",
+			"statusBar.background": "#4a9357",
+			"statusBar.foreground": "#e7e7e7",
+			"statusBarItem.hoverBackground": "#61af6f",
+			"statusBarItem.remoteBackground": "#4a9357",
+			"statusBarItem.remoteForeground": "#e7e7e7",
+			"titleBar.activeBackground": "#4a9357",
+			"titleBar.activeForeground": "#e7e7e7",
+			"titleBar.inactiveBackground": "#4a935799",
+			"titleBar.inactiveForeground": "#e7e7e799"
+		},
+		"peacock.color": "#4a9357",
+		"typescript.tsdk": "shell/.yarn/sdks/typescript/lib"
+	}
+}
