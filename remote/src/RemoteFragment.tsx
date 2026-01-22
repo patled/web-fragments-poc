@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect, useRef } from 'react'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -14,10 +14,46 @@ import Typography from '@mui/material/Typography'
 export default function RemoteFragment() {
   const [count, setCount] = useState(0)
   const [name, setName] = useState('')
+  const [fragmentData, setFragmentData] = useState('')
+  const [receivedData, setReceivedData] = useState<string | null>(null)
+  const channelRef = useRef<BroadcastChannel | null>(null)
+
   const greeting = useMemo(
     () => (name.trim() ? `Hello, ${name.trim()}` : 'Hello from the remote fragment'),
     [name],
   )
+
+  useEffect(() => {
+    // BroadcastChannel für Kommunikation mit Shell erstellen
+    const channel = new BroadcastChannel('shell-fragment-communication')
+    channelRef.current = channel
+
+    // Nachrichten von der Shell empfangen
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data.type === 'shell-to-fragment') {
+        setReceivedData(event.data.payload)
+      }
+    }
+
+    channel.addEventListener('message', handleMessage)
+
+    return () => {
+      channel.removeEventListener('message', handleMessage)
+      channel.close()
+      channelRef.current = null
+    }
+  }, [])
+
+  const sendDataToShell = () => {
+    if (channelRef.current && fragmentData.trim()) {
+      channelRef.current.postMessage({
+        type: 'fragment-to-shell',
+        payload: fragmentData,
+        timestamp: new Date().toISOString(),
+      })
+      setFragmentData('')
+    }
+  }
 
   return (
     <Container maxWidth="sm" sx={{ py: 6 }}>
@@ -59,6 +95,36 @@ export default function RemoteFragment() {
               Reset
             </Button>
           </CardActions>
+        </Card>
+
+        <Card variant="outlined">
+          <CardContent>
+            <Stack spacing={2}>
+              <Typography variant="h6">Fragment → Shell Communication</Typography>
+              <TextField
+                label="Daten an Shell senden"
+                value={fragmentData}
+                onChange={(event) => setFragmentData(event.target.value)}
+                size="small"
+                fullWidth
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    sendDataToShell()
+                  }
+                }}
+              />
+              <Button variant="contained" onClick={sendDataToShell} disabled={!fragmentData.trim()}>
+                An Shell senden
+              </Button>
+              {receivedData && (
+                <Alert severity="success">
+                  <Typography variant="body2">
+                    <strong>Empfangen von Shell:</strong> {receivedData}
+                  </Typography>
+                </Alert>
+              )}
+            </Stack>
+          </CardContent>
         </Card>
 
         <Alert severity="info">
