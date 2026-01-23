@@ -1974,6 +1974,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"first@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "first@workspace:."
+  dependencies:
+    "@emotion/react": "npm:^11.14.0"
+    "@emotion/styled": "npm:^11.14.1"
+    "@eslint/js": "npm:^9.39.1"
+    "@mui/material": "npm:^7.3.7"
+    "@types/node": "npm:^24.10.1"
+    "@types/react": "npm:^19.2.5"
+    "@types/react-dom": "npm:^19.2.3"
+    "@vitejs/plugin-react": "npm:^5.1.1"
+    eslint: "npm:^9.39.1"
+    eslint-plugin-react-hooks: "npm:^7.0.1"
+    eslint-plugin-react-refresh: "npm:^0.4.24"
+    globals: "npm:^16.5.0"
+    react: "npm:^19.2.0"
+    react-dom: "npm:^19.2.0"
+    react-router-dom: "npm:^7.12.0"
+    typescript: "npm:~5.9.3"
+    typescript-eslint: "npm:^8.46.4"
+    vite: "npm:^7.2.4"
+  languageName: unknown
+  linkType: soft
+
 "flat-cache@npm:^4.0.0":
   version: 4.0.1
   resolution: "flat-cache@npm:4.0.1"
@@ -2811,31 +2836,6 @@ __metadata:
   checksum: 10c0/094220b3ba3a76c1b668f972ace1dd15509b157aead1b40391d1c8e657e720c201d9719537375eff08f5e0514748c0319063392a6f000e31303aafc4471f1436
   languageName: node
   linkType: hard
-
-"remote@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "remote@workspace:."
-  dependencies:
-    "@emotion/react": "npm:^11.14.0"
-    "@emotion/styled": "npm:^11.14.1"
-    "@eslint/js": "npm:^9.39.1"
-    "@mui/material": "npm:^7.3.7"
-    "@types/node": "npm:^24.10.1"
-    "@types/react": "npm:^19.2.5"
-    "@types/react-dom": "npm:^19.2.3"
-    "@vitejs/plugin-react": "npm:^5.1.1"
-    eslint: "npm:^9.39.1"
-    eslint-plugin-react-hooks: "npm:^7.0.1"
-    eslint-plugin-react-refresh: "npm:^0.4.24"
-    globals: "npm:^16.5.0"
-    react: "npm:^19.2.0"
-    react-dom: "npm:^19.2.0"
-    react-router-dom: "npm:^7.12.0"
-    typescript: "npm:~5.9.3"
-    typescript-eslint: "npm:^8.46.4"
-    vite: "npm:^7.2.4"
-  languageName: unknown
-  linkType: soft
 
 "resolve-from@npm:^4.0.0":
   version: 4.0.0

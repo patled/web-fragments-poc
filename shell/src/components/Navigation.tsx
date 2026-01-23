@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 
 export function Navigation() {
   const location = useLocation();
-  const isRemoteRoute = location.pathname.startsWith("/remote");
+  const isFirstRoute = location.pathname.startsWith("/first");
   const isSecondRoute = location.pathname.startsWith("/second");
 
   return (
@@ -26,14 +26,14 @@ export function Navigation() {
           Home
         </Link>
         <Link
-          to="/remote/"
+          to="/first/"
           style={{
             textDecoration: "none",
-            color: isRemoteRoute ? "#3b82f6" : "#4b5563",
-            fontWeight: isRemoteRoute ? "600" : "400",
+            color: isFirstRoute ? "#3b82f6" : "#4b5563",
+            fontWeight: isFirstRoute ? "600" : "400",
           }}
         >
-          Open the remote fragment
+          Open the first fragment
         </Link>
         <Link
           to="/second/"

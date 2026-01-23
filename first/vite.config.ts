@@ -6,12 +6,12 @@ import path from 'node:path'
 // https://vite.dev/config/
 export default defineConfig({
   // base is required for asset paths when called via gateway
-  // For direct access on the remote server, both routes still work
-  base: '/remote/',
+  // For direct access on the first server, both routes still work
+  base: '/first/',
   plugins: [
     react(),
     {
-      // Vite serves HTML below `base` by default (here: /remote/).
+      // Vite serves HTML below `base` by default (here: /first/).
       // So that `http://localhost:5174/second/` also loads the SPA in DEV (and thus
       // `location.pathname` remains `/second/`), we also serve `index.html` there.
       name: 'serve-second-fragment-spa-route',

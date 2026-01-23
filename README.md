@@ -1,6 +1,6 @@
 # Web Fragments PoC - Micro-Frontend Example
 
-This project demonstrates the use of **Web Fragments** for implementing micro-frontends. It shows how a remote application (fragment) can be seamlessly integrated into a shell application (host).
+This project demonstrates the use of **Web Fragments** for implementing micro-frontends. It shows how a first application (fragment) can be seamlessly integrated into a shell application (host).
 
 ## What is Web Fragments?
 
@@ -24,9 +24,9 @@ web-fragments-poc/
 │   │   └── vite-env.d.ts     # TypeScript definitions for <web-fragment>
 │   └── vite.config.ts        # Vite configuration with gateway middleware
 │
-└── remote/         # Remote application (Fragment)
+└── first/         # First application (Fragment)
     ├── src/
-    │   ├── RemoteFragment.tsx  # MUI-based fragment component
+    │   ├── FirstFragment.tsx  # MUI-based fragment component
     │   ├── App.tsx             # Fragment app wrapper
     │   └── main.tsx           # Fragment entry point with MUI theme
     └── vite.config.ts         # Vite configuration with base path
@@ -39,24 +39,24 @@ web-fragments-poc/
 The shell application is the host application that embeds fragments:
 
 - **Port**: 5173
-- **Role**: Hosts the main application and integrates remote fragments
+- **Role**: Hosts the main application and integrates fragments
 - **Gateway**: Uses `FragmentGateway` as middleware to route requests to fragments
 - **Client**: Initializes `initializeWebFragments()` for client-side fragment management
 
-### Remote (Fragment)
+### First (Fragment)
 
-The remote application is a standalone fragment:
+The first application is a standalone fragment:
 
 - **Port**: 5174
 - **Role**: Provides an isolated fragment with its own UI
-- **Base Path**: `/remote/` - All assets are served under this path
+- **Base Path**: `/first/` - All assets are served under this path
 - **UI**: Uses Material-UI (MUI) for components
 
 ### Gateway
 
 The gateway is a middleware that:
 
-- Recognizes requests to fragment routes (`/remote/`, `/remote/:_*`)
+- Recognizes requests to fragment routes (`/first/`, `/first/:_*`)
 - Routes these requests to the corresponding fragment endpoint (`http://localhost:5174`)
 - Proxies fragment assets (JS, CSS, etc.) through the gateway
 - Supports Server-Side Rendering (SSR) for fragments
@@ -75,8 +75,8 @@ The gateway is a middleware that:
 cd shell
 yarn install
 
-# Install remote
-cd ../remote
+# Install first
+cd ../first
 yarn install
 ```
 
@@ -84,14 +84,14 @@ yarn install
 
 The application consists of two separate dev servers that must run simultaneously:
 
-### Terminal 1: Start Remote Fragment
+### Terminal 1: Start First Fragment
 
 ```bash
-cd remote
+cd first
 yarn dev
 ```
 
-The remote server starts on **<http://localhost:5174>**
+The first server starts on **<http://localhost:5174>**
 
 ### Terminal 2: Start Shell Host
 
@@ -104,15 +104,15 @@ The shell server starts on **<http://localhost:5173>**
 
 ### Open the Application
 
-Open **<http://localhost:5173/remote/>** in your browser.
+Open **<http://localhost:5173/first/>** in your browser.
 
-**Important**: Use the path `/remote/` with a trailing slash. The path `/remote` will be automatically redirected.
+**Important**: Use the path `/first/` with a trailing slash. The path `/first` will be automatically redirected.
 
 ## What is Demonstrated?
 
 ### 1. Fragment Integration
 
-The project shows how a remote fragment is seamlessly integrated into the shell:
+The project shows how a first fragment is seamlessly integrated into the shell:
 
 - The `<web-fragment>` custom element is used in the shell
 - The fragment runs in an isolated JavaScript context
@@ -150,10 +150,10 @@ Fragments are registered in the gateway (`shell/vite.config.ts`):
 
 ```typescript
 gateway.registerFragment({
-  fragmentId: 'remote-example',
+  fragmentId: 'first-example',
   piercingClassNames: [],
   endpoint: 'http://localhost:5174',
-  routePatterns: ['/remote/', '/remote/:_*'],
+  routePatterns: ['/first/', '/first/:_*'],
 })
 ```
 
@@ -166,23 +166,23 @@ gateway.registerFragment({
 The fragment is embedded in the shell using a custom element:
 
 ```tsx
-<web-fragment fragment-id="remote-example"></web-fragment>
+<web-fragment fragment-id="first-example"></web-fragment>
 ```
 
 The element is automatically registered by `initializeWebFragments()`.
 
 ### Base Path Configuration
 
-The remote fragment uses a base path (`remote/vite.config.ts`):
+The first fragment uses a base path (`first/vite.config.ts`):
 
 ```typescript
 export default defineConfig({
-  base: '/remote/',
+  base: '/first/',
   // ...
 })
 ```
 
-This ensures that all assets are served under `/remote/`, which matches the gateway route patterns.
+This ensures that all assets are served under `/first/`, which matches the gateway route patterns.
 
 ## Development
 
@@ -191,14 +191,14 @@ This ensures that all assets are served under `/remote/`, which matches the gate
 Both applications support HMR:
 
 - Changes in the shell are automatically updated
-- Changes in the remote fragment are automatically updated
+- Changes in the first fragment are automatically updated
 - The gateway correctly proxies the updates
 
 ### Debugging
 
 - **Browser DevTools**: Open DevTools to see the fragment structure
 - **Shadow DOM**: Fragments are embedded in Shadow DOM
-- **JavaScript Contexts**: Each fragment has its own context (`wf:remote-example`)
+- **JavaScript Contexts**: Each fragment has its own context (`wf:first-example`)
 
 ## Stopping the Application
 
@@ -210,7 +210,7 @@ Alternatively, the processes can be terminated:
 # Stop shell
 kill $(lsof -ti tcp:5173)
 
-# Stop remote
+# Stop first
 kill $(lsof -ti tcp:5174)
 ```
 

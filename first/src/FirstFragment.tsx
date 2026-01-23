@@ -11,7 +11,7 @@ import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 
-export default function RemoteFragment() {
+export default function FirstFragment() {
   const [count, setCount] = useState(0)
   const [name, setName] = useState('')
   const [fragmentData, setFragmentData] = useState('')
@@ -19,7 +19,7 @@ export default function RemoteFragment() {
   const channelRef = useRef<BroadcastChannel | null>(null)
 
   const greeting = useMemo(
-    () => (name.trim() ? `Hello, ${name.trim()}` : 'Hello from the remote fragment'),
+    () => (name.trim() ? `Hello, ${name.trim()}` : 'Hello from the first fragment'),
     [name],
   )
 
@@ -30,7 +30,7 @@ export default function RemoteFragment() {
 
     // Receive messages from Shell
     const handleMessage = (event: MessageEvent) => {
-      if (event.data.type === 'shell-to-fragment' && event.data.fragmentId === 'remote-example') {
+      if (event.data.type === 'shell-to-fragment' && event.data.fragmentId === 'first-example') {
         setReceivedData(event.data.payload)
       }
     }
@@ -48,7 +48,7 @@ export default function RemoteFragment() {
     if (channelRef.current && fragmentData.trim()) {
       channelRef.current.postMessage({
         type: 'fragment-to-shell',
-        fragmentId: 'remote-example',
+        fragmentId: 'first-example',
         payload: fragmentData,
         timestamp: new Date().toISOString(),
       })
@@ -61,13 +61,13 @@ export default function RemoteFragment() {
       <Stack spacing={3}>
         <Box>
           <Typography variant="overline" color="text.secondary">
-            Web Fragments Remote
+            Web Fragments First
           </Typography>
           <Typography variant="h4" component="h1" gutterBottom>
-            Remote Fragment Example
+            First Fragment Example
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            This UI is rendered by the remote app and composed inside the shell.
+            This UI is rendered by the first app and composed inside the shell.
           </Typography>
         </Box>
 
@@ -129,7 +129,7 @@ export default function RemoteFragment() {
         </Card>
 
         <Alert severity="info">
-          The host route /remote mounts this fragment; assets are proxied via /remote/*.
+          The host route /first mounts this fragment; assets are proxied via /first/*.
         </Alert>
       </Stack>
     </Container>

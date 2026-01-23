@@ -1,8 +1,8 @@
 import { PropsWithChildren, useEffect, useMemo, useRef } from "react";
 import { MemoryRouter, useLocation, useNavigate } from "react-router-dom";
 
-type FragmentId = "remote-example" | "second-example";
-type BasePath = "/remote" | "/second";
+type FragmentId = "first-example" | "second-example";
+type BasePath = "/first" | "/second";
 
 function FragmentRouteSync({
   fragmentId,

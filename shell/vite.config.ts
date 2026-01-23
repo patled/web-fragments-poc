@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { FragmentGateway, getWebMiddleware } from 'web-fragments/gateway'
 
-const fragmentId = 'remote-example'
+const fragmentId = 'first-example'
 const secondFragmentId = 'second-example'
 const gateway = new FragmentGateway()
 const webFragmentsMiddleware = getWebMiddleware(gateway, { mode: 'development' })
@@ -12,7 +12,7 @@ gateway.registerFragment({
   fragmentId,
   piercingClassNames: [],
   endpoint: 'http://localhost:5174',
-  routePatterns: ['/remote/', '/remote/:_*'],
+  routePatterns: ['/first/', '/first/:_*'],
 })
 
 gateway.registerFragment({
@@ -50,7 +50,7 @@ export default defineConfig({
                                  url.pathname.startsWith('/src')
           
           // Check if it's a fragment route
-          const isFragmentRoute = url.pathname.startsWith('/remote/') || url.pathname.startsWith('/second/')
+          const isFragmentRoute = url.pathname.startsWith('/first/') || url.pathname.startsWith('/second/')
           
           // Check if it's a direct browser navigation
           // The <web-fragment> element sends requests in an IFrame
@@ -86,14 +86,14 @@ export default defineConfig({
             init.duplex = 'half'
           }
 
-          // Transform /second/ to /remote/ for asset requests, since base: '/remote/' is set
+          // Transform /second/ to /first/ for asset requests, since base: '/first/' is set
           // For HTML requests, add a query parameter so the app renders the correct fragment
           let transformedPath = url.pathname
           const isSecondFragment = matchedFragment.fragmentId === secondFragmentId && url.pathname.startsWith('/second/')
           
           if (isSecondFragment) {
-            // Transform path from /second/ to /remote/ for assets
-            transformedPath = url.pathname.replace(/^\/second\//, '/remote/')
+            // Transform path from /second/ to /first/ for assets
+            transformedPath = url.pathname.replace(/^\/second\//, '/first/')
             // Add query parameter for HTML requests
             if (!url.pathname.includes('.')) {
               const searchParams = new URLSearchParams(url.search)
@@ -102,7 +102,7 @@ export default defineConfig({
             }
           }
 
-          // Transform URL to remote endpoint
+          // Transform URL to first endpoint
           const fragmentEndpoint = matchedFragment.endpoint
           const fragmentUrl = new URL(transformedPath + url.search, fragmentEndpoint)
           const request = new Request(fragmentUrl, init)

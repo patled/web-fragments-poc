@@ -56,13 +56,13 @@ export default function SecondFragment() {
       <Stack spacing={3}>
         <Box>
           <Typography variant="overline" color="text.secondary">
-            Web Fragments Remote - Second Fragment
+            Web Fragments First - Second Fragment
           </Typography>
           <Typography variant="h4" component="h1" gutterBottom>
             Second Fragment Example
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            This is a second fragment component served from the same remote app.
+            This is a second fragment component served from the same first app.
           </Typography>
         </Box>
 

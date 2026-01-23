@@ -4,18 +4,18 @@ import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import RemoteFragment from './RemoteFragment'
+import FirstFragment from './FirstFragment'
 
-function RemoteDetails() {
+function FirstDetails() {
   return (
     <Container maxWidth="sm" sx={{ py: 6 }}>
       <Stack spacing={2}>
         <Typography variant="h4" component="h2">
-          Remote Details
+          First Details
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          This is a sub-route inside the remote fragment. The shell URL should now reflect this
-          route (e.g. /remote/details).
+          This is a sub-route inside the first fragment. The shell URL should now reflect this
+          route (e.g. /first/details).
         </Typography>
         <Alert severity="info">Use the nav above to switch routes without full reload.</Alert>
       </Stack>
@@ -23,7 +23,7 @@ function RemoteDetails() {
   )
 }
 
-export default function RemoteFragmentRoutes() {
+export default function FirstFragmentRoutes() {
   return (
     <Box>
       <Box
@@ -41,8 +41,8 @@ export default function RemoteFragmentRoutes() {
       </Box>
 
       <Routes>
-        <Route index element={<RemoteFragment />} />
-        <Route path="details" element={<RemoteDetails />} />
+        <Route index element={<FirstFragment />} />
+        <Route path="details" element={<FirstDetails />} />
       </Routes>
     </Box>
   )

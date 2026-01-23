@@ -10,14 +10,14 @@ function App() {
         <Navigation />
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/remote" element={<Navigate to="/remote/" replace />} />
+          <Route path="/first" element={<Navigate to="/first/" replace />} />
           <Route
-            path="/remote/"
-            element={<FragmentPage key="remote-example" fragmentId="remote-example" basePath="/remote" />}
+            path="/first/"
+            element={<FragmentPage key="first-example" fragmentId="first-example" basePath="/first" />}
           />
           <Route
-            path="/remote/*"
-            element={<FragmentPage key="remote-example" fragmentId="remote-example" basePath="/remote" />}
+            path="/first/*"
+            element={<FragmentPage key="first-example" fragmentId="first-example" basePath="/first" />}
           />
           <Route path="/second" element={<Navigate to="/second/" replace />} />
           <Route

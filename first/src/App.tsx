@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
 import { FragmentRouter } from './FragmentRouter'
-import RemoteFragmentRoutes from './RemoteFragmentRoutes'
+import FirstFragmentRoutes from './FirstFragmentRoutes'
 import SecondFragmentRoutes from './SecondFragmentRoutes'
 
 function App() {
   // Determine which component to render based on the current path or query parameter
-  // The gateway transforms /second/ to /remote/?_fragment=second, so we check both
+  // The gateway transforms /second/ to /first/?_fragment=second, so we check both
   const isSecondFragment = useMemo(() => {
     const currentPath = globalThis.location.pathname
     const searchParams = new URLSearchParams(globalThis.location.search)
@@ -20,8 +20,8 @@ function App() {
           <SecondFragmentRoutes />
         </FragmentRouter>
       ) : (
-        <FragmentRouter fragmentId="remote-example" basePath="/remote">
-          <RemoteFragmentRoutes />
+        <FragmentRouter fragmentId="first-example" basePath="/first">
+          <FirstFragmentRoutes />
         </FragmentRouter>
       )}
     </div>
