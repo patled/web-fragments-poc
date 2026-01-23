@@ -17,19 +17,41 @@ Unlike other micro-frontend solutions, Web Fragments isolates individual fragmen
 
 ```
 web-fragments-poc/
-├── shell/          # Host application (Shell)
+├── shell/                    # Host application (Shell)
 │   ├── src/
-│   │   ├── App.tsx           # Shell main component with <web-fragment>
+│   │   ├── App.tsx           # Shell main component with React Router
 │   │   ├── main.tsx          # Initializes Web Fragments client
-│   │   └── vite-env.d.ts     # TypeScript definitions for <web-fragment>
+│   │   ├── vite-env.d.ts     # TypeScript definitions for <web-fragment>
+│   │   ├── components/       # Shell components
+│   │   │   ├── HomePage.tsx
+│   │   │   ├── FragmentPage.tsx
+│   │   │   ├── ProjectsPage.tsx
+│   │   │   ├── AssignmentsFragmentPage.tsx
+│   │   │   ├── FragmentCommunication.tsx
+│   │   │   └── Navigation.tsx
+│   │   └── data/            # Local storage utilities
+│   │       └── projectsStorage.ts
 │   └── vite.config.ts        # Vite configuration with gateway middleware
 │
-└── fragments/         # Fragments application (hosts multiple fragments)
+├── fragments/                # Fragments application (hosts first and second fragments)
+│   ├── src/
+│   │   ├── FirstFragment.tsx  # MUI-based first fragment component
+│   │   ├── SecondFragment.tsx # MUI-based second fragment component
+│   │   ├── FirstFragmentRoutes.tsx
+│   │   ├── SecondFragmentRoutes.tsx
+│   │   ├── FragmentRouter.tsx
+│   │   ├── App.tsx           # Fragment app wrapper
+│   │   └── main.tsx          # Fragment entry point with MUI theme
+│   └── vite.config.ts        # Vite configuration with base path
+│
+└── assignments-fragment/     # Assignments fragment application
     ├── src/
-    │   ├── FirstFragment.tsx  # MUI-based fragment component
-    │   ├── App.tsx             # Fragment app wrapper
-    │   └── main.tsx           # Fragment entry point with MUI theme
-    └── vite.config.ts         # Vite configuration with base path
+    │   ├── AssignmentsFragment.tsx  # MUI-based assignments fragment
+    │   ├── AssignmentsRoutes.tsx
+    │   ├── FragmentRouter.tsx
+    │   ├── App.tsx
+    │   └── main.tsx
+    └── vite.config.ts        # Vite configuration with base path
 ```
 
 ## Architecture
@@ -42,6 +64,8 @@ The shell application is the host application that embeds fragments:
 - **Role**: Hosts the main application and integrates fragments
 - **Gateway**: Uses `FragmentGateway` as middleware to route requests to fragments
 - **Client**: Initializes `initializeWebFragments()` for client-side fragment management
+- **Routing**: Uses React Router for navigation between pages
+- **Pages**: Home, Projects, First Fragment, Second Fragment, Assignments
 
 ### Fragments (Fragment Provider)
 
@@ -51,6 +75,43 @@ The fragments application hosts multiple fragments:
 - **Role**: Provides isolated fragments (first-example, second-example) with their own UI
 - **Base Path**: `/first/` - All assets are served under this path
 - **UI**: Uses Material-UI (MUI) for components
+- **Routing**: Supports both `/first/` and `/second/` routes via query parameter
+
+### Assignments Fragment
+
+The assignments fragment is a separate fragment application:
+
+- **Port**: 5175
+- **Role**: Provides the project-assignments fragment for managing project assignments
+- **Base Path**: `/assignments/` - All assets are served under this path
+- **UI**: Uses Material-UI (MUI) for components
+- **Integration**: Embedded in ProjectsPage for project-specific assignments
+- **Standalone Mode**: Can run independently for development without the shell
+
+#### Standalone Development Mode
+
+The assignments fragment supports standalone development mode, allowing you to develop and test it independently without running the shell application.
+
+**Automatic Detection:**
+- If no data is received from the shell within 1 second, the fragment automatically switches to standalone mode
+- Mock data is loaded automatically for development
+
+**Manual Activation:**
+You can force standalone mode by adding `?standalone=true` to the URL:
+```
+http://localhost:5175/assignments/1?standalone=true
+```
+
+**Mock Data:**
+The fragment includes mock projects and staff members for standalone development:
+- 3 example projects (Website Redesign, Mobile App Entwicklung, Datenbank Migration)
+- 6 staff members (Lea Nguyen, Markus Klein, Maya Fischer, Julian Weber, Sofia Hartmann, Tobias Richter)
+
+**Usage:**
+1. Start only the assignments fragment: `cd assignments-fragment && npm run dev`
+2. Open `http://localhost:5175/assignments/1` (or any project ID)
+3. The fragment will automatically detect standalone mode and load mock data
+4. A banner indicates when standalone mode is active
 
 ### Gateway
 
@@ -68,7 +129,7 @@ The gateway is a middleware that:
 
 ## Installation
 
-1. **Install dependencies** (in both directories):
+1. **Install dependencies** (in all three directories):
 
 ```bash
 # Install shell
@@ -78,11 +139,15 @@ yarn install
 # Install fragments
 cd ../fragments
 yarn install
+
+# Install assignments-fragment
+cd ../assignments-fragment
+yarn install
 ```
 
 ## Starting the Application
 
-The application consists of two separate dev servers that must run simultaneously:
+The application consists of three separate dev servers that must run simultaneously:
 
 ### Terminal 1: Start Fragments Server
 
@@ -93,7 +158,16 @@ yarn dev
 
 The fragments server starts on **<http://localhost:5174>**
 
-### Terminal 2: Start Shell Host
+### Terminal 2: Start Assignments Fragment Server
+
+```bash
+cd assignments-fragment
+yarn dev
+```
+
+The assignments fragment server starts on **<http://localhost:5175>**
+
+### Terminal 3: Start Shell Host
 
 ```bash
 cd shell
@@ -104,19 +178,28 @@ The shell server starts on **<http://localhost:5173>**
 
 ### Open the Application
 
-Open **<http://localhost:5173/first/>** in your browser.
+Open **<http://localhost:5173>** in your browser.
 
-**Important**: Use the path `/first/` with a trailing slash. The path `/first` will be automatically redirected.
+**Available Routes:**
+- `/` - Home page
+- `/first/` - First fragment example
+- `/second/` - Second fragment example
+- `/projects` - Projects management page
+- `/projects/:projectId` - Project details with assignments
+- `/assignments/:projectId` - Assignments fragment for a specific project
+
+**Important**: Use paths with trailing slashes (e.g., `/first/`). Paths without trailing slashes will be automatically redirected.
 
 ## What is Demonstrated?
 
 ### 1. Fragment Integration
 
-The project shows how a first fragment is seamlessly integrated into the shell:
+The project shows how multiple fragments are seamlessly integrated into the shell:
 
 - The `<web-fragment>` custom element is used in the shell
-- The fragment runs in an isolated JavaScript context
+- Fragments run in isolated JavaScript contexts
 - Fragment assets are automatically loaded through the gateway
+- Three fragments: `first-example`, `second-example`, and `project-assignments`
 
 ### 2. Gateway Routing
 
@@ -125,16 +208,35 @@ The gateway middleware demonstrates:
 - Automatic routing of fragment requests
 - Proxying of fragment assets (JS, CSS, etc.)
 - Support for different request types (HTML, assets, etc.)
+- Multiple fragments from different endpoints
 
 ### 3. Framework Integration
 
 The example shows:
 
-- Use of React in both applications
-- Integration of Material-UI in the fragment
+- Use of React in all applications
+- React Router for navigation in the shell
+- Integration of Material-UI in fragments
 - Independent development and deployment of fragments
 
-### 4. Isolation
+### 4. Fragment Communication
+
+The project demonstrates:
+
+- Communication between shell and fragments via events
+- BroadcastChannel API for cross-fragment communication
+- Fragment communication component for testing
+
+### 5. Real-World Use Case
+
+The ProjectsPage demonstrates:
+
+- Project management with local storage
+- Drag-and-drop staff assignments
+- Integration of assignments fragment within a shell page
+- Multi-fragment coordination
+
+### 6. Isolation
 
 Web Fragments provides:
 
@@ -155,6 +257,20 @@ gateway.registerFragment({
   endpoint: 'http://localhost:5174',
   routePatterns: ['/first/', '/first/:_*'],
 })
+
+gateway.registerFragment({
+  fragmentId: 'second-example',
+  piercingClassNames: [],
+  endpoint: 'http://localhost:5174',
+  routePatterns: ['/second/', '/second/:_*'],
+})
+
+gateway.registerFragment({
+  fragmentId: 'project-assignments',
+  piercingClassNames: [],
+  endpoint: 'http://localhost:5175',
+  routePatterns: ['/assignments/', '/assignments/:_*'],
+})
 ```
 
 - **fragmentId**: Unique ID of the fragment
@@ -173,8 +289,9 @@ The element is automatically registered by `initializeWebFragments()`.
 
 ### Base Path Configuration
 
-The fragments application uses a base path (`fragments/vite.config.ts`):
+Each fragment application uses a base path:
 
+**Fragments application** (`fragments/vite.config.ts`):
 ```typescript
 export default defineConfig({
   base: '/first/',
@@ -182,7 +299,15 @@ export default defineConfig({
 })
 ```
 
-This ensures that all assets are served under `/first/`, which matches the gateway route patterns.
+**Assignments fragment** (`assignments-fragment/vite.config.ts`):
+```typescript
+export default defineConfig({
+  base: '/assignments/',
+  // ...
+})
+```
+
+This ensures that all assets are served under the correct path, which matches the gateway route patterns.
 
 ## Development
 
@@ -202,7 +327,7 @@ Both applications support HMR:
 
 ## Stopping the Application
 
-Stop both dev servers with `Ctrl+C` in their respective terminals.
+Stop all three dev servers with `Ctrl+C` in their respective terminals.
 
 Alternatively, the processes can be terminated:
 
@@ -212,15 +337,20 @@ kill $(lsof -ti tcp:5173)
 
 # Stop fragments
 kill $(lsof -ti tcp:5174)
+
+# Stop assignments-fragment
+kill $(lsof -ti tcp:5175)
 ```
 
 ## Technology Stack
 
-- **React 19**: UI framework for both applications
+- **React 19**: UI framework for all applications
+- **React Router 7**: Client-side routing in shell
 - **Vite 7**: Build tool and dev server
 - **TypeScript**: Type safety
-- **Material-UI (MUI)**: UI component library in the fragment
+- **Material-UI (MUI)**: UI component library in fragments
 - **Web Fragments**: Micro-frontend framework
+- **BroadcastChannel API**: Cross-fragment communication
 
 ## Useful Links
 
@@ -233,10 +363,12 @@ kill $(lsof -ti tcp:5174)
 This PoC project can be extended to:
 
 - Add more fragments
-- Demonstrate fragment communication via events
+- Enhance fragment communication patterns
 - Show fragment piercing
 - Configure production builds
 - Document deployment strategies
+- Add authentication and authorization
+- Implement state management across fragments
 
 ## License
 
