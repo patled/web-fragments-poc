@@ -801,9 +801,8 @@ export function ProjectsPage() {
                         }}
                       >
                         {selectedProject.tasks.map((task) => (
-                          <button
+                          <div
                             key={task.id}
-                            type="button"
                             onDragOver={(event) => {
                               event.preventDefault();
                               setDragOverTaskId(task.id);
@@ -935,7 +934,7 @@ export function ProjectsPage() {
                                 Löschen
                               </button>
                             </div>
-                          </button>
+                          </div>
                         ))}
                       </div>
                     )}
