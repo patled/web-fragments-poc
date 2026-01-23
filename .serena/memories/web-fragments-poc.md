@@ -6,3 +6,4 @@ Web Fragments PoC in /Users/patrick/source/micro-frontends/web-fragments-poc:
 
 - shell also registers second fragmentId: second-example, endpoint: http://localhost:5174, routePatterns: /second/ and /second/:_*; shell rewrites /second/ asset requests to /first/ and adds query param _fragment=second for HTML requests (shell/vite.config.ts).
 - fragments keeps Vite base /first/ but serves SPA HTML for /second/ in dev via a Vite dev-server middleware plugin (fragments/vite.config.ts), so http://localhost:5174/second/ renders SecondFragment directly.
+- shell registers assignments fragmentId: project-assignments, endpoint: http://localhost:5175, routePatterns: /assignments/ and /assignments/:_*; assignments-fragment uses Vite base /assignments/ and its own dev server middleware to serve SPA HTML for /assignments/*.

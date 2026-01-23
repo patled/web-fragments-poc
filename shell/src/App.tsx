@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HomePage } from "./components/HomePage";
 import { FragmentPage } from "./components/FragmentPage";
 import { Navigation } from "./components/Navigation";
+import { ProjectsPage } from "./components/ProjectsPage";
 
 function App() {
   return (
@@ -10,6 +11,9 @@ function App() {
         <Navigation />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/projects/:projectId" element={<ProjectsPage />} />
+          <Route path="/assignments/:projectId" element={<ProjectsPage />} />
           <Route path="/first" element={<Navigate to="/first/" replace />} />
           <Route
             path="/first/"

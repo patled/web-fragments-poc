@@ -4,6 +4,7 @@ import { FragmentGateway, getWebMiddleware } from 'web-fragments/gateway'
 
 const fragmentId = 'first-example'
 const secondFragmentId = 'second-example'
+const assignmentsFragmentId = 'project-assignments'
 const gateway = new FragmentGateway()
 const webFragmentsMiddleware = getWebMiddleware(gateway, { mode: 'development' })
 const skipHeaderName = 'x-wf-skip'
@@ -20,6 +21,13 @@ gateway.registerFragment({
   piercingClassNames: [],
   endpoint: 'http://localhost:5174',
   routePatterns: ['/second/', '/second/:_*'],
+})
+
+gateway.registerFragment({
+  fragmentId: assignmentsFragmentId,
+  piercingClassNames: [],
+  endpoint: 'http://localhost:5175',
+  routePatterns: ['/assignments/', '/assignments/:_*'],
 })
 
 // https://vite.dev/config/
@@ -50,7 +58,10 @@ export default defineConfig({
                                  url.pathname.startsWith('/src')
           
           // Check if it's a fragment route
-          const isFragmentRoute = url.pathname.startsWith('/first/') || url.pathname.startsWith('/second/')
+          const isFragmentRoute =
+            url.pathname.startsWith('/first/') ||
+            url.pathname.startsWith('/second/') ||
+            url.pathname.startsWith('/assignments/')
           
           // Check if it's a direct browser navigation
           // The <web-fragment> element sends requests in an IFrame

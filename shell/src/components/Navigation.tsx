@@ -4,6 +4,7 @@ export function Navigation() {
   const location = useLocation();
   const isFirstRoute = location.pathname.startsWith("/first");
   const isSecondRoute = location.pathname.startsWith("/second");
+  const isProjectsRoute = location.pathname.startsWith("/projects");
 
   return (
     <nav
@@ -44,6 +45,16 @@ export function Navigation() {
           }}
         >
           Open the second fragment
+        </Link>
+        <Link
+          to="/projects"
+          style={{
+            textDecoration: "none",
+            color: isProjectsRoute ? "#3b82f6" : "#4b5563",
+            fontWeight: isProjectsRoute ? "600" : "400",
+          }}
+        >
+          Projekte
         </Link>
       </div>
     </nav>
