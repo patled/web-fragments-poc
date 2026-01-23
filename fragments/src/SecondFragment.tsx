@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -11,17 +11,12 @@ import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 
-export default function FirstFragment() {
-  const [count, setCount] = useState(0)
-  const [name, setName] = useState('')
+export default function SecondFragment() {
+  const [counter, setCounter] = useState(0)
+  const [message, setMessage] = useState('')
   const [fragmentData, setFragmentData] = useState('')
   const [receivedData, setReceivedData] = useState<string | null>(null)
   const channelRef = useRef<BroadcastChannel | null>(null)
-
-  const greeting = useMemo(
-    () => (name.trim() ? `Hello, ${name.trim()}` : 'Hello from the first fragment'),
-    [name],
-  )
 
   useEffect(() => {
     // Create BroadcastChannel for communication with Shell
@@ -30,7 +25,7 @@ export default function FirstFragment() {
 
     // Receive messages from Shell
     const handleMessage = (event: MessageEvent) => {
-      if (event.data.type === 'shell-to-fragment' && event.data.fragmentId === 'first-example') {
+      if (event.data.type === 'shell-to-fragment' && event.data.fragmentId === 'second-example') {
         setReceivedData(event.data.payload)
       }
     }
@@ -48,7 +43,7 @@ export default function FirstFragment() {
     if (channelRef.current && fragmentData.trim()) {
       channelRef.current.postMessage({
         type: 'fragment-to-shell',
-        fragmentId: 'first-example',
+        fragmentId: 'second-example',
         payload: fragmentData,
         timestamp: new Date().toISOString(),
       })
@@ -61,39 +56,39 @@ export default function FirstFragment() {
       <Stack spacing={3}>
         <Box>
           <Typography variant="overline" color="text.secondary">
-            Web Fragments First
+            Web Fragments First - Second Fragment
           </Typography>
           <Typography variant="h4" component="h1" gutterBottom>
-            First Fragment Example
+            Second Fragment Example
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            This UI is rendered by the first app and composed inside the shell.
+            This is a second fragment component served from the same fragments app.
           </Typography>
         </Box>
 
         <Card variant="outlined">
           <CardContent>
             <Stack spacing={2}>
-              <Typography variant="h6">{greeting}</Typography>
+              <Typography variant="h6">Message: {message || 'No message yet'}</Typography>
               <TextField
-                label="Your name"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
+                label="Enter a message"
+                value={message}
+                onChange={(event) => setMessage(event.target.value)}
                 size="small"
                 fullWidth
               />
               <Stack direction="row" spacing={1} flexWrap="wrap">
-                <Chip label={`Count: ${count}`} color="primary" variant="outlined" />
-                <Chip label="MUI powered" color="secondary" variant="outlined" />
+                <Chip label={`Counter: ${counter}`} color="primary" variant="outlined" />
+                <Chip label="Second Fragment" color="secondary" variant="outlined" />
               </Stack>
             </Stack>
           </CardContent>
           <CardActions>
-            <Button variant="contained" onClick={() => setCount((value) => value + 1)}>
-              Increase
+            <Button variant="contained" onClick={() => setCounter((value) => value + 1)}>
+              Increment
             </Button>
-            <Button variant="text" onClick={() => setCount(0)}>
-              Reset
+            <Button variant="text" onClick={() => setCounter(0)}>
+              Reset Counter
             </Button>
           </CardActions>
         </Card>
@@ -129,7 +124,7 @@ export default function FirstFragment() {
         </Card>
 
         <Alert severity="info">
-          The host route /first mounts this fragment; assets are proxied via /first/*.
+          The host route /second/ mounts this fragment; assets are proxied via /second/*.
         </Alert>
       </Stack>
     </Container>

@@ -11,7 +11,7 @@ export function FragmentPage({ fragmentId, basePath }: FragmentPageProps) {
       <section style={{ marginBottom: "2rem" }}>
         <h1 style={{ marginBottom: "0.5rem" }}>Shell Host</h1>
         <p style={{ maxWidth: "48rem", color: "#4b5563" }}>
-          This host renders Web Fragments provided by the first app. Navigate
+          This host renders Web Fragments provided by the fragments app. Navigate
           to the fragment routes to see them mounted.
         </p>
       </section>

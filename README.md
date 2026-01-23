@@ -1,6 +1,6 @@
 # Web Fragments PoC - Micro-Frontend Example
 
-This project demonstrates the use of **Web Fragments** for implementing micro-frontends. It shows how a first application (fragment) can be seamlessly integrated into a shell application (host).
+This project demonstrates the use of **Web Fragments** for implementing micro-frontends. It shows how fragment applications can be seamlessly integrated into a shell application (host).
 
 ## What is Web Fragments?
 
@@ -24,7 +24,7 @@ web-fragments-poc/
 │   │   └── vite-env.d.ts     # TypeScript definitions for <web-fragment>
 │   └── vite.config.ts        # Vite configuration with gateway middleware
 │
-└── first/         # First application (Fragment)
+└── fragments/         # Fragments application (hosts multiple fragments)
     ├── src/
     │   ├── FirstFragment.tsx  # MUI-based fragment component
     │   ├── App.tsx             # Fragment app wrapper
@@ -43,12 +43,12 @@ The shell application is the host application that embeds fragments:
 - **Gateway**: Uses `FragmentGateway` as middleware to route requests to fragments
 - **Client**: Initializes `initializeWebFragments()` for client-side fragment management
 
-### First (Fragment)
+### Fragments (Fragment Provider)
 
-The first application is a standalone fragment:
+The fragments application hosts multiple fragments:
 
 - **Port**: 5174
-- **Role**: Provides an isolated fragment with its own UI
+- **Role**: Provides isolated fragments (first-example, second-example) with their own UI
 - **Base Path**: `/first/` - All assets are served under this path
 - **UI**: Uses Material-UI (MUI) for components
 
@@ -75,8 +75,8 @@ The gateway is a middleware that:
 cd shell
 yarn install
 
-# Install first
-cd ../first
+# Install fragments
+cd ../fragments
 yarn install
 ```
 
@@ -84,14 +84,14 @@ yarn install
 
 The application consists of two separate dev servers that must run simultaneously:
 
-### Terminal 1: Start First Fragment
+### Terminal 1: Start Fragments Server
 
 ```bash
-cd first
+cd fragments
 yarn dev
 ```
 
-The first server starts on **<http://localhost:5174>**
+The fragments server starts on **<http://localhost:5174>**
 
 ### Terminal 2: Start Shell Host
 
@@ -173,7 +173,7 @@ The element is automatically registered by `initializeWebFragments()`.
 
 ### Base Path Configuration
 
-The first fragment uses a base path (`first/vite.config.ts`):
+The fragments application uses a base path (`fragments/vite.config.ts`):
 
 ```typescript
 export default defineConfig({
@@ -191,7 +191,7 @@ This ensures that all assets are served under `/first/`, which matches the gatew
 Both applications support HMR:
 
 - Changes in the shell are automatically updated
-- Changes in the first fragment are automatically updated
+- Changes in the fragments are automatically updated
 - The gateway correctly proxies the updates
 
 ### Debugging
@@ -210,7 +210,7 @@ Alternatively, the processes can be terminated:
 # Stop shell
 kill $(lsof -ti tcp:5173)
 
-# Stop first
+# Stop fragments
 kill $(lsof -ti tcp:5174)
 ```
 

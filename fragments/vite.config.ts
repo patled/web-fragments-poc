@@ -6,7 +6,7 @@ import path from 'node:path'
 // https://vite.dev/config/
 export default defineConfig({
   // base is required for asset paths when called via gateway
-  // For direct access on the first server, both routes still work
+  // For direct access on the fragments server, both routes still work
   base: '/first/',
   plugins: [
     react(),

@@ -102,7 +102,7 @@ export default defineConfig({
             }
           }
 
-          // Transform URL to first endpoint
+          // Transform URL to fragments endpoint
           const fragmentEndpoint = matchedFragment.endpoint
           const fragmentUrl = new URL(transformedPath + url.search, fragmentEndpoint)
           const request = new Request(fragmentUrl, init)
