@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
-import RemoteFragment from './RemoteFragment'
-import SecondFragment from './SecondFragment'
+import { FragmentRouter } from './FragmentRouter'
+import RemoteFragmentRoutes from './RemoteFragmentRoutes'
+import SecondFragmentRoutes from './SecondFragmentRoutes'
 
 function App() {
   // Determine which component to render based on the current path or query parameter
@@ -14,7 +15,15 @@ function App() {
 
   return (
     <div style={{ backgroundColor: isSecondFragment ? '#e3f2fd' : 'green' }}>
-      {isSecondFragment ? <SecondFragment /> : <RemoteFragment />}
+      {isSecondFragment ? (
+        <FragmentRouter fragmentId="second-example" basePath="/second">
+          <SecondFragmentRoutes />
+        </FragmentRouter>
+      ) : (
+        <FragmentRouter fragmentId="remote-example" basePath="/remote">
+          <RemoteFragmentRoutes />
+        </FragmentRouter>
+      )}
     </div>
   )
 }
