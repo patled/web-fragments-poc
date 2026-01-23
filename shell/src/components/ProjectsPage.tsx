@@ -7,6 +7,7 @@ import {
   saveProjects,
   loadStaff,
   saveStaff,
+  initializeMockData,
   STORAGE_KEY,
   STAFF_STORAGE_KEY,
 } from "../data/projectsStorage";
@@ -325,6 +326,18 @@ export function ProjectsPage() {
     setEditForm({ name: "", description: "" });
   };
 
+  const handleInitializeMockData = () => {
+    initializeMockData();
+    const loadedProjects = loadProjects();
+    const loadedStaff = loadStaff();
+    setProjects(loadedProjects);
+    setStaff(loadedStaff);
+    if (loadedProjects.length > 0) {
+      setSelectedProject(loadedProjects[0]);
+      navigate(`/projects/${loadedProjects[0].id}`);
+    }
+  };
+
   const handleTaskDrop = (event: DragEvent<HTMLElement>, task: Task) => {
     event.preventDefault();
     setDragOverTaskId(null);
@@ -519,51 +532,82 @@ export function ProjectsPage() {
         <div
           style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
         >
-          {projects.map((project) => (
-            <button
-              key={project.id}
-              onClick={() => handleSelectProject(project)}
-              type="button"
+          {projects.length === 0 ? (
+            <div
               style={{
-                padding: "1rem",
-                border: "1px solid #e5e7eb",
+                padding: "2rem",
+                border: "2px dashed #d1d5db",
                 borderRadius: "0.5rem",
-                cursor: "pointer",
-                backgroundColor:
-                  selectedProject?.id === project.id ? "#eff6ff" : "white",
-                borderColor:
-                  selectedProject?.id === project.id ? "#3b82f6" : "#e5e7eb",
-                textAlign: "left",
-                width: "100%",
+                textAlign: "center",
+                backgroundColor: "#f9fafb",
               }}
             >
-              <h3 style={{ margin: "0 0 0.25rem 0", fontSize: "1rem" }}>
-                {project.name}
-              </h3>
-              <p
+              <p style={{ margin: "0 0 1rem 0", color: "#6b7280" }}>
+                No projects available yet.
+              </p>
+              <button
+                onClick={handleInitializeMockData}
                 style={{
-                  margin: 0,
-                  fontSize: "0.875rem",
-                  color: "#6b7280",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
+                  padding: "0.75rem 1.5rem",
+                  backgroundColor: "#3b82f6",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "0.375rem",
+                  cursor: "pointer",
+                  fontSize: "1rem",
+                  fontWeight: "500",
                 }}
               >
-                {project.description || "Keine Beschreibung"}
-              </p>
-              <p
+                Create Sample Data
+              </button>
+            </div>
+          ) : (
+            projects.map((project) => (
+              <button
+                key={project.id}
+                onClick={() => handleSelectProject(project)}
+                type="button"
                 style={{
-                  margin: "0.5rem 0 0 0",
-                  fontSize: "0.75rem",
-                  color: "#9ca3af",
+                  padding: "1rem",
+                  border: "1px solid #e5e7eb",
+                  borderRadius: "0.5rem",
+                  cursor: "pointer",
+                  backgroundColor:
+                    selectedProject?.id === project.id ? "#eff6ff" : "white",
+                  borderColor:
+                    selectedProject?.id === project.id ? "#3b82f6" : "#e5e7eb",
+                  textAlign: "left",
+                  width: "100%",
                 }}
               >
-                {project.tasks.length} Aufgabe(n) {"·"}{" "}
-                {assignmentCountByProject[project.id] ?? 0} Zuweisung(en)
-              </p>
-            </button>
-          ))}
+                <h3 style={{ margin: "0 0 0.25rem 0", fontSize: "1rem" }}>
+                  {project.name}
+                </h3>
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: "0.875rem",
+                    color: "#6b7280",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {project.description || "Keine Beschreibung"}
+                </p>
+                <p
+                  style={{
+                    margin: "0.5rem 0 0 0",
+                    fontSize: "0.75rem",
+                    color: "#9ca3af",
+                  }}
+                >
+                  {project.tasks.length} Aufgabe(n) {"·"}{" "}
+                  {assignmentCountByProject[project.id] ?? 0} Zuweisung(en)
+                </p>
+              </button>
+            ))
+          )}
         </div>
       </div>
 
