@@ -209,7 +209,7 @@ const EXAMPLE_PROJECTS: Project[] = [
 function normalizeStaffMember(raw: Partial<StaffMember>): StaffMember {
   return {
     id: raw.id ?? crypto.randomUUID(),
-    name: raw.name ?? "Unbekannt",
+    name: raw.name ?? "Unknown",
   };
 }
 
@@ -269,7 +269,7 @@ function extractAssigneeIds(
       if (assignee.id) {
         const staff = findOrCreateStaffByName(
           staffMembers,
-          assignee.name ?? "Unbekannt",
+          assignee.name ?? "Unknown",
           assignee.id,
         );
         return staff.id;
