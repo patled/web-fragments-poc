@@ -53,7 +53,9 @@ export function ProjectsPage() {
     }, {});
   }, [staff]);
 
-  const isAssignmentsRoute = location.pathname.startsWith("/assignments/");
+  const isAssignmentsRoute =
+    location.pathname.startsWith("/assignments/") ||
+    /^\/projects\/[^/]+\/assignments(\/|$)/.test(location.pathname);
   const shouldShowAssignmentsPanel = Boolean(
     isAssignmentsRoute && selectedProject,
   );
@@ -235,7 +237,7 @@ export function ProjectsPage() {
     setSelectedProject(project);
     setIsEditing(false);
     if (isAssignmentsRoute) {
-      navigate(`/assignments/${project.id}`);
+      navigate(`/projects/${project.id}/assignments`);
       return;
     }
     navigate(`/projects/${project.id}`);
@@ -415,7 +417,7 @@ export function ProjectsPage() {
 
   const handleOpenAssignments = () => {
     if (!selectedProject) return;
-    navigate(`/assignments/${selectedProject.id}`);
+    navigate(`/projects/${selectedProject.id}/assignments`);
   };
 
   const handleCloseAssignments = () => {

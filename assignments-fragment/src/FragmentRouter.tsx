@@ -61,7 +61,10 @@ function FragmentRouteSync({
     const channel = channelRef.current;
     if (!channel) return;
 
-    const fullPathname = `${basePath}${location.pathname === "/" ? "/" : location.pathname}`;
+    // /projects/ID/assignments -> /assignments/ID; ansonsten basePath + pathname
+    const match = location.pathname.match(/^\/projects\/([^/]+)\/assignments\/?/);
+    const pathSuffix = location.pathname === "/" ? "/" : location.pathname;
+    const fullPathname = match ? `${basePath}/${match[1]}` : `${basePath}${pathSuffix}`;
     const nextUrl = `${fullPathname}${location.search}${location.hash}`;
 
     channel.postMessage({
@@ -86,8 +89,13 @@ export function FragmentRouter({
     [],
   );
 
+  // Wenn die URL /projects/ID/assignments ist, darf basename nicht /assignments sein,
+  // da React Router nur Pfade berücksichtigt, die mit basename beginnen. Dann basename="/".
+  const pathname = globalThis.location?.pathname ?? "/";
+  const basename = pathname.startsWith("/assignments") ? basePath : "/";
+
   return (
-    <MemoryRouter basename={basePath} initialEntries={[initialEntry]}>
+    <MemoryRouter basename={basename} initialEntries={[initialEntry]}>
       <FragmentRouteSync fragmentId={fragmentId} basePath={basePath} />
       {children}
     </MemoryRouter>
