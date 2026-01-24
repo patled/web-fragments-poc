@@ -219,7 +219,7 @@ export function ProjectsPage() {
   };
 
   const handleDeleteProject = (id: string) => {
-    if (!confirm("Möchten Sie dieses Projekt wirklich löschen?")) return;
+    if (!confirm("Are you sure you want to delete this project?")) return;
 
     const updatedProjects = projects.filter((p) => p.id !== id);
     setProjects(updatedProjects);
@@ -242,10 +242,10 @@ export function ProjectsPage() {
   };
 
   const handleAddTask = (projectId: string) => {
-    const taskTitle = prompt("Aufgaben-Titel:");
+    const taskTitle = prompt("Task title:");
     if (!taskTitle?.trim()) return;
 
-    const taskDescription = prompt("Aufgaben-Beschreibung (optional):") || "";
+    const taskDescription = prompt("Task description (optional):") || "";
 
     const newTask: Task = {
       id: `${projectId}-${Date.now()}`,
@@ -292,7 +292,7 @@ export function ProjectsPage() {
   };
 
   const handleDeleteTask = (projectId: string, taskId: string) => {
-    if (!confirm("Möchten Sie diese Aufgabe wirklich löschen?")) return;
+    if (!confirm("Are you sure you want to delete this task?")) return;
 
     const updatedProjects = projects.map((p) =>
       p.id === projectId
@@ -428,7 +428,7 @@ export function ProjectsPage() {
 
   return (
     <div style={{ display: "flex", gap: "2rem", minHeight: "600px" }}>
-      {/* Projekte-Liste */}
+      {/* Projects list */}
       <div style={{ flex: "0 0 300px" }}>
         <div
           style={{
@@ -438,7 +438,7 @@ export function ProjectsPage() {
             marginBottom: "1rem",
           }}
         >
-          <h2 style={{ margin: 0 }}>Projekte</h2>
+          <h2 style={{ margin: 0 }}>Projects</h2>
           <button
             onClick={handleCreateProject}
             style={{
@@ -451,7 +451,7 @@ export function ProjectsPage() {
               fontSize: "0.875rem",
             }}
           >
-            + Neu
+            + New
           </button>
         </div>
 
@@ -467,7 +467,7 @@ export function ProjectsPage() {
           >
             <input
               type="text"
-              placeholder="Projektname"
+              placeholder="Project name"
               value={editForm.name}
               onChange={(e) =>
                 setEditForm({ ...editForm, name: e.target.value })
@@ -481,7 +481,7 @@ export function ProjectsPage() {
               }}
             />
             <textarea
-              placeholder="Beschreibung"
+              placeholder="Description"
               value={editForm.description}
               onChange={(e) =>
                 setEditForm({ ...editForm, description: e.target.value })
@@ -509,7 +509,7 @@ export function ProjectsPage() {
                   fontSize: "0.875rem",
                 }}
               >
-                Speichern
+                Save
               </button>
               <button
                 onClick={cancelEdit}
@@ -523,7 +523,7 @@ export function ProjectsPage() {
                   fontSize: "0.875rem",
                 }}
               >
-                Abbrechen
+                Cancel
               </button>
             </div>
           </div>
@@ -593,7 +593,7 @@ export function ProjectsPage() {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {project.description || "Keine Beschreibung"}
+                  {project.description || "No description"}
                 </p>
                 <p
                   style={{
@@ -602,8 +602,8 @@ export function ProjectsPage() {
                     color: "#9ca3af",
                   }}
                 >
-                  {project.tasks.length} Aufgabe(n) {"·"}{" "}
-                  {assignmentCountByProject[project.id] ?? 0} Zuweisung(en)
+                  {project.tasks.length} task(s) {"·"}{" "}
+                  {assignmentCountByProject[project.id] ?? 0} assignment(s)
                 </p>
               </button>
             ))
@@ -611,7 +611,7 @@ export function ProjectsPage() {
         </div>
       </div>
 
-      {/* Projekt-Detailansicht */}
+      {/* Project detail view */}
       <div
         style={{
           flex: 1,
@@ -634,7 +634,7 @@ export function ProjectsPage() {
                 >
                   <input
                     type="text"
-                    placeholder="Projektname"
+                    placeholder="Project name"
                     value={editForm.name}
                     onChange={(e) =>
                       setEditForm({ ...editForm, name: e.target.value })
@@ -650,7 +650,7 @@ export function ProjectsPage() {
                     }}
                   />
                   <textarea
-                    placeholder="Beschreibung"
+                    placeholder="Description"
                     value={editForm.description}
                     onChange={(e) =>
                       setEditForm({ ...editForm, description: e.target.value })
@@ -677,7 +677,7 @@ export function ProjectsPage() {
                         cursor: "pointer",
                       }}
                     >
-                      Speichern
+                      Save
                     </button>
                     <button
                       onClick={cancelEdit}
@@ -690,7 +690,7 @@ export function ProjectsPage() {
                         cursor: "pointer",
                       }}
                     >
-                      Abbrechen
+                      Cancel
                     </button>
                   </div>
                 </div>
@@ -709,7 +709,7 @@ export function ProjectsPage() {
                         {selectedProject.name}
                       </h1>
                       <p style={{ margin: 0, color: "#6b7280" }}>
-                        {selectedProject.description || "Keine Beschreibung"}
+                        {selectedProject.description || "No description"}
                       </p>
                     </div>
                     <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -724,7 +724,7 @@ export function ProjectsPage() {
                           cursor: "pointer",
                         }}
                       >
-                        Bearbeiten
+                        Edit
                       </button>
                       <button
                         onClick={handleOpenAssignments}
@@ -737,7 +737,7 @@ export function ProjectsPage() {
                           cursor: "pointer",
                         }}
                       >
-                        Zuweisungen
+                        Assignments
                       </button>
                       <button
                         onClick={() => handleDeleteProject(selectedProject.id)}
@@ -750,7 +750,7 @@ export function ProjectsPage() {
                           cursor: "pointer",
                         }}
                       >
-                        Löschen
+                        Delete
                       </button>
                     </div>
                   </div>
@@ -770,7 +770,7 @@ export function ProjectsPage() {
                       }}
                     >
                       <h2 style={{ margin: 0, fontSize: "1.25rem" }}>
-                        Aufgaben
+                        Tasks
                       </h2>
                       <button
                         onClick={() => handleAddTask(selectedProject.id)}
@@ -784,13 +784,13 @@ export function ProjectsPage() {
                           fontSize: "0.875rem",
                         }}
                       >
-                        + Aufgabe hinzufügen
+                        + Add task
                       </button>
                     </div>
 
                     {selectedProject.tasks.length === 0 ? (
                       <p style={{ color: "#9ca3af", fontStyle: "italic" }}>
-                        Noch keine Aufgaben vorhanden.
+                        No tasks yet.
                       </p>
                     ) : (
                       <div
@@ -931,7 +931,7 @@ export function ProjectsPage() {
                                   fontSize: "0.75rem",
                                 }}
                               >
-                                Löschen
+                                Delete
                               </button>
                             </div>
                           </div>
@@ -953,8 +953,7 @@ export function ProjectsPage() {
               }}
             >
               <p>
-                Wählen Sie ein Projekt aus der Liste aus oder erstellen Sie ein
-                neues.
+                Select a project from the list or create a new one.
               </p>
             </div>
           )}
