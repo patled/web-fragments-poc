@@ -445,8 +445,8 @@ export function ProjectsPage() {
             onClick={handleCreateProject}
             style={{
               padding: "0.5rem 1rem",
-              backgroundColor: "#3b82f6",
-              color: "white",
+              backgroundColor: "var(--color-btn-primary)",
+              color: "var(--color-btn-primary-fg)",
               border: "none",
               borderRadius: "0.375rem",
               cursor: "pointer",
@@ -462,9 +462,9 @@ export function ProjectsPage() {
             style={{
               padding: "1rem",
               marginBottom: "1rem",
-              border: "1px solid #e5e7eb",
+              border: "1px solid var(--color-border)",
               borderRadius: "0.5rem",
-              backgroundColor: "#f9fafb",
+              backgroundColor: "var(--color-bg-surface-alt)",
             }}
           >
             <input
@@ -478,8 +478,10 @@ export function ProjectsPage() {
                 width: "100%",
                 padding: "0.5rem",
                 marginBottom: "0.5rem",
-                border: "1px solid #d1d5db",
+                border: "1px solid var(--color-border-strong)",
                 borderRadius: "0.375rem",
+                backgroundColor: "var(--color-bg-surface)",
+                color: "var(--color-text)",
               }}
             />
             <textarea
@@ -492,10 +494,12 @@ export function ProjectsPage() {
                 width: "100%",
                 padding: "0.5rem",
                 marginBottom: "0.5rem",
-                border: "1px solid #d1d5db",
+                border: "1px solid var(--color-border-strong)",
                 borderRadius: "0.375rem",
                 minHeight: "60px",
                 resize: "vertical",
+                backgroundColor: "var(--color-bg-surface)",
+                color: "var(--color-text)",
               }}
             />
             <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -503,8 +507,8 @@ export function ProjectsPage() {
                 onClick={handleSaveProject}
                 style={{
                   padding: "0.375rem 0.75rem",
-                  backgroundColor: "#10b981",
-                  color: "white",
+                  backgroundColor: "var(--color-btn-success)",
+                  color: "var(--color-btn-success-fg)",
                   border: "none",
                   borderRadius: "0.375rem",
                   cursor: "pointer",
@@ -517,8 +521,8 @@ export function ProjectsPage() {
                 onClick={cancelEdit}
                 style={{
                   padding: "0.375rem 0.75rem",
-                  backgroundColor: "#6b7280",
-                  color: "white",
+                  backgroundColor: "var(--color-btn-secondary)",
+                  color: "var(--color-btn-secondary-fg)",
                   border: "none",
                   borderRadius: "0.375rem",
                   cursor: "pointer",
@@ -538,21 +542,21 @@ export function ProjectsPage() {
             <div
               style={{
                 padding: "2rem",
-                border: "2px dashed #d1d5db",
+                border: "2px dashed var(--color-border-strong)",
                 borderRadius: "0.5rem",
                 textAlign: "center",
-                backgroundColor: "#f9fafb",
+                backgroundColor: "var(--color-bg-surface-alt)",
               }}
             >
-              <p style={{ margin: "0 0 1rem 0", color: "#6b7280" }}>
+              <p style={{ margin: "0 0 1rem 0", color: "var(--color-text-secondary)" }}>
                 No projects available yet.
               </p>
               <button
                 onClick={handleInitializeMockData}
                 style={{
                   padding: "0.75rem 1.5rem",
-                  backgroundColor: "#3b82f6",
-                  color: "white",
+                  backgroundColor: "var(--color-btn-primary)",
+                  color: "var(--color-btn-primary-fg)",
                   border: "none",
                   borderRadius: "0.375rem",
                   cursor: "pointer",
@@ -571,13 +575,14 @@ export function ProjectsPage() {
                 type="button"
                 style={{
                   padding: "1rem",
-                  border: "1px solid #e5e7eb",
+                  border: "1px solid var(--color-border)",
                   borderRadius: "0.5rem",
                   cursor: "pointer",
                   backgroundColor:
-                    selectedProject?.id === project.id ? "#eff6ff" : "white",
+                    selectedProject?.id === project.id ? "var(--color-bg-selected)" : "var(--color-bg-surface)",
                   borderColor:
-                    selectedProject?.id === project.id ? "#3b82f6" : "#e5e7eb",
+                    selectedProject?.id === project.id ? "var(--color-link)" : "var(--color-border)",
+                  color: "var(--color-text)",
                   textAlign: "left",
                   width: "100%",
                 }}
@@ -589,7 +594,7 @@ export function ProjectsPage() {
                   style={{
                     margin: 0,
                     fontSize: "0.875rem",
-                    color: "#6b7280",
+                    color: "var(--color-text-secondary)",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
@@ -601,7 +606,7 @@ export function ProjectsPage() {
                   style={{
                     margin: "0.5rem 0 0 0",
                     fontSize: "0.75rem",
-                    color: "#9ca3af",
+                    color: "var(--color-text-muted)",
                   }}
                 >
                   {project.tasks.length} task(s) {"·"}{" "}
@@ -629,9 +634,9 @@ export function ProjectsPage() {
                 <div
                   style={{
                     padding: "1.5rem",
-                    border: "1px solid #e5e7eb",
+                    border: "1px solid var(--color-border)",
                     borderRadius: "0.5rem",
-                    backgroundColor: "#f9fafb",
+                    backgroundColor: "var(--color-bg-surface-alt)",
                   }}
                 >
                   <input
@@ -645,10 +650,12 @@ export function ProjectsPage() {
                       width: "100%",
                       padding: "0.75rem",
                       marginBottom: "1rem",
-                      border: "1px solid #d1d5db",
+                      border: "1px solid var(--color-border-strong)",
                       borderRadius: "0.375rem",
                       fontSize: "1.25rem",
                       fontWeight: "600",
+                      backgroundColor: "var(--color-bg-surface)",
+                      color: "var(--color-text)",
                     }}
                   />
                   <textarea
@@ -661,10 +668,12 @@ export function ProjectsPage() {
                       width: "100%",
                       padding: "0.75rem",
                       marginBottom: "1rem",
-                      border: "1px solid #d1d5db",
+                      border: "1px solid var(--color-border-strong)",
                       borderRadius: "0.375rem",
                       minHeight: "100px",
                       resize: "vertical",
+                      backgroundColor: "var(--color-bg-surface)",
+                      color: "var(--color-text)",
                     }}
                   />
                   <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -672,8 +681,8 @@ export function ProjectsPage() {
                       onClick={handleEditProject}
                       style={{
                         padding: "0.5rem 1rem",
-                        backgroundColor: "#10b981",
-                        color: "white",
+                        backgroundColor: "var(--color-btn-success)",
+                        color: "var(--color-btn-success-fg)",
                         border: "none",
                         borderRadius: "0.375rem",
                         cursor: "pointer",
@@ -685,8 +694,8 @@ export function ProjectsPage() {
                       onClick={cancelEdit}
                       style={{
                         padding: "0.5rem 1rem",
-                        backgroundColor: "#6b7280",
-                        color: "white",
+                        backgroundColor: "var(--color-btn-secondary)",
+                        color: "var(--color-btn-secondary-fg)",
                         border: "none",
                         borderRadius: "0.375rem",
                         cursor: "pointer",
@@ -710,7 +719,7 @@ export function ProjectsPage() {
                       <h1 style={{ margin: "0 0 0.5rem 0" }}>
                         {selectedProject.name}
                       </h1>
-                      <p style={{ margin: 0, color: "#6b7280" }}>
+                      <p style={{ margin: 0, color: "var(--color-text-secondary)" }}>
                         {selectedProject.description || "No description"}
                       </p>
                     </div>
@@ -719,8 +728,8 @@ export function ProjectsPage() {
                         onClick={startEdit}
                         style={{
                           padding: "0.5rem 1rem",
-                          backgroundColor: "#3b82f6",
-                          color: "white",
+                          backgroundColor: "var(--color-btn-primary)",
+                          color: "var(--color-btn-primary-fg)",
                           border: "none",
                           borderRadius: "0.375rem",
                           cursor: "pointer",
@@ -732,8 +741,8 @@ export function ProjectsPage() {
                         onClick={handleOpenAssignments}
                         style={{
                           padding: "0.5rem 1rem",
-                          backgroundColor: "#0ea5e9",
-                          color: "white",
+                          backgroundColor: "var(--color-btn-info)",
+                          color: "var(--color-btn-info-fg)",
                           border: "none",
                           borderRadius: "0.375rem",
                           cursor: "pointer",
@@ -745,8 +754,8 @@ export function ProjectsPage() {
                         onClick={() => handleDeleteProject(selectedProject.id)}
                         style={{
                           padding: "0.5rem 1rem",
-                          backgroundColor: "#ef4444",
-                          color: "white",
+                          backgroundColor: "var(--color-btn-danger)",
+                          color: "var(--color-btn-danger-fg)",
                           border: "none",
                           borderRadius: "0.375rem",
                           cursor: "pointer",
@@ -759,7 +768,7 @@ export function ProjectsPage() {
 
                   <div
                     style={{
-                      borderTop: "1px solid #e5e7eb",
+                      borderTop: "1px solid var(--color-border)",
                       paddingTop: "1.5rem",
                     }}
                   >
@@ -778,8 +787,8 @@ export function ProjectsPage() {
                         onClick={() => handleAddTask(selectedProject.id)}
                         style={{
                           padding: "0.5rem 1rem",
-                          backgroundColor: "#10b981",
-                          color: "white",
+                          backgroundColor: "var(--color-btn-success)",
+                          color: "var(--color-btn-success-fg)",
                           border: "none",
                           borderRadius: "0.375rem",
                           cursor: "pointer",
@@ -791,7 +800,7 @@ export function ProjectsPage() {
                     </div>
 
                     {selectedProject.tasks.length === 0 ? (
-                      <p style={{ color: "#9ca3af", fontStyle: "italic" }}>
+                      <p style={{ color: "var(--color-text-muted)", fontStyle: "italic" }}>
                         No tasks yet.
                       </p>
                     ) : (
@@ -820,12 +829,13 @@ export function ProjectsPage() {
                               border: "1px solid",
                               borderColor:
                                 dragOverTaskId === task.id
-                                  ? "#0ea5e9"
-                                  : "#e5e7eb",
+                                  ? "var(--color-drag-over)"
+                                  : "var(--color-border)",
                               borderRadius: "0.5rem",
                               backgroundColor: task.completed
-                                ? "#f0fdf4"
-                                : "white",
+                                ? "var(--color-bg-completed)"
+                                : "var(--color-bg-surface)",
+                              color: "var(--color-text)",
                               textAlign: "left",
                             }}
                           >
@@ -856,7 +866,7 @@ export function ProjectsPage() {
                                       ? "line-through"
                                       : "none",
                                     color: task.completed
-                                      ? "#9ca3af"
+                                      ? "var(--color-text-muted)"
                                       : "inherit",
                                   }}
                                 >
@@ -867,7 +877,7 @@ export function ProjectsPage() {
                                     style={{
                                       margin: 0,
                                       fontSize: "0.875rem",
-                                      color: "#6b7280",
+                                      color: "var(--color-text-secondary)",
                                     }}
                                   >
                                     {task.description}
@@ -878,7 +888,7 @@ export function ProjectsPage() {
                                     <div
                                       style={{
                                         fontSize: "0.75rem",
-                                        color: "#4b5563",
+                                        color: "var(--color-text-secondary)",
                                         marginBottom: "0.25rem",
                                       }}
                                     >
@@ -902,10 +912,11 @@ export function ProjectsPage() {
                                             )
                                           }
                                           style={{
-                                            border: "1px solid #d1d5db",
+                                            border: "1px solid var(--color-border-strong)",
                                             borderRadius: "999px",
                                             padding: "0.2rem 0.5rem",
-                                            backgroundColor: "white",
+                                            backgroundColor: "var(--color-bg-surface)",
+                                            color: "var(--color-text)",
                                             fontSize: "0.75rem",
                                             cursor: "pointer",
                                           }}
@@ -925,8 +936,8 @@ export function ProjectsPage() {
                                 }
                                 style={{
                                   padding: "0.25rem 0.5rem",
-                                  backgroundColor: "#fee2e2",
-                                  color: "#dc2626",
+                                  backgroundColor: "var(--color-btn-danger-subtle-bg)",
+                                  color: "var(--color-btn-danger-subtle-fg)",
                                   border: "none",
                                   borderRadius: "0.375rem",
                                   cursor: "pointer",
@@ -951,7 +962,7 @@ export function ProjectsPage() {
                 alignItems: "center",
                 justifyContent: "center",
                 height: "100%",
-                color: "#9ca3af",
+                color: "var(--color-text-muted)",
               }}
             >
               <p>
@@ -965,10 +976,10 @@ export function ProjectsPage() {
           <div
             style={{
               width: "360px",
-              border: "1px solid #e5e7eb",
+              border: "1px solid var(--color-border)",
               borderRadius: "0.75rem",
-              backgroundColor: "white",
-              boxShadow: "0 12px 24px rgba(15, 23, 42, 0.08)",
+              backgroundColor: "var(--color-bg-surface)",
+              boxShadow: "var(--shadow-panel)",
               display: "flex",
               flexDirection: "column",
               alignSelf: "stretch",
@@ -979,7 +990,7 @@ export function ProjectsPage() {
             <div
               style={{
                 padding: "1rem 1.25rem",
-                borderBottom: "1px solid #e5e7eb",
+                borderBottom: "1px solid var(--color-border)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
@@ -993,8 +1004,9 @@ export function ProjectsPage() {
                 style={{
                   padding: "0.4rem 0.6rem",
                   borderRadius: "0.375rem",
-                  border: "1px solid #d1d5db",
-                  backgroundColor: "white",
+                  border: "1px solid var(--color-btn-close-border)",
+                  backgroundColor: "var(--color-btn-close-bg)",
+                  color: "var(--color-text)",
                   cursor: "pointer",
                 }}
               >

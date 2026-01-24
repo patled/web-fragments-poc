@@ -74,8 +74,9 @@ export function AssignmentsFragmentPage() {
             style={{
               padding: "0.5rem 0.75rem",
               borderRadius: "0.375rem",
-              border: "1px solid #d1d5db",
-              backgroundColor: "white",
+              border: "1px solid var(--color-border-strong)",
+              backgroundColor: "var(--color-btn-close-bg)",
+              color: "var(--color-text)",
               cursor: "pointer",
             }}
           >
@@ -83,7 +84,7 @@ export function AssignmentsFragmentPage() {
           </button>
           <div>
             <h1 style={{ margin: 0 }}>Assignments in Fragment</h1>
-            <p style={{ margin: "0.25rem 0 0 0", color: "#6b7280" }}>
+            <p style={{ margin: "0.25rem 0 0 0", color: "var(--color-text-secondary)" }}>
               Project assignments are maintained exclusively in the fragment.
             </p>
           </div>
@@ -96,7 +97,7 @@ export function AssignmentsFragmentPage() {
           fragment-id={ASSIGNMENTS_FRAGMENT_ID}
         ></web-fragment>
       ) : (
-        <div style={{ color: "#9ca3af" }}>
+        <div style={{ color: "var(--color-text-muted)" }}>
           Project not found. Please return to the list.
         </div>
       )}

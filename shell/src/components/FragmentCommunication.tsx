@@ -103,9 +103,9 @@ export function FragmentCommunication({
       style={{
         marginBottom: "2rem",
         padding: "1.5rem",
-        border: "1px solid #e5e7eb",
+        border: "1px solid var(--color-border)",
         borderRadius: "8px",
-        backgroundColor: "#f9fafb",
+        backgroundColor: "var(--color-bg-surface-alt)",
       }}
     >
       <h2 style={{ marginBottom: "1rem", fontSize: "1.25rem" }}>
@@ -120,9 +120,11 @@ export function FragmentCommunication({
           style={{
             flex: 1,
             padding: "0.5rem",
-            border: "1px solid #d1d5db",
+            border: "1px solid var(--color-border-strong)",
             borderRadius: "4px",
             fontSize: "0.875rem",
+            backgroundColor: "var(--color-bg-surface)",
+            color: "var(--color-text)",
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
@@ -135,8 +137,8 @@ export function FragmentCommunication({
           disabled={!shellData.trim() || !fragmentId}
           style={{
             padding: "0.5rem 1rem",
-            backgroundColor: "#3b82f6",
-            color: "white",
+            backgroundColor: "var(--color-btn-primary)",
+            color: "var(--color-btn-primary-fg)",
             border: "none",
             borderRadius: "4px",
             cursor:
@@ -151,14 +153,14 @@ export function FragmentCommunication({
         <div
           style={{
             padding: "0.75rem",
-            backgroundColor: "#dbeafe",
-            border: "1px solid #93c5fd",
+            backgroundColor: "var(--color-info-bg)",
+            border: "1px solid var(--color-info-border)",
             borderRadius: "4px",
             marginTop: "1rem",
           }}
         >
           <strong>Received from Fragment:</strong>
-          <div style={{ marginTop: "0.5rem", color: "#1e40af" }}>
+          <div style={{ marginTop: "0.5rem", color: "var(--color-info-text)" }}>
             {receivedData}
           </div>
         </div>

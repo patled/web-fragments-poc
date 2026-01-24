@@ -1,0 +1,79 @@
+/* Light mode (default) */
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+  --color-bg-page: #ffffff;
+  --color-bg-nav: #f9fafb;
+  --color-bg-surface: #ffffff;
+  --color-bg-surface-alt: #f9fafb;
+  --color-bg-selected: #eff6ff;
+  --color-bg-completed: #f0fdf4;
+  --color-border: #e5e7eb;
+  --color-border-strong: #d1d5db;
+  --color-text: #111827;
+  --color-text-secondary: #6b7280;
+  --color-text-muted: #9ca3af;
+  --color-link: #3b82f6;
+  --color-link-active: #3b82f6;
+  --color-btn-primary: #3b82f6;
+  --color-btn-primary-fg: #fff;
+  --color-btn-secondary: #6b7280;
+  --color-btn-secondary-fg: #fff;
+  --color-btn-success: #10b981;
+  --color-btn-success-fg: #fff;
+  --color-btn-info: #0ea5e9;
+  --color-btn-info-fg: #fff;
+  --color-btn-danger: #ef4444;
+  --color-btn-danger-fg: #fff;
+  --color-btn-danger-subtle-bg: #fee2e2;
+  --color-btn-danger-subtle-fg: #dc2626;
+  --color-btn-close-bg: #ffffff;
+  --color-btn-close-border: #d1d5db;
+  --color-drag-over: #0ea5e9;
+  --color-info-bg: #dbeafe;
+  --color-info-border: #93c5fd;
+  --color-info-text: #1e40af;
+  --shadow-panel: 0 12px 24px rgba(15, 23, 42, 0.08);
+}
+
+/* Dark mode */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg-page: #0f172a;
+  --color-bg-nav: #1e293b;
+  --color-bg-surface: #1e293b;
+  --color-bg-surface-alt: #334155;
+  --color-bg-selected: #1e3a5f;
+  --color-bg-completed: #14532d;
+  --color-border: #334155;
+  --color-border-strong: #475569;
+  --color-text: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-link: #60a5fa;
+  --color-link-active: #93c5fd;
+  --color-btn-primary: #3b82f6;
+  --color-btn-primary-fg: #fff;
+  --color-btn-secondary: #64748b;
+  --color-btn-secondary-fg: #fff;
+  --color-btn-success: #10b981;
+  --color-btn-success-fg: #fff;
+  --color-btn-info: #0ea5e9;
+  --color-btn-info-fg: #fff;
+  --color-btn-danger: #ef4444;
+  --color-btn-danger-fg: #fff;
+  --color-btn-danger-subtle-bg: #7f1d1d;
+  --color-btn-danger-subtle-fg: #fca5a5;
+  --color-btn-close-bg: #1e293b;
+  --color-btn-close-border: #475569;
+  --color-drag-over: #38bdf8;
+  --color-info-bg: #1e3a5f;
+  --color-info-border: #3b82f6;
+  --color-info-text: #93c5fd;
+  --shadow-panel: 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+body {
+  background: var(--color-bg-page);
+  color: var(--color-text);
+}
