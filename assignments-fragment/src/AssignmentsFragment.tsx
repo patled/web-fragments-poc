@@ -21,7 +21,7 @@ interface DragStaffPayload {
 
 const ASSIGNMENTS_CHANNEL = "project-assignments-channel";
 const ASSIGNMENTS_FRAGMENT_ID = "project-assignments";
-const STANDALONE_TIMEOUT_MS = 1000; // Timeout nach 1 Sekunde, um auf Shell-Daten zu warten
+const STANDALONE_TIMEOUT_MS = 1000; // Timeout after 1s to wait for shell data
 
 export default function AssignmentsFragment() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -33,11 +33,11 @@ export default function AssignmentsFragment() {
   const standaloneTimeoutRef = useRef<number | null>(null);
   const dataReceivedRef = useRef(false);
 
-  // Prüfe, ob Standalone-Modus über URL-Parameter aktiviert ist
+  // Check if standalone mode is enabled via URL parameter
   const forceStandalone = searchParams.get("standalone") === "true";
 
   useEffect(() => {
-    // Wenn Standalone-Modus erzwungen wird, verwende sofort Mock-Daten
+    // When standalone mode is forced, use mock data immediately
     if (forceStandalone) {
       setIsStandalone(true);
       const mockProject = getMockProject(projectId);
@@ -96,12 +96,11 @@ export default function AssignmentsFragment() {
         timestamp: new Date().toISOString(),
       });
 
-      // Setze Timeout: Wenn nach einer Sekunde keine Daten gekommen sind,
-      // verwende Mock-Daten für den Standalone-Modus
+      // Set timeout: if no data received after 1s, use mock data for standalone mode
       standaloneTimeoutRef.current = window.setTimeout(() => {
         if (!dataReceivedRef.current) {
           console.log(
-            "[AssignmentsFragment] Keine Daten von Shell erhalten, verwende Mock-Daten für Standalone-Modus",
+            "[AssignmentsFragment] No data received from shell, using mock data for standalone mode",
           );
           setIsStandalone(true);
           const mockProject = getMockProject(projectId);
@@ -153,7 +152,7 @@ export default function AssignmentsFragment() {
     });
   };
 
-  // Im Standalone-Modus: Wenn kein projectId vorhanden ist, verwende das erste Mock-Projekt
+  // In standalone mode: if no projectId, use the first mock project
   useEffect(() => {
     if (isStandalone && !projectId && !project) {
       const mockProject = getMockProject("1");
