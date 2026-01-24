@@ -54,7 +54,7 @@ export function Navigation() {
             fontWeight: isProjectsRoute ? "600" : "400",
           }}
         >
-          Projekte
+          Projects
         </Link>
       </div>
     </nav>
