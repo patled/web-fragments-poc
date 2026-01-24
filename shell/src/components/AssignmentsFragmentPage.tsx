@@ -79,12 +79,12 @@ export function AssignmentsFragmentPage() {
               cursor: "pointer",
             }}
           >
-            ← Zurück
+            ← Back
           </button>
           <div>
-            <h1 style={{ margin: 0 }}>Vergabe im Fragment</h1>
+            <h1 style={{ margin: 0 }}>Assignments in Fragment</h1>
             <p style={{ margin: "0.25rem 0 0 0", color: "#6b7280" }}>
-              Projektzuweisungen werden ausschließlich im Fragment gepflegt.
+              Project assignments are maintained exclusively in the fragment.
             </p>
           </div>
         </div>
@@ -97,7 +97,7 @@ export function AssignmentsFragmentPage() {
         ></web-fragment>
       ) : (
         <div style={{ color: "#9ca3af" }}>
-          Kein Projekt gefunden. Bitte zurück zur Liste wechseln.
+          Project not found. Please return to the list.
         </div>
       )}
     </>
