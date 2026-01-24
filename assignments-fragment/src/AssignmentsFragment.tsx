@@ -198,16 +198,16 @@ export default function AssignmentsFragment() {
         {isStandalone && (
           <Typography
             variant="caption"
-            color="info.main"
             sx={{
               p: 1,
               bgcolor: "info.light",
+              color: "info.dark",
               borderRadius: 1,
               border: "1px solid",
               borderColor: "info.main",
             }}
           >
-            🧪 Standalone-Modus: Mock-Daten werden verwendet
+            🧪 Standalone mode: Mock data is being used
           </Typography>
         )}
         <Stack spacing={0.5}>
