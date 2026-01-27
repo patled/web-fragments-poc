@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const SHOWCASE_FRAGMENT_ID = "showcase-lab";
 const SHOWCASE_FRAGMENT_SRC = "/showcase/";
@@ -12,6 +12,58 @@ const accentColorMap: Record<string, string> = {
   "Sunset Amber": "#ff9a3c",
   "Orchid Glow": "#b86bff",
 };
+
+// Helper functions for density and motion styling
+function getDensityStyles(densityId?: string) {
+  switch (densityId) {
+    case "cozy":
+      return {
+        padding: "1.5rem",
+        gap: "1.25rem",
+        fontSize: "1rem",
+        sectionMargin: "2rem",
+        statusPadding: "0.85rem 1rem",
+        statusFontSize: "0.95rem",
+        h1FontSize: "1.75rem",
+        h2FontSize: "1.3rem",
+      };
+    case "compact":
+      return {
+        padding: "0.75rem",
+        gap: "0.75rem",
+        fontSize: "0.875rem",
+        sectionMargin: "1.25rem",
+        statusPadding: "0.5rem 0.7rem",
+        statusFontSize: "0.8rem",
+        h1FontSize: "1.5rem",
+        h2FontSize: "1rem",
+      };
+    case "balanced":
+    default:
+      return {
+        padding: "1rem",
+        gap: "1rem",
+        fontSize: "0.9rem",
+        sectionMargin: "1.5rem",
+        statusPadding: "0.6rem 0.85rem",
+        statusFontSize: "0.9rem",
+        h1FontSize: "1.625rem",
+        h2FontSize: "1.125rem",
+      };
+  }
+}
+
+function getMotionTransition(motionId?: string) {
+  switch (motionId) {
+    case "ambient":
+      return "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)";
+    case "snappy":
+      return "all 0.15s cubic-bezier(0.4, 0, 0.2, 1)";
+    case "still":
+    default:
+      return "none";
+  }
+}
 
 interface ShowcaseMessage {
   type: string;
@@ -122,24 +174,55 @@ export function ShowcaseFragmentPage() {
       ? accentColorMap[settings.accent]
       : accentColorMap["Electric Blue"];
 
+  // Get density and motion styles
+  const densityStyles = useMemo(
+    () => getDensityStyles(settings?.density),
+    [settings?.density],
+  );
+  const motionTransition = useMemo(
+    () => getMotionTransition(settings?.motion),
+    [settings?.motion],
+  );
+
   return (
     <>
-      <section style={{ marginBottom: "1.5rem" }}>
-        <h1 style={{ marginBottom: "0.5rem" }}>Showcase Fragment</h1>
-        <p style={{ maxWidth: "48rem", color: "var(--color-text-secondary)" }}>
+      <section
+        style={{
+          marginBottom: densityStyles.sectionMargin,
+          transition: motionTransition,
+        }}
+      >
+        <h1
+          style={{
+            marginBottom: "0.5rem",
+            fontSize: densityStyles.h1FontSize,
+            transition: motionTransition,
+          }}
+        >
+          Showcase Fragment
+        </h1>
+        <p
+          style={{
+            maxWidth: "48rem",
+            color: "var(--color-text-secondary)",
+            fontSize: densityStyles.fontSize,
+            transition: motionTransition,
+          }}
+        >
           This page renders the fragment at the top-level route so you can
           explore it full width.
         </p>
         {settings && (
           <div
             style={{
-              marginTop: "1rem",
-              padding: "0.6rem 0.85rem",
+              marginTop: densityStyles.gap,
+              padding: densityStyles.statusPadding,
               borderRadius: "0.6rem",
               border: `2px solid ${accentColor}`,
               color: "var(--color-text-secondary)",
               background: `linear-gradient(135deg, ${accentColor}15, ${accentColor}08)`,
-              transition: "all 0.3s ease",
+              fontSize: densityStyles.statusFontSize,
+              transition: motionTransition,
               display: "inline-block",
             }}
           >
@@ -160,12 +243,12 @@ export function ShowcaseFragmentPage() {
           position: "relative",
           minHeight: "400px",
           borderRadius: "0.75rem",
-          padding: settings ? "0.5rem" : "0",
+          padding: settings ? densityStyles.padding : "0",
           background: settings
             ? `linear-gradient(135deg, ${accentColor}10, ${accentColor}05)`
             : "transparent",
           border: settings ? `1px solid ${accentColor}30` : "none",
-          transition: "all 0.3s ease",
+          transition: motionTransition,
         }}
       >
         {fragmentAvailable === false && (

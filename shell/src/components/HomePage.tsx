@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 const SHOWCASE_FRAGMENT_ID = "showcase-lab";
@@ -13,6 +13,58 @@ const accentColorMap: Record<string, string> = {
   "Sunset Amber": "#ff9a3c",
   "Orchid Glow": "#b86bff",
 };
+
+// Helper functions for density and motion styling
+function getDensityStyles(densityId?: string) {
+  switch (densityId) {
+    case "cozy":
+      return {
+        padding: "1.5rem",
+        gap: "1.25rem",
+        fontSize: "1rem",
+        sectionMargin: "2rem",
+        statusPadding: "0.85rem 1rem",
+        statusFontSize: "0.95rem",
+        h1FontSize: "1.75rem",
+        h2FontSize: "1.3rem",
+      };
+    case "compact":
+      return {
+        padding: "0.75rem",
+        gap: "0.75rem",
+        fontSize: "0.875rem",
+        sectionMargin: "1.25rem",
+        statusPadding: "0.5rem 0.7rem",
+        statusFontSize: "0.8rem",
+        h1FontSize: "1.5rem",
+        h2FontSize: "1rem",
+      };
+    case "balanced":
+    default:
+      return {
+        padding: "1rem",
+        gap: "1rem",
+        fontSize: "0.9rem",
+        sectionMargin: "1.5rem",
+        statusPadding: "0.6rem 0.85rem",
+        statusFontSize: "0.9rem",
+        h1FontSize: "1.625rem",
+        h2FontSize: "1.125rem",
+      };
+  }
+}
+
+function getMotionTransition(motionId?: string) {
+  switch (motionId) {
+    case "ambient":
+      return "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)";
+    case "snappy":
+      return "all 0.15s cubic-bezier(0.4, 0, 0.2, 1)";
+    case "still":
+    default:
+      return "none";
+  }
+}
 
 interface ShowcaseMessage {
   type: string;
@@ -127,6 +179,16 @@ export function HomePage() {
       ? accentColorMap[settings.accent]
       : accentColorMap["Electric Blue"];
 
+  // Get density and motion styles
+  const densityStyles = useMemo(
+    () => getDensityStyles(settings?.density),
+    [settings?.density],
+  );
+  const motionTransition = useMemo(
+    () => getMotionTransition(settings?.motion),
+    [settings?.motion],
+  );
+
   let statusContent: JSX.Element | string | null =
     "Waiting for the fragment to send its first event...";
   // Avoid duplicate messaging: when fragment is unavailable, only show the large fallback block below.
@@ -154,22 +216,64 @@ export function HomePage() {
 
   return (
     <>
-      <section style={{ marginBottom: "2rem" }}>
-        <h1 style={{ marginBottom: "0.5rem" }}>Shell Host</h1>
-        <p style={{ maxWidth: "48rem", color: "var(--color-text-secondary)" }}>
+      <section
+        style={{
+          marginBottom: densityStyles.sectionMargin,
+          transition: motionTransition,
+        }}
+      >
+        <h1
+          style={{
+            marginBottom: "0.5rem",
+            fontSize: densityStyles.h1FontSize,
+            transition: motionTransition,
+          }}
+        >
+          Shell Host
+        </h1>
+        <p
+          style={{
+            maxWidth: "48rem",
+            color: "var(--color-text-secondary)",
+            fontSize: densityStyles.fontSize,
+            transition: motionTransition,
+          }}
+        >
           This host renders Web Fragments. Use the navigation above to open
           Projects and view assignments.
         </p>
       </section>
 
-      <section style={{ marginBottom: "1.25rem" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+      <section
+        style={{
+          marginBottom: densityStyles.sectionMargin,
+          transition: motionTransition,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: densityStyles.gap,
+            transition: motionTransition,
+          }}
+        >
           <div>
-            <h2 style={{ margin: 0 }}>Showcase Fragment (live)</h2>
+            <h2
+              style={{
+                margin: 0,
+                fontSize: densityStyles.h2FontSize,
+                transition: motionTransition,
+              }}
+            >
+              Showcase Fragment (live)
+            </h2>
             <p
               style={{
                 margin: "0.35rem 0 0",
                 color: "var(--color-text-secondary)",
+                fontSize: densityStyles.fontSize,
+                transition: motionTransition,
               }}
             >
               Interact with the fragment below. It sends events back to this
@@ -180,12 +284,14 @@ export function HomePage() {
             to="/showcase"
             style={{
               marginLeft: "auto",
-              padding: "0.45rem 0.75rem",
+              padding: densityStyles.statusPadding,
               borderRadius: "0.5rem",
               border: "1px solid var(--color-border-strong)",
               textDecoration: "none",
               color: "var(--color-text)",
               background: "var(--color-bg-surface)",
+              fontSize: densityStyles.fontSize,
+              transition: motionTransition,
             }}
           >
             Open full page →
@@ -194,13 +300,14 @@ export function HomePage() {
         {statusContent ? (
           <div
             style={{
-              marginTop: "0.75rem",
-              padding: "0.6rem 0.85rem",
+              marginTop: densityStyles.gap,
+              padding: densityStyles.statusPadding,
               borderRadius: "0.6rem",
               border: `2px solid ${accentColor}`,
               color: "var(--color-text-secondary)",
               background: `linear-gradient(135deg, ${accentColor}15, ${accentColor}08)`,
-              transition: "all 0.3s ease",
+              fontSize: densityStyles.statusFontSize,
+              transition: motionTransition,
             }}
           >
             {statusContent}
@@ -212,12 +319,12 @@ export function HomePage() {
         style={{
           position: "relative",
           borderRadius: "0.75rem",
-          padding: settings ? "0.5rem" : "0",
+          padding: settings ? densityStyles.padding : "0",
           background: settings
             ? `linear-gradient(135deg, ${accentColor}10, ${accentColor}05)`
             : "transparent",
           border: settings ? `1px solid ${accentColor}30` : "none",
-          transition: "all 0.3s ease",
+          transition: motionTransition,
         }}
       >
         {fragmentAvailable === false && (
