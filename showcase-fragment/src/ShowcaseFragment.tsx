@@ -27,7 +27,6 @@ export function ShowcaseFragment() {
   const [densityId, setDensityId] = useState(densityOptions[1].id);
   const [motionId, setMotionId] = useState(motionOptions[0].id);
   const [counter, setCounter] = useState(6);
-  const [lastSentAt, setLastSentAt] = useState<string | null>(null);
   const [isStandalone, setIsStandalone] = useState(false);
   const channelRef = useRef<BroadcastChannel | null>(null);
 
@@ -76,22 +75,6 @@ export function ShowcaseFragment() {
       timestamp: new Date().toISOString(),
     });
   }, [accent.label, counter, densityId, motionId]);
-
-  const sendPulse = () => {
-    const timestamp = new Date().toISOString();
-    channelRef.current?.postMessage({
-      type: "showcase-pulse",
-      fragmentId: FRAGMENT_ID,
-      payload: {
-        accent: accent.label,
-        density: densityId,
-        motion: motionId,
-        counter,
-      },
-      timestamp,
-    });
-    setLastSentAt(timestamp);
-  };
 
   return (
     <div
@@ -274,38 +257,6 @@ export function ShowcaseFragment() {
             </div>
           </div>
         </div>
-
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.75rem",
-            marginTop: "1rem",
-            flexWrap: "wrap",
-          }}
-        >
-          <button
-            type="button"
-            onClick={sendPulse}
-            style={{
-              padding: "0.5rem 0.95rem",
-              borderRadius: "0.65rem",
-              border: "1px solid rgba(148, 163, 184, 0.4)",
-              backgroundColor: accent.color,
-              color: "white",
-              fontWeight: 600,
-              cursor: "pointer",
-              boxShadow: "0 10px 25px rgba(79, 124, 255, 0.25)",
-            }}
-          >
-            Pulse the Shell
-          </button>
-          <span style={{ fontSize: "0.85rem", color: "#64748b" }}>
-            {lastSentAt
-              ? `Last pulse: ${new Date(lastSentAt).toLocaleTimeString()}`
-              : "No pulse sent yet."}
-          </span>
-        </div>
       </section>
 
       <section style={{ marginTop: "1.75rem" }}>
@@ -314,10 +265,13 @@ export function ShowcaseFragment() {
         </h2>
         <ol style={{ margin: 0, paddingLeft: "1.1rem", color: "#475569" }}>
           <li>
-            Change the accent palette and note that the shell stays untouched.
+            Change any setting (accent palette, density, motion, or counter) and
+            watch how changes are automatically broadcast to the shell.
           </li>
-          <li>Pulse the shell to send a cross-app event.</li>
-          <li>Adjust density + motion to simulate design-system settings.</li>
+          <li>
+            Check the HomePage in the shell to see the live event updates
+            displayed in real time.
+          </li>
         </ol>
       </section>
     </div>
