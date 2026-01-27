@@ -4,8 +4,6 @@ import { useTheme } from "../ThemeContext";
 export function Navigation() {
   const location = useLocation();
   const { mode, toggleTheme } = useTheme();
-  const isFirstRoute = location.pathname.startsWith("/first");
-  const isSecondRoute = location.pathname.startsWith("/second");
   const isProjectsRoute = location.pathname.startsWith("/projects");
 
   return (
@@ -27,26 +25,6 @@ export function Navigation() {
           }}
         >
           Home
-        </Link>
-        <Link
-          to="/first/"
-          style={{
-            textDecoration: "none",
-            color: isFirstRoute ? "var(--color-link-active)" : "var(--color-text-secondary)",
-            fontWeight: isFirstRoute ? "600" : "400",
-          }}
-        >
-          Open the first fragment
-        </Link>
-        <Link
-          to="/second/"
-          style={{
-            textDecoration: "none",
-            color: isSecondRoute ? "var(--color-link-active)" : "var(--color-text-secondary)",
-            fontWeight: isSecondRoute ? "600" : "400",
-          }}
-        >
-          Open the second fragment
         </Link>
         <Link
           to="/projects"

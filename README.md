@@ -24,25 +24,12 @@ web-fragments-poc/
 │   │   ├── vite-env.d.ts     # TypeScript definitions for <web-fragment>
 │   │   ├── components/       # Shell components
 │   │   │   ├── HomePage.tsx
-│   │   │   ├── FragmentPage.tsx
 │   │   │   ├── ProjectsPage.tsx
 │   │   │   ├── AssignmentsFragmentPage.tsx
-│   │   │   ├── FragmentCommunication.tsx
 │   │   │   └── Navigation.tsx
 │   │   └── data/            # Local storage utilities
 │   │       └── projectsStorage.ts
 │   └── vite.config.ts        # Vite configuration with gateway middleware
-│
-├── fragments/                # Fragments application (hosts first and second fragments)
-│   ├── src/
-│   │   ├── FirstFragment.tsx  # MUI-based first fragment component
-│   │   ├── SecondFragment.tsx # MUI-based second fragment component
-│   │   ├── FirstFragmentRoutes.tsx
-│   │   ├── SecondFragmentRoutes.tsx
-│   │   ├── FragmentRouter.tsx
-│   │   ├── App.tsx           # Fragment app wrapper
-│   │   └── main.tsx          # Fragment entry point with MUI theme
-│   └── vite.config.ts        # Vite configuration with base path
 │
 └── assignments-fragment/     # Assignments fragment application
     ├── src/
@@ -65,17 +52,7 @@ The shell application is the host application that embeds fragments:
 - **Gateway**: Uses `FragmentGateway` as middleware to route requests to fragments
 - **Client**: Initializes `initializeWebFragments()` for client-side fragment management
 - **Routing**: Uses React Router for navigation between pages
-- **Pages**: Home, Projects, First Fragment, Second Fragment, Assignments
-
-### Fragments (Fragment Provider)
-
-The fragments application hosts multiple fragments:
-
-- **Port**: 5174
-- **Role**: Provides isolated fragments (first-example, second-example) with their own UI
-- **Base Path**: `/first/` - All assets are served under this path
-- **UI**: Uses Material-UI (MUI) for components
-- **Routing**: Supports both `/first/` and `/second/` routes via query parameter
+- **Pages**: Home, Projects (with embedded assignments fragment)
 
 ### Assignments Fragment
 
@@ -117,8 +94,8 @@ The fragment includes mock projects and staff members for standalone development
 
 The gateway is a middleware that:
 
-- Recognizes requests to fragment routes (`/first/`, `/first/:_*`)
-- Routes these requests to the corresponding fragment endpoint (`http://localhost:5174`)
+- Recognizes requests to fragment routes (`/assignments/`, `/projects/:_*/assignments/`)
+- Routes these requests to the assignments fragment endpoint (`http://localhost:5175`)
 - Proxies fragment assets (JS, CSS, etc.) through the gateway
 - Supports Server-Side Rendering (SSR) for fragments
 
@@ -129,15 +106,11 @@ The gateway is a middleware that:
 
 ## Installation
 
-1. **Install dependencies** (in all three directories):
+1. **Install dependencies** (in both directories):
 
 ```bash
 # Install shell
 cd shell
-yarn install
-
-# Install fragments
-cd ../fragments
 yarn install
 
 # Install assignments-fragment
@@ -147,18 +120,9 @@ yarn install
 
 ## Starting the Application
 
-The application consists of three separate dev servers that must run simultaneously:
+The application consists of two dev servers that must run simultaneously:
 
-### Terminal 1: Start Fragments Server
-
-```bash
-cd fragments
-yarn dev
-```
-
-The fragments server starts on **<http://localhost:5174>**
-
-### Terminal 2: Start Assignments Fragment Server
+### Terminal 1: Start Assignments Fragment Server
 
 ```bash
 cd assignments-fragment
@@ -167,7 +131,7 @@ yarn dev
 
 The assignments fragment server starts on **<http://localhost:5175>**
 
-### Terminal 3: Start Shell Host
+### Terminal 2: Start Shell Host
 
 ```bash
 cd shell
@@ -182,13 +146,9 @@ Open **<http://localhost:5173>** in your browser.
 
 **Available Routes:**
 - `/` - Home page
-- `/first/` - First fragment example
-- `/second/` - Second fragment example
 - `/projects` - Projects management page
 - `/projects/:projectId` - Project details with assignments
 - `/assignments/:projectId` - Assignments fragment for a specific project
-
-**Important**: Use paths with trailing slashes (e.g., `/first/`). Paths without trailing slashes will be automatically redirected.
 
 ## What is Demonstrated?
 
@@ -199,7 +159,7 @@ The project shows how multiple fragments are seamlessly integrated into the shel
 - The `<web-fragment>` custom element is used in the shell
 - Fragments run in isolated JavaScript contexts
 - Fragment assets are automatically loaded through the gateway
-- Three fragments: `first-example`, `second-example`, and `project-assignments`
+- One fragment: `project-assignments` (embedded in ProjectsPage)
 
 ### 2. Gateway Routing
 
@@ -208,7 +168,7 @@ The gateway middleware demonstrates:
 - Automatic routing of fragment requests
 - Proxying of fragment assets (JS, CSS, etc.)
 - Support for different request types (HTML, assets, etc.)
-- Multiple fragments from different endpoints
+- Fragment requests proxied to the assignments fragment endpoint
 
 ### 3. Framework Integration
 
@@ -225,7 +185,6 @@ The project demonstrates:
 
 - Communication between shell and fragments via events
 - BroadcastChannel API for cross-fragment communication
-- Fragment communication component for testing
 
 ### 5. Real-World Use Case
 
@@ -252,24 +211,15 @@ Fragments are registered in the gateway (`shell/vite.config.ts`):
 
 ```typescript
 gateway.registerFragment({
-  fragmentId: 'first-example',
-  piercingClassNames: [],
-  endpoint: 'http://localhost:5174',
-  routePatterns: ['/first/', '/first/:_*'],
-})
-
-gateway.registerFragment({
-  fragmentId: 'second-example',
-  piercingClassNames: [],
-  endpoint: 'http://localhost:5174',
-  routePatterns: ['/second/', '/second/:_*'],
-})
-
-gateway.registerFragment({
   fragmentId: 'project-assignments',
   piercingClassNames: [],
   endpoint: 'http://localhost:5175',
-  routePatterns: ['/assignments/', '/assignments/:_*'],
+  routePatterns: [
+    '/assignments/',
+    '/assignments/:_*',
+    '/projects/:_*/assignments/',
+    '/projects/:_*/assignments/:_*',
+  ],
 })
 ```
 
@@ -279,10 +229,10 @@ gateway.registerFragment({
 
 ### Fragment Element
 
-The fragment is embedded in the shell using a custom element:
+The fragment is embedded in the shell using a custom element (e.g. in ProjectsPage):
 
 ```tsx
-<web-fragment fragment-id="first-example"></web-fragment>
+<web-fragment fragment-id="project-assignments"></web-fragment>
 ```
 
 The element is automatically registered by `initializeWebFragments()`.
@@ -290,14 +240,6 @@ The element is automatically registered by `initializeWebFragments()`.
 ### Base Path Configuration
 
 Each fragment application uses a base path:
-
-**Fragments application** (`fragments/vite.config.ts`):
-```typescript
-export default defineConfig({
-  base: '/first/',
-  // ...
-})
-```
 
 **Assignments fragment** (`assignments-fragment/vite.config.ts`):
 ```typescript
@@ -316,27 +258,24 @@ This ensures that all assets are served under the correct path, which matches th
 Both applications support HMR:
 
 - Changes in the shell are automatically updated
-- Changes in the fragments are automatically updated
+- Changes in the assignments fragment are automatically updated
 - The gateway correctly proxies the updates
 
 ### Debugging
 
 - **Browser DevTools**: Open DevTools to see the fragment structure
 - **Shadow DOM**: Fragments are embedded in Shadow DOM
-- **JavaScript Contexts**: Each fragment has its own context (`wf:first-example`)
+- **JavaScript Contexts**: Each fragment has its own context (e.g. `wf:project-assignments`)
 
 ## Stopping the Application
 
-Stop all three dev servers with `Ctrl+C` in their respective terminals.
+Stop both dev servers with `Ctrl+C` in their respective terminals.
 
 Alternatively, the processes can be terminated:
 
 ```bash
 # Stop shell
 kill $(lsof -ti tcp:5173)
-
-# Stop fragments
-kill $(lsof -ti tcp:5174)
 
 # Stop assignments-fragment
 kill $(lsof -ti tcp:5175)

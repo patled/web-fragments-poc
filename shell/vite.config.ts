@@ -2,26 +2,10 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { FragmentGateway, getWebMiddleware } from 'web-fragments/gateway'
 
-const fragmentId = 'first-example'
-const secondFragmentId = 'second-example'
 const assignmentsFragmentId = 'project-assignments'
 const gateway = new FragmentGateway()
 const webFragmentsMiddleware = getWebMiddleware(gateway, { mode: 'development' })
 const skipHeaderName = 'x-wf-skip'
-
-gateway.registerFragment({
-  fragmentId,
-  piercingClassNames: [],
-  endpoint: 'http://localhost:5174',
-  routePatterns: ['/first/', '/first/:_*'],
-})
-
-gateway.registerFragment({
-  fragmentId: secondFragmentId,
-  piercingClassNames: [],
-  endpoint: 'http://localhost:5174',
-  routePatterns: ['/second/', '/second/:_*'],
-})
 
 gateway.registerFragment({
   fragmentId: assignmentsFragmentId,
@@ -66,10 +50,7 @@ export default defineConfig({
           const isProjectsAssignments =
             /^\/projects\/[^/]+\/assignments(\/|$)/.test(url.pathname)
           const isFragmentRoute =
-            url.pathname.startsWith('/first/') ||
-            url.pathname.startsWith('/second/') ||
-            url.pathname.startsWith('/assignments/') ||
-            isProjectsAssignments
+            url.pathname.startsWith('/assignments/') || isProjectsAssignments
           
           // Check if it's a direct browser navigation
           // The <web-fragment> element sends requests in an IFrame
@@ -105,11 +86,8 @@ export default defineConfig({
             init.duplex = 'half'
           }
 
-          // Transform /second/ to /first/ for asset requests, since base: '/first/' is set
-          // For HTML requests, add a query parameter so the app renders the correct fragment
           // Transform /projects/ID/assignments to /assignments/ID for the assignments fragment
           let transformedPath = url.pathname
-          const isSecondFragment = matchedFragment.fragmentId === secondFragmentId && url.pathname.startsWith('/second/')
           const projectsAssignmentsMatch = url.pathname.match(
             /^\/projects\/([^/]+)\/assignments\/?(.*)$/,
           )
@@ -117,22 +95,13 @@ export default defineConfig({
             matchedFragment.fragmentId === assignmentsFragmentId &&
             projectsAssignmentsMatch
 
-          if (isSecondFragment) {
-            // Transform path from /second/ to /first/ for assets
-            transformedPath = url.pathname.replace(/^\/second\//, '/first/')
-            // Add query parameter for HTML requests
-            if (!url.pathname.includes('.')) {
-              const searchParams = new URLSearchParams(url.search)
-              searchParams.set('_fragment', 'second')
-              url.search = '?' + searchParams.toString()
-            }
-          } else if (isProjectsAssignmentsPath && projectsAssignmentsMatch) {
+          if (isProjectsAssignmentsPath && projectsAssignmentsMatch) {
             transformedPath = projectsAssignmentsMatch[2]
               ? `/assignments/${projectsAssignmentsMatch[1]}/${projectsAssignmentsMatch[2]}`
               : `/assignments/${projectsAssignmentsMatch[1]}`
           }
 
-          // Transform URL to fragments endpoint
+          // Transform URL to fragment endpoint
           const fragmentEndpoint = matchedFragment.endpoint
           const fragmentUrl = new URL(transformedPath + url.search, fragmentEndpoint)
           const request = new Request(fragmentUrl, init)

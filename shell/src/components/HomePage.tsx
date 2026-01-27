@@ -4,13 +4,10 @@ export function HomePage() {
       <section style={{ marginBottom: "2rem" }}>
         <h1 style={{ marginBottom: "0.5rem" }}>Shell Host</h1>
         <p style={{ maxWidth: "48rem", color: "var(--color-text-secondary)" }}>
-          This host renders Web Fragments provided by the fragments app. Navigate
-          to the fragment routes to see them mounted.
+          This host renders Web Fragments. Use the navigation above to open
+          Projects and view assignments.
         </p>
       </section>
-      <p style={{ color: "var(--color-text-secondary)" }}>
-        Use the navigation above to switch between fragments.
-      </p>
     </>
   );
 }
