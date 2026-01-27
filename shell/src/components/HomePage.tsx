@@ -21,8 +21,6 @@ export function HomePage() {
   const [fragmentAvailable, setFragmentAvailable] = useState<boolean | null>(
     null,
   );
-  const fragmentRef = useRef<HTMLElement | null>(null);
-  const checkTimeoutRef = useRef<number | null>(null);
   const fragmentElementRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -31,172 +29,72 @@ export function HomePage() {
       if (!event.data?.type) return;
       setLastMessage(event.data as ShowcaseMessage);
       // If we receive a message, the fragment is available
-      setFragmentAvailable((prev) => {
-        if (prev === null || prev === false) {
-          return true;
-        }
-        return prev;
-      });
+      setFragmentAvailable(true);
     };
     channel.addEventListener("message", handleMessage);
-
-    // Check if fragment becomes available after a delay
-    checkTimeoutRef.current = window.setTimeout(() => {
-      setFragmentAvailable((prev) => {
-        // If no message received after 2 seconds, assume fragment is not available
-        if (prev === null) {
-          return false;
-        }
-        return prev;
-      });
-    }, 2000);
 
     return () => {
       channel.removeEventListener("message", handleMessage);
       channel.close();
-      if (checkTimeoutRef.current) {
-        clearTimeout(checkTimeoutRef.current);
-      }
     };
   }, []);
 
   // Callback ref to set element when it's mounted
   const setFragmentRef = (element: HTMLElement | null) => {
     fragmentElementRef.current = element;
-    fragmentRef.current = element;
   };
 
   useEffect(() => {
-    let intervalId: number | null = null;
-    let observer: MutationObserver | null = null;
-    const iframeHandlers = new Map<
-      HTMLIFrameElement,
-      { load: () => void; error: () => void }
-    >();
+    let cancelled = false;
 
-    const checkFragmentLoaded = () => {
+    const healthCheck = async () => {
       try {
-        const fragmentElement = fragmentElementRef.current;
-        if (!fragmentElement) return false;
+        // Trigger gateway forwarding (this is NOT a browser navigation)
+        const response = await fetch(SHOWCASE_FRAGMENT_SRC, {
+          headers: {
+            accept: "text/html",
+            "x-web-fragment-id": SHOWCASE_FRAGMENT_ID,
+          },
+        });
 
-        // Check if fragment has shadow root (indicates it loaded)
-        if (fragmentElement.shadowRoot) {
-          setFragmentAvailable(true);
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error("[HomePage] Error checking fragment:", error);
-        return false;
+        if (cancelled) return;
+        setFragmentAvailable(response.ok);
+      } catch {
+        if (cancelled) return;
+        setFragmentAvailable(false);
       }
     };
 
-    const handleError = () => {
-      setFragmentAvailable(false);
-    };
-
-    const handleLoad = () => {
-      setFragmentAvailable(true);
-    };
-
-    const setupListeners = () => {
-      try {
-        const fragmentElement = fragmentElementRef.current;
-        if (!fragmentElement) return false;
-
-        // Check immediately
-        checkFragmentLoaded();
-
-        // Check periodically
-        if (intervalId) clearInterval(intervalId);
-        intervalId = window.setInterval(() => {
-          checkFragmentLoaded();
-        }, 500);
-
-        fragmentElement.addEventListener("error", handleError);
-        fragmentElement.addEventListener("load", handleLoad);
-
-        // Use MutationObserver to catch dynamically added iframes
-        observer = new MutationObserver(() => {
-          try {
-            const iframes = fragmentElement.querySelectorAll("iframe");
-            iframes.forEach((newIframe) => {
-              if (!iframeHandlers.has(newIframe)) {
-                const handlers = {
-                  load: handleLoad,
-                  error: handleError,
-                };
-                newIframe.addEventListener("load", handlers.load);
-                newIframe.addEventListener("error", handlers.error);
-                iframeHandlers.set(newIframe, handlers);
-              }
-            });
-          } catch (error) {
-            console.error("[HomePage] Error in MutationObserver:", error);
-          }
-        });
-
-        observer.observe(fragmentElement, { childList: true, subtree: true });
-
-        // Check for existing iframes
-        const existingIframes = fragmentElement.querySelectorAll("iframe");
-        existingIframes.forEach((existingIframe) => {
-          if (!iframeHandlers.has(existingIframe)) {
-            const handlers = {
-              load: handleLoad,
-              error: handleError,
-            };
-            existingIframe.addEventListener("load", handlers.load);
-            existingIframe.addEventListener("error", handlers.error);
-            iframeHandlers.set(existingIframe, handlers);
-          }
-        });
-
-        return true;
-      } catch (error) {
-        console.error("[HomePage] Error setting up fragment listeners:", error);
-        return false;
-      }
-    };
-
-    // Try to setup listeners immediately
-    if (!setupListeners()) {
-      // Retry after a short delay if element is not yet available
-      const retryTimeout = setTimeout(() => {
-        setupListeners();
-      }, 100);
-      return () => {
-        clearTimeout(retryTimeout);
-        if (intervalId) clearInterval(intervalId);
-        if (observer) observer.disconnect();
-        const fragmentElement = fragmentElementRef.current;
-        if (fragmentElement) {
-          fragmentElement.removeEventListener("error", handleError);
-          fragmentElement.removeEventListener("load", handleLoad);
-        }
-        iframeHandlers.forEach((handlers, iframe) => {
-          iframe.removeEventListener("load", handlers.load);
-          iframe.removeEventListener("error", handlers.error);
-        });
-        iframeHandlers.clear();
-      };
-    }
+    // Run immediately (and rely on fragment events afterwards)
+    healthCheck();
 
     return () => {
-      if (intervalId) clearInterval(intervalId);
-      if (observer) observer.disconnect();
-      const fragmentElement = fragmentElementRef.current;
-      if (fragmentElement) {
-        fragmentElement.removeEventListener("error", handleError);
-        fragmentElement.removeEventListener("load", handleLoad);
-      }
-      iframeHandlers.forEach((handlers, iframe) => {
-        iframe.removeEventListener("load", handlers.load);
-        iframe.removeEventListener("error", handlers.error);
-      });
-      iframeHandlers.clear();
+      cancelled = true;
     };
   }, []);
+
+  let statusContent: JSX.Element | string = "Waiting for the fragment to send its first event...";
+  if (fragmentAvailable === false) {
+    statusContent =
+      "Fragment not available. Start the showcase-fragment server to enable this feature.";
+  }
+  if (lastMessage) {
+    statusContent = (
+      <>
+        <strong style={{ color: "var(--color-text)" }}>Last event:</strong>{" "}
+        {lastMessage.type}
+        {lastMessage.payload?.accent ? ` • ${lastMessage.payload.accent}` : ""}
+        {lastMessage.payload?.density ? ` • ${lastMessage.payload.density}` : ""}
+        {lastMessage.payload?.motion ? ` • ${lastMessage.payload.motion}` : ""}
+        {typeof lastMessage.payload?.counter === "number"
+          ? ` • counter ${lastMessage.payload.counter}`
+          : ""}
+        {lastMessage.timestamp
+          ? ` • ${new Date(lastMessage.timestamp).toLocaleTimeString()}`
+          : ""}
+      </>
+    );
+  }
 
   return (
     <>
@@ -247,33 +145,7 @@ export function HomePage() {
             background: "var(--color-bg-surface)",
           }}
         >
-          {lastMessage ? (
-            <>
-              <strong style={{ color: "var(--color-text)" }}>
-                Last event:
-              </strong>{" "}
-              {lastMessage.type}
-              {lastMessage.payload?.accent
-                ? ` • ${lastMessage.payload.accent}`
-                : ""}
-              {lastMessage.payload?.density
-                ? ` • ${lastMessage.payload.density}`
-                : ""}
-              {lastMessage.payload?.motion
-                ? ` • ${lastMessage.payload.motion}`
-                : ""}
-              {typeof lastMessage.payload?.counter === "number"
-                ? ` • counter ${lastMessage.payload.counter}`
-                : ""}
-              {lastMessage.timestamp
-                ? ` • ${new Date(lastMessage.timestamp).toLocaleTimeString()}`
-                : ""}
-            </>
-          ) : fragmentAvailable === false ? (
-            "Fragment not available. Start the showcase-fragment server to enable this feature."
-          ) : (
-            "Waiting for the fragment to send its first event..."
-          )}
+          {statusContent}
         </div>
       </section>
 

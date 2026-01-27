@@ -7,6 +7,7 @@ const showcaseFragmentId = 'showcase-lab'
 const gateway = new FragmentGateway()
 const webFragmentsMiddleware = getWebMiddleware(gateway, { mode: 'development' })
 const skipHeaderName = 'x-wf-skip'
+const lastGatewayErrorLogByFragment = new Map<string, number>()
 
 gateway.registerFragment({
   fragmentId: assignmentsFragmentId,
@@ -179,8 +180,15 @@ export default defineConfig({
               res.end(body)
             })
             .catch((error) => {
-              // Log error but don't crash the shell
-              console.error(`[Gateway] Error proxying fragment request:`, error)
+              // Don't crash the shell; throttle logs to avoid spam when a fragment is down
+              const fragmentId = matchedFragment?.fragmentId ?? 'unknown'
+              const now = Date.now()
+              const lastLoggedAt = lastGatewayErrorLogByFragment.get(fragmentId) ?? 0
+              if (now - lastLoggedAt > 10_000) {
+                lastGatewayErrorLogByFragment.set(fragmentId, now)
+                console.warn(`[Gateway] Fragment "${fragmentId}" unavailable:`, error)
+              }
+
               // Return a 503 response to the client
               res.statusCode = 503
               res.setHeader('Content-Type', 'application/json')
