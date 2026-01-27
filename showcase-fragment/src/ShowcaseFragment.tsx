@@ -2,6 +2,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 const FRAGMENT_ID = "showcase-lab";
 const CHANNEL_NAME = "showcase-fragment-channel";
+const STORAGE_KEY = "showcase-fragment-settings";
+
+interface StoredSettings {
+  accent?: string;
+  density?: string;
+  motion?: string;
+  counter?: number;
+}
 
 const accentOptions = [
   { id: "electric", label: "Electric Blue", color: "#4f7cff" },
@@ -22,11 +30,77 @@ const motionOptions = [
   { id: "still", label: "Still" },
 ];
 
+// Helper function to load settings from localStorage
+function loadSettingsFromStorage(): {
+  accentId: string;
+  densityId: string;
+  motionId: string;
+  counter: number;
+} {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored) as StoredSettings;
+      
+      // Map accent label back to id
+      let accentId = accentOptions[0].id;
+      if (parsed.accent) {
+        const accentOption = accentOptions.find(
+          (opt) => opt.label === parsed.accent,
+        );
+        if (accentOption) {
+          accentId = accentOption.id;
+        }
+      }
+      
+      // Map density label back to id
+      let densityId = densityOptions[1].id;
+      if (parsed.density) {
+        const densityOption = densityOptions.find(
+          (opt) => opt.id === parsed.density || opt.label === parsed.density,
+        );
+        if (densityOption) {
+          densityId = densityOption.id;
+        }
+      }
+      
+      // Map motion label back to id
+      let motionId = motionOptions[0].id;
+      if (parsed.motion) {
+        const motionOption = motionOptions.find(
+          (opt) => opt.id === parsed.motion || opt.label === parsed.motion,
+        );
+        if (motionOption) {
+          motionId = motionOption.id;
+        }
+      }
+      
+      const counter =
+        typeof parsed.counter === "number" && parsed.counter >= 0
+          ? parsed.counter
+          : 6;
+      
+      return { accentId, densityId, motionId, counter };
+    }
+  } catch (error) {
+    console.warn("Failed to load settings from localStorage", error);
+  }
+  
+  // Return defaults
+  return {
+    accentId: accentOptions[0].id,
+    densityId: densityOptions[1].id,
+    motionId: motionOptions[0].id,
+    counter: 6,
+  };
+}
+
 export function ShowcaseFragment() {
-  const [accentId, setAccentId] = useState(accentOptions[0].id);
-  const [densityId, setDensityId] = useState(densityOptions[1].id);
-  const [motionId, setMotionId] = useState(motionOptions[0].id);
-  const [counter, setCounter] = useState(6);
+  const loadedSettings = loadSettingsFromStorage();
+  const [accentId, setAccentId] = useState(loadedSettings.accentId);
+  const [densityId, setDensityId] = useState(loadedSettings.densityId);
+  const [motionId, setMotionId] = useState(loadedSettings.motionId);
+  const [counter, setCounter] = useState(loadedSettings.counter);
   const [isStandalone, setIsStandalone] = useState(false);
   const channelRef = useRef<BroadcastChannel | null>(null);
 
@@ -54,6 +128,20 @@ export function ShowcaseFragment() {
       payload: { status: "ready" },
       timestamp: new Date().toISOString(),
     });
+    
+    // Send current settings immediately when channel is ready
+    channel.postMessage({
+      type: "showcase-settings",
+      fragmentId: FRAGMENT_ID,
+      payload: {
+        accent: accent.label,
+        density: densityId,
+        motion: motionId,
+        counter,
+      },
+      timestamp: new Date().toISOString(),
+    });
+    
     return () => {
       channel.close();
       channelRef.current = null;

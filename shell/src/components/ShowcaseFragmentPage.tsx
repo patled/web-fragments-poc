@@ -2,8 +2,37 @@ import { useEffect, useRef, useState } from "react";
 
 const SHOWCASE_FRAGMENT_ID = "showcase-lab";
 const SHOWCASE_FRAGMENT_SRC = "/showcase/";
+const SHOWCASE_CHANNEL = "showcase-fragment-channel";
+const STORAGE_KEY = "showcase-fragment-settings";
+
+// Accent color mapping (matching showcase-fragment/src/ShowcaseFragment.tsx)
+const accentColorMap: Record<string, string> = {
+  "Electric Blue": "#4f7cff",
+  "Neon Mint": "#18d6a3",
+  "Sunset Amber": "#ff9a3c",
+  "Orchid Glow": "#b86bff",
+};
+
+interface ShowcaseMessage {
+  type: string;
+  timestamp?: string;
+  payload?: {
+    accent?: string;
+    density?: string;
+    motion?: string;
+    counter?: number;
+  };
+}
+
+interface ShowcaseSettings {
+  accent?: string;
+  density?: string;
+  motion?: string;
+  counter?: number;
+}
 
 export function ShowcaseFragmentPage() {
+  const [settings, setSettings] = useState<ShowcaseSettings | null>(null);
   const [fragmentAvailable, setFragmentAvailable] = useState<boolean | null>(
     null,
   );
@@ -13,6 +42,52 @@ export function ShowcaseFragmentPage() {
   const setFragmentRef = (element: HTMLElement | null) => {
     fragmentElementRef.current = element;
   };
+
+  // Load settings from localStorage on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored) as ShowcaseSettings;
+        setSettings(parsed);
+      }
+    } catch (error) {
+      console.warn("Failed to load showcase settings from localStorage", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    const channel = new BroadcastChannel(SHOWCASE_CHANNEL);
+    const handleMessage = (event: MessageEvent) => {
+      if (!event.data?.type) return;
+      const message = event.data as ShowcaseMessage;
+      
+      // Store settings when we receive showcase-settings messages
+      if (message.type === "showcase-settings" && message.payload) {
+        const newSettings: ShowcaseSettings = {
+          accent: message.payload.accent,
+          density: message.payload.density,
+          motion: message.payload.motion,
+          counter: message.payload.counter,
+        };
+        setSettings(newSettings);
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(newSettings));
+        } catch (error) {
+          console.warn("Failed to save showcase settings to localStorage", error);
+        }
+      }
+      
+      // If we receive a message, the fragment is available
+      setFragmentAvailable(true);
+    };
+    channel.addEventListener("message", handleMessage);
+
+    return () => {
+      channel.removeEventListener("message", handleMessage);
+      channel.close();
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -41,6 +116,12 @@ export function ShowcaseFragmentPage() {
     };
   }, []);
 
+  // Get accent color for visual effects
+  const accentColor =
+    settings?.accent && accentColorMap[settings.accent]
+      ? accentColorMap[settings.accent]
+      : accentColorMap["Electric Blue"];
+
   return (
     <>
       <section style={{ marginBottom: "1.5rem" }}>
@@ -49,9 +130,44 @@ export function ShowcaseFragmentPage() {
           This page renders the fragment at the top-level route so you can
           explore it full width.
         </p>
+        {settings && (
+          <div
+            style={{
+              marginTop: "1rem",
+              padding: "0.6rem 0.85rem",
+              borderRadius: "0.6rem",
+              border: `2px solid ${accentColor}`,
+              color: "var(--color-text-secondary)",
+              background: `linear-gradient(135deg, ${accentColor}15, ${accentColor}08)`,
+              transition: "all 0.3s ease",
+              display: "inline-block",
+            }}
+          >
+            <strong style={{ color: "var(--color-text)" }}>
+              Active settings:
+            </strong>{" "}
+            {settings.accent && `Accent: ${settings.accent}`}
+            {settings.density && ` • Density: ${settings.density}`}
+            {settings.motion && ` • Motion: ${settings.motion}`}
+            {typeof settings.counter === "number" &&
+              ` • Counter: ${settings.counter}`}
+          </div>
+        )}
       </section>
 
-      <div style={{ position: "relative", minHeight: "400px" }}>
+      <div
+        style={{
+          position: "relative",
+          minHeight: "400px",
+          borderRadius: "0.75rem",
+          padding: settings ? "0.5rem" : "0",
+          background: settings
+            ? `linear-gradient(135deg, ${accentColor}10, ${accentColor}05)`
+            : "transparent",
+          border: settings ? `1px solid ${accentColor}30` : "none",
+          transition: "all 0.3s ease",
+        }}
+      >
         {fragmentAvailable === false && (
           <div
             style={{

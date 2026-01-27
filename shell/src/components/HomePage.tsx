@@ -4,6 +4,15 @@ import { Link } from "react-router-dom";
 const SHOWCASE_FRAGMENT_ID = "showcase-lab";
 const SHOWCASE_FRAGMENT_SRC = "/showcase/";
 const SHOWCASE_CHANNEL = "showcase-fragment-channel";
+const STORAGE_KEY = "showcase-fragment-settings";
+
+// Accent color mapping (matching showcase-fragment/src/ShowcaseFragment.tsx)
+const accentColorMap: Record<string, string> = {
+  "Electric Blue": "#4f7cff",
+  "Neon Mint": "#18d6a3",
+  "Sunset Amber": "#ff9a3c",
+  "Orchid Glow": "#b86bff",
+};
 
 interface ShowcaseMessage {
   type: string;
@@ -16,18 +25,57 @@ interface ShowcaseMessage {
   };
 }
 
+interface ShowcaseSettings {
+  accent?: string;
+  density?: string;
+  motion?: string;
+  counter?: number;
+}
+
 export function HomePage() {
   const [lastMessage, setLastMessage] = useState<ShowcaseMessage | null>(null);
+  const [settings, setSettings] = useState<ShowcaseSettings | null>(null);
   const [fragmentAvailable, setFragmentAvailable] = useState<boolean | null>(
     null,
   );
   const fragmentElementRef = useRef<HTMLElement | null>(null);
 
+  // Load settings from localStorage on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored) as ShowcaseSettings;
+        setSettings(parsed);
+      }
+    } catch (error) {
+      console.warn("Failed to load showcase settings from localStorage", error);
+    }
+  }, []);
+
   useEffect(() => {
     const channel = new BroadcastChannel(SHOWCASE_CHANNEL);
     const handleMessage = (event: MessageEvent) => {
       if (!event.data?.type) return;
-      setLastMessage(event.data as ShowcaseMessage);
+      const message = event.data as ShowcaseMessage;
+      setLastMessage(message);
+      
+      // Store settings when we receive showcase-settings messages
+      if (message.type === "showcase-settings" && message.payload) {
+        const newSettings: ShowcaseSettings = {
+          accent: message.payload.accent,
+          density: message.payload.density,
+          motion: message.payload.motion,
+          counter: message.payload.counter,
+        };
+        setSettings(newSettings);
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(newSettings));
+        } catch (error) {
+          console.warn("Failed to save showcase settings to localStorage", error);
+        }
+      }
+      
       // If we receive a message, the fragment is available
       setFragmentAvailable(true);
     };
@@ -73,26 +121,31 @@ export function HomePage() {
     };
   }, []);
 
+  // Get accent color for visual effects
+  const accentColor =
+    settings?.accent && accentColorMap[settings.accent]
+      ? accentColorMap[settings.accent]
+      : accentColorMap["Electric Blue"];
+
   let statusContent: JSX.Element | string | null =
     "Waiting for the fragment to send its first event...";
   // Avoid duplicate messaging: when fragment is unavailable, only show the large fallback block below.
   if (fragmentAvailable === false) {
     statusContent = null;
   }
-  if (lastMessage) {
+  if (lastMessage || settings) {
+    const displaySettings = settings || lastMessage?.payload;
     statusContent = (
       <>
         <strong style={{ color: "var(--color-text)" }}>Last event:</strong>{" "}
-        {lastMessage.type}
-        {lastMessage.payload?.accent ? ` • ${lastMessage.payload.accent}` : ""}
-        {lastMessage.payload?.density
-          ? ` • ${lastMessage.payload.density}`
+        {lastMessage?.type || "loaded from storage"}
+        {displaySettings?.accent ? ` • ${displaySettings.accent}` : ""}
+        {displaySettings?.density ? ` • ${displaySettings.density}` : ""}
+        {displaySettings?.motion ? ` • ${displaySettings.motion}` : ""}
+        {typeof displaySettings?.counter === "number"
+          ? ` • counter ${displaySettings.counter}`
           : ""}
-        {lastMessage.payload?.motion ? ` • ${lastMessage.payload.motion}` : ""}
-        {typeof lastMessage.payload?.counter === "number"
-          ? ` • counter ${lastMessage.payload.counter}`
-          : ""}
-        {lastMessage.timestamp
+        {lastMessage?.timestamp
           ? ` • ${new Date(lastMessage.timestamp).toLocaleTimeString()}`
           : ""}
       </>
@@ -144,9 +197,10 @@ export function HomePage() {
               marginTop: "0.75rem",
               padding: "0.6rem 0.85rem",
               borderRadius: "0.6rem",
-              border: "1px dashed var(--color-border)",
+              border: `2px solid ${accentColor}`,
               color: "var(--color-text-secondary)",
-              background: "var(--color-bg-surface)",
+              background: `linear-gradient(135deg, ${accentColor}15, ${accentColor}08)`,
+              transition: "all 0.3s ease",
             }}
           >
             {statusContent}
@@ -154,7 +208,18 @@ export function HomePage() {
         ) : null}
       </section>
 
-      <div style={{ position: "relative" }}>
+      <div
+        style={{
+          position: "relative",
+          borderRadius: "0.75rem",
+          padding: settings ? "0.5rem" : "0",
+          background: settings
+            ? `linear-gradient(135deg, ${accentColor}10, ${accentColor}05)`
+            : "transparent",
+          border: settings ? `1px solid ${accentColor}30` : "none",
+          transition: "all 0.3s ease",
+        }}
+      >
         {fragmentAvailable === false && (
           <div
             style={{
