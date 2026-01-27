@@ -73,10 +73,11 @@ export function HomePage() {
     };
   }, []);
 
-  let statusContent: JSX.Element | string = "Waiting for the fragment to send its first event...";
+  let statusContent: JSX.Element | string | null =
+    "Waiting for the fragment to send its first event...";
+  // Avoid duplicate messaging: when fragment is unavailable, only show the large fallback block below.
   if (fragmentAvailable === false) {
-    statusContent =
-      "Fragment not available. Start the showcase-fragment server to enable this feature.";
+    statusContent = null;
   }
   if (lastMessage) {
     statusContent = (
@@ -135,18 +136,20 @@ export function HomePage() {
             Open full page →
           </Link>
         </div>
-        <div
-          style={{
-            marginTop: "0.75rem",
-            padding: "0.6rem 0.85rem",
-            borderRadius: "0.6rem",
-            border: "1px dashed var(--color-border)",
-            color: "var(--color-text-secondary)",
-            background: "var(--color-bg-surface)",
-          }}
-        >
-          {statusContent}
-        </div>
+        {statusContent ? (
+          <div
+            style={{
+              marginTop: "0.75rem",
+              padding: "0.6rem 0.85rem",
+              borderRadius: "0.6rem",
+              border: "1px dashed var(--color-border)",
+              color: "var(--color-text-secondary)",
+              background: "var(--color-bg-surface)",
+            }}
+          >
+            {statusContent}
+          </div>
+        ) : null}
       </section>
 
       <div style={{ position: "relative" }}>
@@ -195,11 +198,13 @@ export function HomePage() {
             </code>
           </div>
         )}
-        <web-fragment
-          ref={setFragmentRef}
-          fragment-id={SHOWCASE_FRAGMENT_ID}
-          src={SHOWCASE_FRAGMENT_SRC}
-        ></web-fragment>
+        {fragmentAvailable !== false && (
+          <web-fragment
+            ref={setFragmentRef}
+            fragment-id={SHOWCASE_FRAGMENT_ID}
+            src={SHOWCASE_FRAGMENT_SRC}
+          ></web-fragment>
+        )}
       </div>
     </>
   );

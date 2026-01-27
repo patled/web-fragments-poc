@@ -104,11 +104,13 @@ export function ShowcaseFragmentPage() {
             </p>
           </div>
         )}
-        <web-fragment
-          ref={setFragmentRef}
-          fragment-id={SHOWCASE_FRAGMENT_ID}
-          src={SHOWCASE_FRAGMENT_SRC}
-        ></web-fragment>
+        {fragmentAvailable !== false && (
+          <web-fragment
+            ref={setFragmentRef}
+            fragment-id={SHOWCASE_FRAGMENT_ID}
+            src={SHOWCASE_FRAGMENT_SRC}
+          ></web-fragment>
+        )}
       </div>
     </>
   );
