@@ -85,7 +85,9 @@ export function HomePage() {
         <strong style={{ color: "var(--color-text)" }}>Last event:</strong>{" "}
         {lastMessage.type}
         {lastMessage.payload?.accent ? ` • ${lastMessage.payload.accent}` : ""}
-        {lastMessage.payload?.density ? ` • ${lastMessage.payload.density}` : ""}
+        {lastMessage.payload?.density
+          ? ` • ${lastMessage.payload.density}`
+          : ""}
         {lastMessage.payload?.motion ? ` • ${lastMessage.payload.motion}` : ""}
         {typeof lastMessage.payload?.counter === "number"
           ? ` • counter ${lastMessage.payload.counter}`
@@ -173,29 +175,7 @@ export function HomePage() {
               alignItems: "center",
             }}
           >
-            <div style={{ marginBottom: "0.75rem" }}>
-              <span style={{ fontSize: "2rem" }}>⚠️</span>
-            </div>
-            <h3 style={{ margin: "0 0 0.5rem 0", color: "var(--color-text)" }}>
-              Showcase Fragment not available
-            </h3>
-            <p style={{ margin: 0, color: "var(--color-text-secondary)" }}>
-              The Showcase Fragment Server is not running. Start it with:
-            </p>
-            <code
-              style={{
-                display: "inline-block",
-                marginTop: "0.75rem",
-                padding: "0.5rem 0.75rem",
-                borderRadius: "0.375rem",
-                backgroundColor: "var(--color-bg-page)",
-                border: "1px solid var(--color-border)",
-                color: "var(--color-text)",
-                fontFamily: "monospace",
-              }}
-            >
-              cd showcase-fragment && yarn dev
-            </code>
+            <span>⚠️ Showcase Fragment not available</span>
           </div>
         )}
         {fragmentAvailable !== false && (

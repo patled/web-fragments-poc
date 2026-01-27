@@ -4,7 +4,9 @@ const SHOWCASE_FRAGMENT_ID = "showcase-lab";
 const SHOWCASE_FRAGMENT_SRC = "/showcase/";
 
 export function ShowcaseFragmentPage() {
-  const [fragmentAvailable, setFragmentAvailable] = useState<boolean | null>(null);
+  const [fragmentAvailable, setFragmentAvailable] = useState<boolean | null>(
+    null,
+  );
   const fragmentElementRef = useRef<HTMLElement | null>(null);
 
   // Callback ref to set element when it's mounted
@@ -74,10 +76,15 @@ export function ShowcaseFragmentPage() {
               <span style={{ fontSize: "3rem" }}>⚠️</span>
             </div>
             <h2 style={{ margin: "0 0 0.75rem 0", color: "var(--color-text)" }}>
-              Showcase Fragment nicht verfügbar
+              Showcase Fragment not available
             </h2>
-            <p style={{ margin: "0 0 1rem 0", color: "var(--color-text-secondary)" }}>
-              Der Showcase Fragment Server läuft nicht. Starte ihn mit:
+            <p
+              style={{
+                margin: "0 0 1rem 0",
+                color: "var(--color-text-secondary)",
+              }}
+            >
+              The Showcase Fragment Server is not running. Start it with:
             </p>
             <code
               style={{
@@ -100,7 +107,8 @@ export function ShowcaseFragmentPage() {
                 color: "var(--color-text-secondary)",
               }}
             >
-              Der Server sollte auf <strong>http://localhost:5176</strong> laufen.
+              The Server should be running on{" "}
+              <strong>http://localhost:5176</strong>.
             </p>
           </div>
         )}
