@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HomePage } from "./components/HomePage";
 import { Navigation } from "./components/Navigation";
 import { ProjectsPage } from "./components/ProjectsPage";
+import { ShowcaseFragmentPage } from "./components/ShowcaseFragmentPage";
 
 function App() {
   return (
@@ -11,6 +12,8 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/showcase" element={<ShowcaseFragmentPage />} />
+          <Route path="/showcase/*" element={<ShowcaseFragmentPage />} />
           <Route
             path="/projects/:projectId/assignments"
             element={<ProjectsPage />}

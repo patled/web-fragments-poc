@@ -5,6 +5,7 @@ export function Navigation() {
   const location = useLocation();
   const { mode, toggleTheme } = useTheme();
   const isProjectsRoute = location.pathname.startsWith("/projects");
+  const isShowcaseRoute = location.pathname.startsWith("/showcase");
 
   return (
     <nav
@@ -35,6 +36,16 @@ export function Navigation() {
           }}
         >
           Projects
+        </Link>
+        <Link
+          to="/showcase"
+          style={{
+            textDecoration: "none",
+            color: isShowcaseRoute ? "var(--color-link-active)" : "var(--color-text-secondary)",
+            fontWeight: isShowcaseRoute ? "600" : "400",
+          }}
+        >
+          Showcase
         </Link>
         <button
           type="button"

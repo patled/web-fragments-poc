@@ -1,4 +1,5 @@
 Web Fragments PoC in /Users/patrick/source/micro-frontends/web-fragments-poc:
 - shell uses web-fragments gateway in shell/vite.config.ts with getWebMiddleware and skip header x-wf-skip.
 - shell registers assignments fragmentId: project-assignments, endpoint: http://localhost:5175, routePatterns: /assignments/, /assignments/:_*, /projects/:_*/assignments/, /projects/:_*/assignments/:_*; path /projects/ID/assignments is rewritten to /assignments/ID when forwarding to the fragment; assignments-fragment uses Vite base /assignments/ and its own dev server middleware to serve SPA HTML for /assignments/*.
+- shell registers showcase fragmentId: showcase-lab, endpoint: http://localhost:5176, routePatterns: /showcase/ and /showcase/:_*; showcase-fragment uses Vite base /showcase/ and provides a top-level demo fragment embedded on HomePage and `/showcase`.
 - shell routes /projects/:projectId/assignments and /projects/:projectId/assignments/* render ProjectsPage; assignments panel on the right is shown when URL matches /projects/ID/assignments or /assignments/ID; "Assignments" button and "Close" set URL to /projects/ID/assignments resp. /projects/ID.

@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import { FragmentGateway, getWebMiddleware } from 'web-fragments/gateway'
 
 const assignmentsFragmentId = 'project-assignments'
+const showcaseFragmentId = 'showcase-lab'
 const gateway = new FragmentGateway()
 const webFragmentsMiddleware = getWebMiddleware(gateway, { mode: 'development' })
 const skipHeaderName = 'x-wf-skip'
@@ -17,6 +18,13 @@ gateway.registerFragment({
     '/projects/:_*/assignments/',
     '/projects/:_*/assignments/:_*',
   ],
+})
+
+gateway.registerFragment({
+  fragmentId: showcaseFragmentId,
+  piercingClassNames: [],
+  endpoint: 'http://localhost:5176',
+  routePatterns: ['/showcase/', '/showcase/:_*'],
 })
 
 // https://vite.dev/config/
@@ -49,8 +57,12 @@ export default defineConfig({
           // Check if it's a fragment route
           const isProjectsAssignments =
             /^\/projects\/[^/]+\/assignments(\/|$)/.test(url.pathname)
+          const isShowcaseRoute =
+            url.pathname === '/showcase' || url.pathname.startsWith('/showcase/')
           const isFragmentRoute =
-            url.pathname.startsWith('/assignments/') || isProjectsAssignments
+            url.pathname.startsWith('/assignments/') ||
+            isProjectsAssignments ||
+            isShowcaseRoute
           
           // Check if it's a direct browser navigation
           // The <web-fragment> element sends requests in an IFrame

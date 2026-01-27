@@ -26,16 +26,24 @@ web-fragments-poc/
 │   │   │   ├── HomePage.tsx
 │   │   │   ├── ProjectsPage.tsx
 │   │   │   ├── AssignmentsFragmentPage.tsx
+│   │   │   ├── ShowcaseFragmentPage.tsx
 │   │   │   └── Navigation.tsx
 │   │   └── data/            # Local storage utilities
 │   │       └── projectsStorage.ts
 │   └── vite.config.ts        # Vite configuration with gateway middleware
 │
-└── assignments-fragment/     # Assignments fragment application
+├── assignments-fragment/     # Assignments fragment application
+│   ├── src/
+│   │   ├── AssignmentsFragment.tsx  # MUI-based assignments fragment
+│   │   ├── AssignmentsRoutes.tsx
+│   │   ├── FragmentRouter.tsx
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   └── vite.config.ts        # Vite configuration with base path
+│
+└── showcase-fragment/         # Showcase fragment application
     ├── src/
-    │   ├── AssignmentsFragment.tsx  # MUI-based assignments fragment
-    │   ├── AssignmentsRoutes.tsx
-    │   ├── FragmentRouter.tsx
+    │   ├── ShowcaseFragment.tsx
     │   ├── App.tsx
     │   └── main.tsx
     └── vite.config.ts        # Vite configuration with base path
@@ -52,7 +60,7 @@ The shell application is the host application that embeds fragments:
 - **Gateway**: Uses `FragmentGateway` as middleware to route requests to fragments
 - **Client**: Initializes `initializeWebFragments()` for client-side fragment management
 - **Routing**: Uses React Router for navigation between pages
-- **Pages**: Home, Projects (with embedded assignments fragment)
+- **Pages**: Home, Projects, Showcase (with embedded fragments)
 
 ### Assignments Fragment
 
@@ -90,12 +98,22 @@ The fragment includes mock projects and staff members for standalone development
 3. The fragment will automatically detect standalone mode and load mock data
 4. A banner indicates when standalone mode is active
 
+### Showcase Fragment
+
+The showcase fragment is a lightweight playground to explore Web Fragments:
+
+- **Port**: 5176
+- **Role**: Top-level demo fragment shown on the shell home page and `/showcase`
+- **Base Path**: `/showcase/` - All assets are served under this path
+- **UI**: Pure React (no additional UI libraries)
+- **Integration**: Embedded on the home page and accessible as a full page route
+
 ### Gateway
 
 The gateway is a middleware that:
 
-- Recognizes requests to fragment routes (`/assignments/`, `/projects/:_*/assignments/`)
-- Routes these requests to the assignments fragment endpoint (`http://localhost:5175`)
+- Recognizes requests to fragment routes (`/assignments/`, `/projects/:_*/assignments/`, `/showcase/`)
+- Routes these requests to the fragment endpoints (`http://localhost:5175`, `http://localhost:5176`)
 - Proxies fragment assets (JS, CSS, etc.) through the gateway
 - Supports Server-Side Rendering (SSR) for fragments
 
@@ -106,7 +124,7 @@ The gateway is a middleware that:
 
 ## Installation
 
-1. **Install dependencies** (in both directories):
+1. **Install dependencies** (in all directories):
 
 ```bash
 # Install shell
@@ -116,11 +134,15 @@ yarn install
 # Install assignments-fragment
 cd ../assignments-fragment
 yarn install
+
+# Install showcase-fragment
+cd ../showcase-fragment
+yarn install
 ```
 
 ## Starting the Application
 
-The application consists of two dev servers that must run simultaneously:
+The application consists of three dev servers that must run simultaneously:
 
 ### Terminal 1: Start Assignments Fragment Server
 
@@ -140,6 +162,15 @@ yarn dev
 
 The shell server starts on **<http://localhost:5173>**
 
+### Terminal 3: Start Showcase Fragment Server
+
+```bash
+cd showcase-fragment
+yarn dev
+```
+
+The showcase fragment server starts on **<http://localhost:5176>**
+
 ### Open the Application
 
 Open **<http://localhost:5173>** in your browser.
@@ -149,6 +180,7 @@ Open **<http://localhost:5173>** in your browser.
 - `/projects` - Projects management page
 - `/projects/:projectId` - Project details with assignments
 - `/assignments/:projectId` - Assignments fragment for a specific project
+- `/showcase` - Showcase fragment full-page view
 
 ## What is Demonstrated?
 
@@ -160,6 +192,7 @@ The project shows how multiple fragments are seamlessly integrated into the shel
 - Fragments run in isolated JavaScript contexts
 - Fragment assets are automatically loaded through the gateway
 - One fragment: `project-assignments` (embedded in ProjectsPage)
+- One fragment: `showcase-lab` (embedded on HomePage and accessible at `/showcase`)
 
 ### 2. Gateway Routing
 

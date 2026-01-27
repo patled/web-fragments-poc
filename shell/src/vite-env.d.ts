@@ -7,6 +7,7 @@ declare global {
     interface IntrinsicElements {
       'web-fragment': DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement> & {
         'fragment-id'?: string
+        src?: string
       }
     }
   }
