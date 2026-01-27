@@ -133,7 +133,34 @@ export default defineConfig({
               nextInit.duplex = 'half'
             }
 
-            return fetch(fragmentUrl, nextInit)
+            // Add timeout for fragment requests (5 seconds)
+            const controller = new AbortController()
+            const timeoutId = setTimeout(() => controller.abort(), 5000)
+            nextInit.signal = controller.signal
+
+            try {
+              const response = await fetch(fragmentUrl, nextInit)
+              clearTimeout(timeoutId)
+              return response
+            } catch (error) {
+              clearTimeout(timeoutId)
+              // Return a 503 Service Unavailable response if fragment is not available
+              return new Response(
+                JSON.stringify({
+                  error: 'Fragment unavailable',
+                  fragmentId: matchedFragment.fragmentId,
+                  endpoint: fragmentEndpoint,
+                  message: error instanceof Error ? error.message : 'Unknown error',
+                }),
+                {
+                  status: 503,
+                  statusText: 'Service Unavailable',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                },
+              )
+            }
           }
 
           webFragmentsMiddleware(request, nextResponse)
@@ -151,7 +178,20 @@ export default defineConfig({
               const body = Buffer.from(await response.arrayBuffer())
               res.end(body)
             })
-            .catch(next)
+            .catch((error) => {
+              // Log error but don't crash the shell
+              console.error(`[Gateway] Error proxying fragment request:`, error)
+              // Return a 503 response to the client
+              res.statusCode = 503
+              res.setHeader('Content-Type', 'application/json')
+              res.end(
+                JSON.stringify({
+                  error: 'Fragment unavailable',
+                  fragmentId: matchedFragment?.fragmentId,
+                  message: error instanceof Error ? error.message : 'Unknown error',
+                }),
+              )
+            })
         })
       },
     },
