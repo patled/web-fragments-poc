@@ -1,27 +1,30 @@
-import { useMemo, useRef, useState, useCallback } from "react";
 import type { DragEvent } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { saveStaff, saveProjects } from "../data/projectsStorage";
 import type { Project, StaffMember, Task } from "../data/projectsStorage";
-import { useProjects } from "./projects/hooks/useProjects";
-import { useAssignmentsChannel } from "./projects/hooks/useAssignmentsChannel";
-import { ProjectList } from "./projects/ProjectList";
-import { ProjectForm } from "./projects/ProjectForm";
-import { ProjectDetail } from "./projects/ProjectDetail";
+import { saveProjects, saveStaff } from "../data/projectsStorage";
+import { useFragmentHealthCheck } from "../hooks/useFragmentHealthCheck";
 import { AssignmentsPanel } from "./projects/AssignmentsPanel";
+import { useAssignmentsChannel } from "./projects/hooks/useAssignmentsChannel";
+import { useProjects } from "./projects/hooks/useProjects";
+import { ProjectDetail } from "./projects/ProjectDetail";
+import { ProjectForm } from "./projects/ProjectForm";
+import { ProjectList } from "./projects/ProjectList";
 import { styles } from "./projects/styles";
-import {
-  createProject,
-  updateProjectNameAndDescription,
-  addTaskToProject,
-  toggleTaskInProject,
-  removeTaskFromProject,
-  addAssigneeToTask,
-  removeAssigneeFromTask,
-  updateProjectsAndSave,
-} from "./projects/utils/projectUtils";
 import type { DragStaffPayload } from "./projects/types";
 import { ASSIGNMENTS_FRAGMENT_ID } from "./projects/types";
+import {
+  addAssigneeToTask,
+  addTaskToProject,
+  createProject,
+  removeAssigneeFromTask,
+  removeTaskFromProject,
+  toggleTaskInProject,
+  updateProjectNameAndDescription,
+  updateProjectsAndSave,
+} from "./projects/utils/projectUtils";
+
+const ASSIGNMENTS_FRAGMENT_SRC = "/assignments/";
 
 export function ProjectsPage() {
   const navigate = useNavigate();
@@ -43,6 +46,16 @@ export function ProjectsPage() {
   const [editForm, setEditForm] = useState({ name: "", description: "" });
   const draggedStaffPayloadRef = useRef<DragStaffPayload | null>(null);
   const [dragOverTaskId, setDragOverTaskId] = useState<string | null>(null);
+
+  const assignmentsFragmentAvailable = useFragmentHealthCheck(
+    ASSIGNMENTS_FRAGMENT_SRC,
+    ASSIGNMENTS_FRAGMENT_ID,
+    {
+      onError: () => {
+        console.warn("Assignments fragment not available");
+      },
+    },
+  );
 
   const assignmentCountByProject = useMemo(() => {
     return projects.reduce<Record<string, number>>((acc, project) => {
@@ -332,9 +345,7 @@ export function ProjectsPage() {
             <ProjectForm
               name={editForm.name}
               description={editForm.description}
-              onNameChange={(name) =>
-                setEditForm({ ...editForm, name })
-              }
+              onNameChange={(name) => setEditForm({ ...editForm, name })}
               onDescriptionChange={(description) =>
                 setEditForm({ ...editForm, description })
               }
@@ -350,12 +361,13 @@ export function ProjectsPage() {
               isEditing={isEditing}
               editForm={editForm}
               dragOverTaskId={dragOverTaskId}
+              assignmentsFragmentAvailable={
+                assignmentsFragmentAvailable === true
+              }
               onEdit={startEdit}
               onSaveEdit={handleEditProject}
               onCancelEdit={cancelEdit}
-              onNameChange={(name) =>
-                setEditForm({ ...editForm, name })
-              }
+              onNameChange={(name) => setEditForm({ ...editForm, name })}
               onDescriptionChange={(description) =>
                 setEditForm({ ...editForm, description })
               }
