@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { useFragmentHealthCheck } from "../hooks/useFragmentHealthCheck";
 
 const SHOWCASE_FRAGMENT_ID = "showcase-lab";
 const SHOWCASE_FRAGMENT_SRC = "/showcase/";
@@ -87,10 +88,17 @@ interface ShowcaseSettings {
 export function HomePage() {
   const [lastMessage, setLastMessage] = useState<ShowcaseMessage | null>(null);
   const [settings, setSettings] = useState<ShowcaseSettings | null>(null);
-  const [fragmentAvailable, setFragmentAvailable] = useState<boolean | null>(
-    null,
-  );
   const fragmentElementRef = useRef<HTMLElement | null>(null);
+
+  const fragmentAvailable = useFragmentHealthCheck(
+    SHOWCASE_FRAGMENT_SRC,
+    SHOWCASE_FRAGMENT_ID,
+    {
+      onError: () => {
+        console.warn("Showcase fragment not available");
+      },
+    },
+  );
 
   // Load settings from localStorage on mount
   useEffect(() => {
@@ -111,7 +119,7 @@ export function HomePage() {
       if (!event.data?.type) return;
       const message = event.data as ShowcaseMessage;
       setLastMessage(message);
-      
+
       // Store settings when we receive showcase-settings messages
       if (message.type === "showcase-settings" && message.payload) {
         const newSettings: ShowcaseSettings = {
@@ -124,12 +132,12 @@ export function HomePage() {
         try {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(newSettings));
         } catch (error) {
-          console.warn("Failed to save showcase settings to localStorage", error);
+          console.warn(
+            "Failed to save showcase settings to localStorage",
+            error,
+          );
         }
       }
-      
-      // If we receive a message, the fragment is available
-      setFragmentAvailable(true);
     };
     channel.addEventListener("message", handleMessage);
 
@@ -143,35 +151,6 @@ export function HomePage() {
   const setFragmentRef = (element: HTMLElement | null) => {
     fragmentElementRef.current = element;
   };
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const healthCheck = async () => {
-      try {
-        // Trigger gateway forwarding (this is NOT a browser navigation)
-        const response = await fetch(SHOWCASE_FRAGMENT_SRC, {
-          headers: {
-            accept: "text/html",
-            "x-web-fragment-id": SHOWCASE_FRAGMENT_ID,
-          },
-        });
-
-        if (cancelled) return;
-        setFragmentAvailable(response.ok);
-      } catch {
-        if (cancelled) return;
-        setFragmentAvailable(false);
-      }
-    };
-
-    // Run immediately (and rely on fragment events afterwards)
-    healthCheck();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   // Get accent color for visual effects
   const accentColor =

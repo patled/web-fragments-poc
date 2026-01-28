@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useFragmentHealthCheck } from "../hooks/useFragmentHealthCheck";
 
 const SHOWCASE_FRAGMENT_ID = "showcase-lab";
 const SHOWCASE_FRAGMENT_SRC = "/showcase/";
@@ -85,10 +86,12 @@ interface ShowcaseSettings {
 
 export function ShowcaseFragmentPage() {
   const [settings, setSettings] = useState<ShowcaseSettings | null>(null);
-  const [fragmentAvailable, setFragmentAvailable] = useState<boolean | null>(
-    null,
-  );
   const fragmentElementRef = useRef<HTMLElement | null>(null);
+
+  const fragmentAvailable = useFragmentHealthCheck(
+    SHOWCASE_FRAGMENT_SRC,
+    SHOWCASE_FRAGMENT_ID,
+  );
 
   // Callback ref to set element when it's mounted
   const setFragmentRef = (element: HTMLElement | null) => {
@@ -113,7 +116,7 @@ export function ShowcaseFragmentPage() {
     const handleMessage = (event: MessageEvent) => {
       if (!event.data?.type) return;
       const message = event.data as ShowcaseMessage;
-      
+
       // Store settings when we receive showcase-settings messages
       if (message.type === "showcase-settings" && message.payload) {
         const newSettings: ShowcaseSettings = {
@@ -126,45 +129,18 @@ export function ShowcaseFragmentPage() {
         try {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(newSettings));
         } catch (error) {
-          console.warn("Failed to save showcase settings to localStorage", error);
+          console.warn(
+            "Failed to save showcase settings to localStorage",
+            error,
+          );
         }
       }
-      
-      // If we receive a message, the fragment is available
-      setFragmentAvailable(true);
     };
     channel.addEventListener("message", handleMessage);
 
     return () => {
       channel.removeEventListener("message", handleMessage);
       channel.close();
-    };
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const healthCheck = async () => {
-      try {
-        const response = await fetch(SHOWCASE_FRAGMENT_SRC, {
-          headers: {
-            accept: "text/html",
-            "x-web-fragment-id": SHOWCASE_FRAGMENT_ID,
-          },
-        });
-
-        if (cancelled) return;
-        setFragmentAvailable(response.ok);
-      } catch {
-        if (cancelled) return;
-        setFragmentAvailable(false);
-      }
-    };
-
-    healthCheck();
-
-    return () => {
-      cancelled = true;
     };
   }, []);
 

@@ -9,6 +9,7 @@ interface ProjectDetailProps {
   isEditing: boolean;
   editForm: { name: string; description: string };
   dragOverTaskId: string | null;
+  assignmentsFragmentAvailable?: boolean;
   onEdit: () => void;
   onSaveEdit: () => void;
   onCancelEdit: () => void;
@@ -31,6 +32,7 @@ export function ProjectDetail({
   isEditing,
   editForm,
   dragOverTaskId,
+  assignmentsFragmentAvailable = false,
   onEdit,
   onSaveEdit,
   onCancelEdit,
@@ -73,9 +75,11 @@ export function ProjectDetail({
           <button onClick={onEdit} style={styles.button}>
             Edit
           </button>
-          <button onClick={onOpenAssignments} style={styles.buttonInfo}>
-            Assignments
-          </button>
+          {assignmentsFragmentAvailable && (
+            <button onClick={onOpenAssignments} style={styles.buttonInfo}>
+              Assignments
+            </button>
+          )}
           <button
             onClick={() => onDelete(project.id)}
             style={styles.buttonDanger}
