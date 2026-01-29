@@ -13,6 +13,7 @@ export function AssignmentsPanel({
   projectId,
   onClose,
 }: AssignmentsPanelProps) {
+  const assignmentsFragmentSrc = `/assignments/${projectId}`;
   const fragmentAvailable = useFragmentHealthCheck(
     ASSIGNMENTS_FRAGMENT_SRC,
     ASSIGNMENTS_FRAGMENT_ID,
@@ -50,6 +51,7 @@ export function AssignmentsPanel({
           <web-fragment
             key={`${projectId}-assignments`}
             fragment-id={ASSIGNMENTS_FRAGMENT_ID}
+            src={assignmentsFragmentSrc}
           ></web-fragment>
         )}
       </div>

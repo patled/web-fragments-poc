@@ -14,10 +14,14 @@ export function AssignmentsFragmentPage() {
   const navigate = useNavigate();
   const { projectId } = useParams<{ projectId: string }>();
   const [project, setProject] = useState<Project | null>(null);
+  const assignmentsFragmentSrc = projectId
+    ? `/assignments/${projectId}`
+    : "/assignments/";
 
   useEffect(() => {
     const loadedProjects = loadProjects();
-    const selected = loadedProjects.find((item) => item.id === projectId) ?? null;
+    const selected =
+      loadedProjects.find((item) => item.id === projectId) ?? null;
     setProject(selected);
   }, [projectId]);
 
@@ -38,7 +42,8 @@ export function AssignmentsFragmentPage() {
       if (event.data?.type === "assignments-request" && event.data?.projectId) {
         const loadedProjects = loadProjects();
         const selected =
-          loadedProjects.find((item) => item.id === event.data.projectId) ?? null;
+          loadedProjects.find((item) => item.id === event.data.projectId) ??
+          null;
         if (selected) {
           sendProject(selected);
         }
@@ -84,7 +89,12 @@ export function AssignmentsFragmentPage() {
           </button>
           <div>
             <h1 style={{ margin: 0 }}>Assignments in Fragment</h1>
-            <p style={{ margin: "0.25rem 0 0 0", color: "var(--color-text-secondary)" }}>
+            <p
+              style={{
+                margin: "0.25rem 0 0 0",
+                color: "var(--color-text-secondary)",
+              }}
+            >
               Project assignments are maintained exclusively in the fragment.
             </p>
           </div>
@@ -95,6 +105,7 @@ export function AssignmentsFragmentPage() {
         <web-fragment
           key={project.id}
           fragment-id={ASSIGNMENTS_FRAGMENT_ID}
+          src={assignmentsFragmentSrc}
         ></web-fragment>
       ) : (
         <div style={{ color: "var(--color-text-muted)" }}>
