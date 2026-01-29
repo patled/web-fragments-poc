@@ -12,7 +12,10 @@ import { ProjectForm } from "./projects/ProjectForm";
 import { ProjectList } from "./projects/ProjectList";
 import { styles } from "./projects/styles";
 import type { DragStaffPayload } from "./projects/types";
-import { ASSIGNMENTS_FRAGMENT_ID } from "./projects/types";
+import {
+  ASSIGNMENTS_FRAGMENT_ID,
+  ASSIGNMENTS_FRAGMENT_SRC,
+} from "./projects/types";
 import {
   addAssigneeToTask,
   addTaskToProject,
@@ -23,8 +26,6 @@ import {
   updateProjectNameAndDescription,
   updateProjectsAndSave,
 } from "./projects/utils/projectUtils";
-
-const ASSIGNMENTS_FRAGMENT_SRC = "/assignments/";
 
 export function ProjectsPage() {
   const navigate = useNavigate();

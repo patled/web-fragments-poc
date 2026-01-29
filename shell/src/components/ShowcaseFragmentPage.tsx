@@ -1,18 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  ACCENT_COLOR_MAP,
+  SHOWCASE_CHANNEL,
+  SHOWCASE_FRAGMENT_ID,
+  SHOWCASE_FRAGMENT_SRC,
+  STORAGE_KEY,
+} from "./home/constants";
 import { useFragmentHealthCheck } from "../hooks/useFragmentHealthCheck";
-
-const SHOWCASE_FRAGMENT_ID = "showcase-lab";
-const SHOWCASE_FRAGMENT_SRC = "/showcase/";
-const SHOWCASE_CHANNEL = "showcase-fragment-channel";
-const STORAGE_KEY = "showcase-fragment-settings";
-
-// Accent color mapping (matching showcase-fragment/src/ShowcaseFragment.tsx)
-const accentColorMap: Record<string, string> = {
-  "Electric Blue": "#4f7cff",
-  "Neon Mint": "#18d6a3",
-  "Sunset Amber": "#ff9a3c",
-  "Orchid Glow": "#b86bff",
-};
 
 // Helper functions for density and motion styling
 function getDensityStyles(densityId?: string) {
@@ -146,9 +140,9 @@ export function ShowcaseFragmentPage() {
 
   // Get accent color for visual effects
   const accentColor =
-    settings?.accent && accentColorMap[settings.accent]
-      ? accentColorMap[settings.accent]
-      : accentColorMap["Electric Blue"];
+    settings?.accent && ACCENT_COLOR_MAP[settings.accent]
+      ? ACCENT_COLOR_MAP[settings.accent]
+      : ACCENT_COLOR_MAP["Electric Blue"];
 
   // Get density and motion styles
   const densityStyles = useMemo(

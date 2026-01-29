@@ -6,17 +6,16 @@ import {
   saveProjects,
 } from "../data/projectsStorage";
 import type { Project } from "../data/projectsStorage";
-
-const ASSIGNMENTS_CHANNEL = "project-assignments-channel";
-const ASSIGNMENTS_FRAGMENT_ID = "project-assignments";
+import {
+  ASSIGNMENTS_CHANNEL,
+  ASSIGNMENTS_FRAGMENT_ID,
+  getAssignmentsFragmentSrc,
+} from "./projects/types";
 
 export function AssignmentsFragmentPage() {
   const navigate = useNavigate();
   const { projectId } = useParams<{ projectId: string }>();
   const [project, setProject] = useState<Project | null>(null);
-  const assignmentsFragmentSrc = projectId
-    ? `/assignments/${projectId}`
-    : "/assignments/";
 
   useEffect(() => {
     const loadedProjects = loadProjects();
@@ -105,7 +104,7 @@ export function AssignmentsFragmentPage() {
         <web-fragment
           key={project.id}
           fragment-id={ASSIGNMENTS_FRAGMENT_ID}
-          src={assignmentsFragmentSrc}
+          src={getAssignmentsFragmentSrc(projectId ?? undefined)}
         ></web-fragment>
       ) : (
         <div style={{ color: "var(--color-text-muted)" }}>

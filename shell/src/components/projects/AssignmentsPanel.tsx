@@ -1,8 +1,10 @@
 import { useFragmentHealthCheck } from "../../hooks/useFragmentHealthCheck";
 import { styles } from "./styles";
-import { ASSIGNMENTS_FRAGMENT_ID } from "./types";
-
-const ASSIGNMENTS_FRAGMENT_SRC = "/assignments/";
+import {
+  ASSIGNMENTS_FRAGMENT_ID,
+  ASSIGNMENTS_FRAGMENT_SRC,
+  getAssignmentsFragmentSrc,
+} from "./types";
 
 interface AssignmentsPanelProps {
   projectId: string;
@@ -13,7 +15,6 @@ export function AssignmentsPanel({
   projectId,
   onClose,
 }: AssignmentsPanelProps) {
-  const assignmentsFragmentSrc = `/assignments/${projectId}`;
   const fragmentAvailable = useFragmentHealthCheck(
     ASSIGNMENTS_FRAGMENT_SRC,
     ASSIGNMENTS_FRAGMENT_ID,
@@ -51,7 +52,7 @@ export function AssignmentsPanel({
           <web-fragment
             key={`${projectId}-assignments`}
             fragment-id={ASSIGNMENTS_FRAGMENT_ID}
-            src={assignmentsFragmentSrc}
+            src={getAssignmentsFragmentSrc(projectId)}
           ></web-fragment>
         )}
       </div>
