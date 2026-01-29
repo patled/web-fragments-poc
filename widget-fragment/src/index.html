@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>WidgetFragment</title>
+    <!-- Base href is set dynamically via script before any other scripts load -->
+    <!-- For fragment mode: /widget/ -->
+    <!-- For standalone mode: / -->
+    <script>
+      // Set base href IMMEDIATELY, before any other scripts
+      (function () {
+        const path = window.location.pathname;
+        const baseHref = path.startsWith('/widget/') ? '/widget/' : '/';
+        // Create base element
+        const base = document.createElement('base');
+        base.href = baseHref;
+        // Insert at the very beginning of head
+        const head = document.head || document.getElementsByTagName('head')[0];
+        if (head.firstChild) {
+          head.insertBefore(base, head.firstChild);
+        } else {
+          head.appendChild(base);
+        }
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  </head>
+  <body>
+    <app-root></app-root>
+  </body>
+</html>

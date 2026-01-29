@@ -6,6 +6,9 @@ const SHOWCASE_FRAGMENT_ID = "showcase-lab";
 const SHOWCASE_FRAGMENT_SRC = "/showcase/";
 const SHOWCASE_CHANNEL = "showcase-fragment-channel";
 const STORAGE_KEY = "showcase-fragment-settings";
+const ANGULAR_WIDGET_FRAGMENT_ID = "angular-widget";
+const ANGULAR_WIDGET_FRAGMENT_SRC = "/widget/";
+const ANGULAR_WIDGET_CHANNEL = "angular-widget-channel";
 
 // Accent color mapping (matching showcase-fragment/src/ShowcaseFragment.tsx)
 const accentColorMap: Record<string, string> = {
@@ -89,6 +92,7 @@ export function HomePage() {
   const [lastMessage, setLastMessage] = useState<ShowcaseMessage | null>(null);
   const [settings, setSettings] = useState<ShowcaseSettings | null>(null);
   const fragmentElementRef = useRef<HTMLElement | null>(null);
+  const [angularWidgetMessage, setAngularWidgetMessage] = useState<any>(null);
 
   const fragmentAvailable = useFragmentHealthCheck(
     SHOWCASE_FRAGMENT_SRC,
@@ -96,6 +100,16 @@ export function HomePage() {
     {
       onError: () => {
         console.warn("Showcase fragment not available");
+      },
+    },
+  );
+
+  const angularWidgetAvailable = useFragmentHealthCheck(
+    ANGULAR_WIDGET_FRAGMENT_SRC,
+    ANGULAR_WIDGET_FRAGMENT_ID,
+    {
+      onError: () => {
+        console.warn("Angular widget fragment not available");
       },
     },
   );
@@ -138,6 +152,21 @@ export function HomePage() {
           );
         }
       }
+    };
+    channel.addEventListener("message", handleMessage);
+
+    return () => {
+      channel.removeEventListener("message", handleMessage);
+      channel.close();
+    };
+  }, []);
+
+  // Listen to Angular widget messages
+  useEffect(() => {
+    const channel = new BroadcastChannel(ANGULAR_WIDGET_CHANNEL);
+    const handleMessage = (event: MessageEvent) => {
+      if (!event.data?.type) return;
+      setAngularWidgetMessage(event.data);
     };
     channel.addEventListener("message", handleMessage);
 
@@ -337,6 +366,137 @@ export function HomePage() {
           ></web-fragment>
         )}
       </div>
+
+      {/* Angular Widget Section */}
+      <section
+        style={{
+          marginTop: densityStyles.sectionMargin,
+          transition: motionTransition,
+        }}
+      >
+        <div style={{ marginBottom: densityStyles.gap }}>
+          <h2
+            style={{
+              margin: 0,
+              fontSize: densityStyles.h2FontSize,
+              transition: motionTransition,
+            }}
+          >
+            Angular Widget (live)
+          </h2>
+          <p
+            style={{
+              margin: "0.35rem 0 0",
+              color: "var(--color-text-secondary)",
+              fontSize: densityStyles.fontSize,
+              transition: motionTransition,
+            }}
+          >
+            A small Angular fragment embedded on the shell root.
+          </p>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: densityStyles.gap,
+          }}
+        >
+          <div
+            style={{
+              position: "relative",
+              borderRadius: "0.75rem",
+              overflow: "hidden",
+              minHeight: 240,
+              border: "1px solid var(--color-border)",
+              backgroundColor: "var(--color-bg-surface)",
+            }}
+          >
+            {angularWidgetAvailable === false && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  zIndex: 10,
+                  padding: "2rem",
+                  borderRadius: "0.75rem",
+                  border: "1px dashed var(--color-border)",
+                  backgroundColor: "var(--color-bg-surface)",
+                  textAlign: "center",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <span>⚠️ Angular Widget not available</span>
+              </div>
+            )}
+            <web-fragment
+              style={{ display: "block", width: "100%", minHeight: 240 }}
+              fragment-id={ANGULAR_WIDGET_FRAGMENT_ID}
+              src={ANGULAR_WIDGET_FRAGMENT_SRC}
+            ></web-fragment>
+          </div>
+
+          {angularWidgetMessage && (
+            <div
+              style={{
+                padding: densityStyles.statusPadding,
+                borderRadius: "0.6rem",
+                border: "1px solid var(--color-border-strong)",
+                backgroundColor: "var(--color-bg-surface)",
+                fontSize: densityStyles.statusFontSize,
+              }}
+            >
+              <h3
+                style={{
+                  margin: "0 0 0.5rem 0",
+                  fontSize: densityStyles.h2FontSize,
+                }}
+              >
+                Angular Widget Status
+              </h3>
+              <p
+                style={{
+                  margin: "0.25rem 0",
+                  color: "var(--color-text-secondary)",
+                }}
+              >
+                <strong>Event:</strong> {angularWidgetMessage.type}
+              </p>
+              {angularWidgetMessage.payload?.clickCount !== undefined && (
+                <p
+                  style={{
+                    margin: "0.25rem 0",
+                    color: "var(--color-text-secondary)",
+                  }}
+                >
+                  <strong>Click Count:</strong>{" "}
+                  {angularWidgetMessage.payload.clickCount}
+                </p>
+              )}
+              {angularWidgetMessage.timestamp && (
+                <p
+                  style={{
+                    margin: "0.25rem 0",
+                    color: "var(--color-text-secondary)",
+                  }}
+                >
+                  <strong>Time:</strong>{" "}
+                  {new Date(
+                    angularWidgetMessage.timestamp,
+                  ).toLocaleTimeString()}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
     </>
   );
 }

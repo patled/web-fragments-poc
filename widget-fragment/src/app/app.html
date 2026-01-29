@@ -1,0 +1,20 @@
+<div class="widget-container">
+  <div class="widget-header">
+    <h2>Angular Widget</h2>
+    <span class="badge">Angular {{ '21' }}</span>
+  </div>
+
+  <div class="widget-content">
+    <div class="time-section">
+      <div class="time-display">{{ time() }}</div>
+      <div class="date-display">{{ date() }}</div>
+    </div>
+
+    <div class="click-section">
+      <p>
+        Klicks: <strong>{{ clickCount() }}</strong>
+      </p>
+      <button (click)="incrementClick()" class="click-button">Klick mich!</button>
+    </div>
+  </div>
+</div>
