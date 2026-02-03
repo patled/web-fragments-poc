@@ -1,59 +1,56 @@
-# WidgetFragment
+# Widget Fragment (Angular) — Web Fragments PoC
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.2.
+This package contains a small **Angular** app that is used as a **fragment** in the Web Fragments PoC. The shell embeds it on the home page via `<web-fragment src="/widget/">`.
 
-## Development server
+## Prerequisites
 
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- Node.js 18+
+- Yarn via Corepack (recommended):
 
 ```bash
-ng generate component component-name
+corepack enable
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Run (standalone)
 
 ```bash
-ng generate --help
+cd widget-fragment
+yarn install
+yarn dev
 ```
 
-## Building
+The Angular dev server runs on `http://localhost:5177/` (configured in `angular.json`).
 
-To build the project run:
+## Run (embedded in the shell)
+
+Start the shell and the widget fragment (separate terminals):
 
 ```bash
-ng build
+cd shell && yarn install && yarn dev
+cd ../widget-fragment && yarn install && yarn dev
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Then open `http://localhost:5173/`. The shell proxies `/widget/*` requests to the Angular dev server.
 
-## Running unit tests
+## Communication (demo)
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+The widget uses the `BroadcastChannel` API (channel: `angular-widget-channel`) to send:
 
-```bash
-ng test
-```
+- `angular-widget-ready`
+- `angular-widget-update` (includes `clickCount`)
 
-## Running end-to-end tests
+The shell listens to these messages and shows a small status panel next to the embedded fragment.
 
-For end-to-end (e2e) testing, run:
+## Scripts
 
-```bash
-ng e2e
-```
+- `yarn dev`: start Angular dev server (`ng serve`)
+- `yarn build`: build (`ng build`)
+- `yarn test`: unit tests (`ng test`)
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Notes
 
-## Additional Resources
+- The fragment is proxied under `/widget/` by the shell gateway. The Angular dev server itself serves assets from `/`, so the gateway rewrites some dev-server URLs in development to keep them within the `/widget/` route.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Useful links
+
+- Angular CLI: `https://angular.dev/tools/cli`
