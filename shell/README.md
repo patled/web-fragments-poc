@@ -1,73 +1,60 @@
-# React + TypeScript + Vite
+# Shell (Host) — Web Fragments PoC
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This package is the **host (shell)** application. It renders the main UI and embeds micro-frontends via **Web Fragments** using the `<web-fragment>` custom element and a development gateway/proxy.
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Node.js 18+
+- Yarn via Corepack (recommended for this repo):
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+corepack enable
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Quick start
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Install dependencies and run the shell:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd shell
+yarn install
+yarn dev
 ```
+
+Open `http://localhost:5173`.
+
+To see the embedded fragments, start them as well (in separate terminals):
+
+```bash
+cd ../assignments-fragment && yarn install && yarn dev
+cd ../showcase-fragment && yarn install && yarn dev
+cd ../widget-fragment && yarn install && yarn dev
+```
+
+## Local ports
+
+- Shell: `5173`
+- Assignments fragment: `5175` (mounted under `/assignments/`, proxied by the shell gateway)
+- Showcase fragment: `5176` (mounted under `/showcase/`, proxied by the shell gateway)
+- Angular widget fragment: `5177` (served from `/` by Angular dev server, proxied by the shell gateway under `/widget/`)
+
+## Scripts
+
+- `yarn dev`: start Vite dev server
+- `yarn build`: typecheck + production build
+- `yarn preview`: preview the production build
+- `yarn lint`: run ESLint
+
+## How fragment routing works (dev)
+
+The shell’s `vite.config.ts` registers fragments and proxies fragment requests to the fragment dev servers.
+
+- Requests to fragment routes like `/assignments/*`, `/showcase/*`, and `/widget/*` are matched and forwarded to the respective fragment endpoint.
+- For HTML document requests initiated by `<web-fragment>` (iframe navigations), the Web Fragments middleware wraps the response so the fragment runs in an isolated context.
+- Direct browser navigations to fragment routes are **not** proxied as fragments; they remain shell navigations (so routing stays consistent).
+
+## Troubleshooting
+
+- **“Fragment not available” overlay**: start the corresponding fragment dev server (see commands above).
+- **Port already in use**: stop the process using that port or change the port in the fragment’s config.
+- **Yarn PnP issues in IDE**: this repo uses Yarn Berry (PnP). Use the Yarn SDKs in `.yarn/sdks` if your editor needs it.
