@@ -17,36 +17,27 @@ Unlike other micro-frontend solutions, Web Fragments isolates individual fragmen
 
 ```
 web-fragments-poc/
-├── shell/                    # Host application (Shell)
+├── shell/                    # Host application (Shell, React + Vite)
 │   ├── src/
-│   │   ├── App.tsx           # Shell main component with React Router
+│   │   ├── App.tsx           # Shell routes (React Router)
 │   │   ├── main.tsx          # Initializes Web Fragments client
-│   │   ├── vite-env.d.ts     # TypeScript definitions for <web-fragment>
-│   │   ├── components/       # Shell components
-│   │   │   ├── HomePage.tsx
-│   │   │   ├── ProjectsPage.tsx
-│   │   │   ├── AssignmentsFragmentPage.tsx
-│   │   │   ├── ShowcaseFragmentPage.tsx
-│   │   │   └── Navigation.tsx
-│   │   └── data/            # Local storage utilities
-│   │       └── projectsStorage.ts
-│   └── vite.config.ts        # Vite configuration with gateway middleware
+│   │   └── components/       # Shell pages + embedded fragments
+│   └── vite.config.ts        # Vite dev gateway (fragment proxy + SSR wrapper)
 │
-├── assignments-fragment/     # Assignments fragment application
+├── assignments-fragment/     # Assignments fragment (React + MUI, Vite)
 │   ├── src/
-│   │   ├── AssignmentsFragment.tsx  # MUI-based assignments fragment
-│   │   ├── AssignmentsRoutes.tsx
-│   │   ├── FragmentRouter.tsx
-│   │   ├── App.tsx
-│   │   └── main.tsx
-│   └── vite.config.ts        # Vite configuration with base path
+│   │   ├── AssignmentsFragment.tsx
+│   │   └── mockData.ts       # Used for standalone dev mode
+│   └── vite.config.ts        # `base: /assignments/`, port 5175
 │
-└── showcase-fragment/         # Showcase fragment application
-    ├── src/
-    │   ├── ShowcaseFragment.tsx
-    │   ├── App.tsx
-    │   └── main.tsx
-    └── vite.config.ts        # Vite configuration with base path
+├── showcase-fragment/        # Showcase fragment (React, Vite)
+│   ├── src/
+│   │   └── ShowcaseFragment.tsx
+│   └── vite.config.ts        # `base: /showcase/`, port 5176
+│
+└── widget-fragment/          # Angular widget fragment (Angular CLI)
+    ├── src/app/app.ts        # BroadcastChannel demo + UI
+    └── angular.json          # Dev server port 5177
 ```
 
 ## Architecture
@@ -93,7 +84,7 @@ The fragment includes mock projects and staff members for standalone development
 - 6 staff members (Lea Nguyen, Markus Klein, Maya Fischer, Julian Weber, Sofia Hartmann, Tobias Richter)
 
 **Usage:**
-1. Start only the assignments fragment: `cd assignments-fragment && npm run dev`
+1. Start only the assignments fragment: `cd assignments-fragment && yarn dev`
 2. Open `http://localhost:5175/assignments/1` (or any project ID)
 3. The fragment will automatically detect standalone mode and load mock data
 4. A banner indicates when standalone mode is active
@@ -108,19 +99,33 @@ The showcase fragment is a lightweight playground to explore Web Fragments:
 - **UI**: Pure React (no additional UI libraries)
 - **Integration**: Embedded on the home page and accessible as a full page route
 
+### Angular Widget Fragment
+
+The widget fragment is a small Angular app embedded on the shell home page:
+
+- **Port**: 5177
+- **Role**: Demonstrates a non-React fragment (Angular) embedded via Web Fragments
+- **Gateway Path**: `/widget/` - Proxied by the shell gateway
+- **Dev server behavior**: The Angular dev server serves assets from `/`, so the shell gateway rewrites some dev-server URLs in development to keep them within the `/widget/` route
+- **Communication**: Uses `BroadcastChannel` (`angular-widget-channel`) to send `clickCount` updates to the shell
+
 ### Gateway
 
 The gateway is a middleware that:
 
-- Recognizes requests to fragment routes (`/assignments/`, `/projects/:_*/assignments/`, `/showcase/`)
-- Routes these requests to the fragment endpoints (`http://localhost:5175`, `http://localhost:5176`)
+- Recognizes requests to fragment routes (`/assignments/`, `/projects/:_*/assignments/`, `/showcase/`, `/widget/`)
+- Routes these requests to the fragment endpoints (`http://localhost:5175`, `http://localhost:5176`, `http://localhost:5177`)
 - Proxies fragment assets (JS, CSS, etc.) through the gateway
 - Supports Server-Side Rendering (SSR) for fragments
 
 ## Prerequisites
 
 - Node.js (version 18 or higher)
-- Yarn (version 4.x recommended, used with this project)
+- Yarn (Berry / v4.x recommended, used with this project). If you use Corepack:
+
+```bash
+corepack enable
+```
 
 ## Installation
 
@@ -138,11 +143,15 @@ yarn install
 # Install showcase-fragment
 cd ../showcase-fragment
 yarn install
+
+# Install widget-fragment (Angular)
+cd ../widget-fragment
+yarn install
 ```
 
 ## Starting the Application
 
-The application consists of three dev servers that must run simultaneously:
+The application consists of four dev servers that should run simultaneously:
 
 ### Terminal 1: Start Assignments Fragment Server
 
@@ -171,6 +180,15 @@ yarn dev
 
 The showcase fragment server starts on **<http://localhost:5176>**
 
+### Terminal 4: Start Angular Widget Fragment Server
+
+```bash
+cd widget-fragment
+yarn dev
+```
+
+The Angular widget fragment server starts on **<http://localhost:5177>**
+
 ### Open the Application
 
 Open **<http://localhost:5173>** in your browser.
@@ -181,6 +199,8 @@ Open **<http://localhost:5173>** in your browser.
 - `/projects/:projectId` - Project details with assignments
 - `/assignments/:projectId` - Assignments fragment for a specific project
 - `/showcase` - Showcase fragment full-page view
+
+**Note:** The Angular widget is embedded on `/`. The fragment route `/widget/` is used by `<web-fragment>` internally (it is not a dedicated shell page route).
 
 ## What is Demonstrated?
 
@@ -193,6 +213,7 @@ The project shows how multiple fragments are seamlessly integrated into the shel
 - Fragment assets are automatically loaded through the gateway
 - One fragment: `project-assignments` (embedded in ProjectsPage)
 - One fragment: `showcase-lab` (embedded on HomePage and accessible at `/showcase`)
+- One fragment: `angular-widget` (embedded on HomePage via `/widget/`)
 
 ### 2. Gateway Routing
 
@@ -207,7 +228,8 @@ The gateway middleware demonstrates:
 
 The example shows:
 
-- Use of React in all applications
+- Use of React in the shell + Vite-based fragments
+- Use of Angular in the widget fragment
 - React Router for navigation in the shell
 - Integration of Material-UI in fragments
 - Independent development and deployment of fragments
@@ -254,6 +276,20 @@ gateway.registerFragment({
     '/projects/:_*/assignments/:_*',
   ],
 })
+
+gateway.registerFragment({
+  fragmentId: 'showcase-lab',
+  piercingClassNames: [],
+  endpoint: 'http://localhost:5176',
+  routePatterns: ['/showcase/', '/showcase/:_*'],
+})
+
+gateway.registerFragment({
+  fragmentId: 'angular-widget',
+  piercingClassNames: [],
+  endpoint: 'http://localhost:5177',
+  routePatterns: ['/widget/', '/widget/:_*'],
+})
 ```
 
 - **fragmentId**: Unique ID of the fragment
@@ -272,7 +308,7 @@ The element is automatically registered by `initializeWebFragments()`.
 
 ### Base Path Configuration
 
-Each fragment application uses a base path:
+Each fragment application uses a base path (or a gateway mount path) so asset URLs work correctly behind the shell gateway.
 
 **Assignments fragment** (`assignments-fragment/vite.config.ts`):
 ```typescript
@@ -282,16 +318,29 @@ export default defineConfig({
 })
 ```
 
-This ensures that all assets are served under the correct path, which matches the gateway route patterns.
+**Showcase fragment** (`showcase-fragment/vite.config.ts`):
+```typescript
+export default defineConfig({
+  base: '/showcase/',
+  // ...
+})
+```
+
+**Widget fragment (Angular)**:
+
+- The Angular dev server serves assets from `/`, but the shell mounts it under `/widget/` via the gateway.
+- In development, the shell gateway rewrites some dev-server URLs so everything stays within `/widget/`.
 
 ## Development
 
 ### Hot Module Replacement (HMR)
 
-Both applications support HMR:
+All apps support HMR:
 
 - Changes in the shell are automatically updated
 - Changes in the assignments fragment are automatically updated
+- Changes in the showcase fragment are automatically updated
+- Changes in the Angular widget are automatically updated
 - The gateway correctly proxies the updates
 
 ### Debugging
@@ -302,7 +351,7 @@ Both applications support HMR:
 
 ## Stopping the Application
 
-Stop both dev servers with `Ctrl+C` in their respective terminals.
+Stop all dev servers with `Ctrl+C` in their respective terminals.
 
 Alternatively, the processes can be terminated:
 
@@ -312,15 +361,22 @@ kill $(lsof -ti tcp:5173)
 
 # Stop assignments-fragment
 kill $(lsof -ti tcp:5175)
+
+# Stop showcase-fragment
+kill $(lsof -ti tcp:5176)
+
+# Stop widget-fragment (Angular)
+kill $(lsof -ti tcp:5177)
 ```
 
 ## Technology Stack
 
-- **React 19**: UI framework for all applications
+- **React 19**: UI framework for the shell and Vite-based fragments
 - **React Router 7**: Client-side routing in shell
 - **Vite 7**: Build tool and dev server
 - **TypeScript**: Type safety
 - **Material-UI (MUI)**: UI component library in fragments
+- **Angular 21**: Example of a non-React fragment
 - **Web Fragments**: Micro-frontend framework
 - **BroadcastChannel API**: Cross-fragment communication
 
