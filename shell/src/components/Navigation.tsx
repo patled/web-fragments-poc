@@ -1,9 +1,15 @@
+import { useMsal } from "@azure/msal-react";
 import { Link, useLocation } from "react-router-dom";
 
 export function Navigation() {
   const location = useLocation();
+  const { instance } = useMsal();
   const isProjectsRoute = location.pathname.startsWith("/projects");
   const isShowcaseRoute = location.pathname.startsWith("/showcase");
+
+  const handleLogout = () => {
+    instance.logoutRedirect();
+  };
 
   return (
     <nav
@@ -45,6 +51,23 @@ export function Navigation() {
         >
           Showcase
         </Link>
+        <div style={{ marginLeft: "auto" }}>
+          <button
+            type="button"
+            onClick={handleLogout}
+            style={{
+              padding: "0.5rem 1rem",
+              fontSize: "0.875rem",
+              color: "var(--color-btn-secondary-fg)",
+              backgroundColor: "var(--color-btn-secondary)",
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer",
+            }}
+          >
+            Abmelden
+          </button>
+        </div>
       </div>
     </nav>
   );

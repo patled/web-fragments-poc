@@ -1,13 +1,19 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { initializeWebFragments } from 'web-fragments'
-import App from './App.tsx'
-import './theme.css'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { MsalProvider } from "@azure/msal-react";
+import { initializeWebFragments } from "web-fragments";
+import { getMsalInstance } from "./auth/msalInstance";
+import App from "./App.tsx";
+import "./theme.css";
 
-initializeWebFragments()
+initializeWebFragments();
 
-createRoot(document.getElementById('root')!).render(
+const msalInstance = await getMsalInstance();
+
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <MsalProvider instance={msalInstance}>
+      <App />
+    </MsalProvider>
   </StrictMode>,
-)
+);

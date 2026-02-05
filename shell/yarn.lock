@@ -5,6 +5,32 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
+"@azure/msal-browser@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "@azure/msal-browser@npm:5.1.0"
+  dependencies:
+    "@azure/msal-common": "npm:16.0.3"
+  checksum: 10c0/f385513f6186cf5cb5b830ef1f53aa104353c796b08859818de5cd1bfca596648382a96ed01b731b10a61ee76bbd866efbf260268fee98ca813d50112e81a5ff
+  languageName: node
+  linkType: hard
+
+"@azure/msal-common@npm:16.0.3":
+  version: 16.0.3
+  resolution: "@azure/msal-common@npm:16.0.3"
+  checksum: 10c0/e3e8d129746daead2145b2ed171b96897d4e109acd44a1abdf78d26bd773af88594f9e0507c93a1a0e3fc1cc37d8bd07d6335bdfe75846ff69af7fa81bd56aa9
+  languageName: node
+  linkType: hard
+
+"@azure/msal-react@npm:^5.0.3":
+  version: 5.0.3
+  resolution: "@azure/msal-react@npm:5.0.3"
+  peerDependencies:
+    "@azure/msal-browser": ^5.1.0
+    react: ^19.2.1
+  checksum: 10c0/0bcf9f8a8d511b0e274774ac44138a379837de655c22b52989d84db606941e3a9f5de6cc597ac76e23969faef66e05b3bbb775743a2884e6b07fbead9f3b9ab3
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:^7.28.6":
   version: 7.28.6
   resolution: "@babel/code-frame@npm:7.28.6"
@@ -2451,6 +2477,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "shell@workspace:."
   dependencies:
+    "@azure/msal-browser": "npm:^5.1.0"
+    "@azure/msal-react": "npm:^5.0.3"
     "@eslint/js": "npm:^9.39.1"
     "@types/node": "npm:^24.10.1"
     "@types/react": "npm:^19.2.5"

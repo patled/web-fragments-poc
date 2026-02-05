@@ -28,6 +28,8 @@ const RAW_RUNTIME_STATE =
       [null, {\
         "packageLocation": "./",\
         "packageDependencies": [\
+          ["@azure/msal-browser", "npm:5.1.0"],\
+          ["@azure/msal-react", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:5.0.3"],\
           ["@eslint/js", "npm:9.39.2"],\
           ["@types/node", "npm:24.10.9"],\
           ["@types/react", "npm:19.2.9"],\
@@ -47,6 +49,51 @@ const RAW_RUNTIME_STATE =
           ["web-fragments", "npm:0.8.2"]\
         ],\
         "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@azure/msal-browser", [\
+      ["npm:5.1.0", {\
+        "packageLocation": "../../../../.yarn/berry/cache/@azure-msal-browser-npm-5.1.0-eeab22a767-10c0.zip/node_modules/@azure/msal-browser/",\
+        "packageDependencies": [\
+          ["@azure/msal-browser", "npm:5.1.0"],\
+          ["@azure/msal-common", "npm:16.0.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@azure/msal-common", [\
+      ["npm:16.0.3", {\
+        "packageLocation": "../../../../.yarn/berry/cache/@azure-msal-common-npm-16.0.3-67b9d3bed3-10c0.zip/node_modules/@azure/msal-common/",\
+        "packageDependencies": [\
+          ["@azure/msal-common", "npm:16.0.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@azure/msal-react", [\
+      ["npm:5.0.3", {\
+        "packageLocation": "../../../../.yarn/berry/cache/@azure-msal-react-npm-5.0.3-b111ac067c-10c0.zip/node_modules/@azure/msal-react/",\
+        "packageDependencies": [\
+          ["@azure/msal-react", "npm:5.0.3"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:5.0.3", {\
+        "packageLocation": "./.yarn/__virtual__/@azure-msal-react-virtual-b66a324779/5/.yarn/berry/cache/@azure-msal-react-npm-5.0.3-b111ac067c-10c0.zip/node_modules/@azure/msal-react/",\
+        "packageDependencies": [\
+          ["@azure/msal-browser", "npm:5.1.0"],\
+          ["@azure/msal-react", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:5.0.3"],\
+          ["@types/azure__msal-browser", null],\
+          ["@types/react", "npm:19.2.9"],\
+          ["react", "npm:19.2.3"]\
+        ],\
+        "packagePeers": [\
+          "@azure/msal-browser",\
+          "@types/azure__msal-browser",\
+          "@types/react",\
+          "react"\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["@babel/code-frame", [\
@@ -2973,6 +3020,8 @@ const RAW_RUNTIME_STATE =
       ["workspace:.", {\
         "packageLocation": "./",\
         "packageDependencies": [\
+          ["@azure/msal-browser", "npm:5.1.0"],\
+          ["@azure/msal-react", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:5.0.3"],\
           ["@eslint/js", "npm:9.39.2"],\
           ["@types/node", "npm:24.10.9"],\
           ["@types/react", "npm:19.2.9"],\

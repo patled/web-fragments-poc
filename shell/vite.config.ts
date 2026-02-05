@@ -1,5 +1,6 @@
-import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
+import mkcert from "vite-plugin-mkcert";
 import { FragmentGateway, getWebMiddleware } from "web-fragments/gateway";
 
 const assignmentsFragmentId = "project-assignments";
@@ -11,6 +12,25 @@ const webFragmentsMiddleware = getWebMiddleware(gateway, {
 });
 const skipHeaderName = "x-wf-skip";
 const lastGatewayErrorLogByFragment = new Map<string, number>();
+
+function toSafeHeadersInit(
+  headers: Record<string, string | string[] | undefined>,
+): HeadersInit {
+  const entries: [string, string][] = [];
+  const validHeaderName = /^[A-Za-z0-9!#$%&'*+.^_`|~-]+$/;
+  for (const [key, value] of Object.entries(headers)) {
+    // When Vite runs over HTTP/2 (e.g., HTTPS dev server), Node may surface
+    // HTTP/2 pseudo headers like ":method" which are not valid Fetch headers.
+    if (!validHeaderName.test(key)) continue;
+    if (value === undefined) continue;
+    if (Array.isArray(value)) {
+      for (const v of value) entries.push([key, v]);
+      continue;
+    }
+    entries.push([key, value]);
+  }
+  return entries;
+}
 
 gateway.registerFragment({
   fragmentId: assignmentsFragmentId,
@@ -42,6 +62,7 @@ gateway.registerFragment({
 export default defineConfig({
   plugins: [
     react(),
+    // mkcert(),
     {
       name: "web-fragments-gateway",
       configureServer(server) {
@@ -113,7 +134,7 @@ export default defineConfig({
 
           const init: RequestInit = {
             method: req.method,
-            headers: req.headers as HeadersInit,
+            headers: toSafeHeadersInit(req.headers),
           };
 
           if (req.method && req.method !== "GET" && req.method !== "HEAD") {
@@ -169,6 +190,13 @@ export default defineConfig({
           // For HTML document requests we set it server-side so the middleware can bind the request to a fragment.
           const wfHeaders = new Headers(init.headers);
           wfHeaders.set("x-web-fragment-id", matchedFragment.fragmentId);
+
+          // Preserve the original scheme when the dev server runs on HTTPS.
+          // Web Fragments uses forwarded headers for downstream requests.
+          const isHttps = Boolean(
+            (req.socket as { encrypted?: boolean }).encrypted,
+          );
+          wfHeaders.set("x-forwarded-proto", isHttps ? "https" : "http");
           const wfRequest = new Request(hostUrl, {
             ...init,
             headers: wfHeaders,
