@@ -16,6 +16,9 @@ dist-ssr
 # Angular build cache
 .angular/
 
+# Local TLS certs (mkcert)
+.cert/
+
 # Yarn PnP (keep .pnp.cjs, .pnp.loader.mjs, and .yarn/install-state.gz for Yarn Berry)
 .yarn/*
 !.yarn/install-state.gz
