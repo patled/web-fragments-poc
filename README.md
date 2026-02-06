@@ -69,23 +69,27 @@ The assignments fragment is a separate fragment application:
 The assignments fragment supports standalone development mode, allowing you to develop and test it independently without running the shell application.
 
 **Automatic Detection:**
+
 - If no data is received from the shell within 1 second, the fragment automatically switches to standalone mode
 - Mock data is loaded automatically for development
 
 **Manual Activation:**
 You can force standalone mode by adding `?standalone=true` to the URL:
+
 ```
-http://localhost:5175/assignments/1?standalone=true
+https://localhost:5175/assignments/1?standalone=true
 ```
 
 **Mock Data:**
 The fragment includes mock projects and staff members for standalone development:
+
 - 3 example projects (Website Redesign, Mobile App Entwicklung, Datenbank Migration)
 - 6 staff members (Lea Nguyen, Markus Klein, Maya Fischer, Julian Weber, Sofia Hartmann, Tobias Richter)
 
 **Usage:**
+
 1. Start only the assignments fragment: `cd assignments-fragment && yarn dev`
-2. Open `http://localhost:5175/assignments/1` (or any project ID)
+2. Open `https://localhost:5175/assignments/1` (or any project ID)
 3. The fragment will automatically detect standalone mode and load mock data
 4. A banner indicates when standalone mode is active
 
@@ -160,7 +164,7 @@ cd assignments-fragment
 yarn dev
 ```
 
-The assignments fragment server starts on **<http://localhost:5175>**
+The assignments fragment server starts on **<https://localhost:5175>**
 
 ### Terminal 2: Start Shell Host
 
@@ -169,7 +173,7 @@ cd shell
 yarn dev
 ```
 
-The shell server starts on **<http://localhost:5173>**
+The shell server starts on **<https://localhost:5173>**
 
 ### Terminal 3: Start Showcase Fragment Server
 
@@ -178,7 +182,7 @@ cd showcase-fragment
 yarn dev
 ```
 
-The showcase fragment server starts on **<http://localhost:5176>**
+The showcase fragment server starts on **<https://localhost:5176>**
 
 ### Terminal 4: Start Angular Widget Fragment Server
 
@@ -189,11 +193,32 @@ yarn dev
 
 The Angular widget fragment server starts on **<http://localhost:5177>**
 
+To run it over HTTPS (mkcert):
+
+```bash
+cd widget-fragment
+yarn cert
+yarn dev
+```
+
+Then configure the shell gateway to proxy to the HTTPS widget endpoint:
+
+```bash
+yarn --cwd shell dev
+```
+
+If you run the widget over HTTP instead, set:
+
+```bash
+WF_WIDGET_ENDPOINT=http://localhost:5177 yarn --cwd shell dev
+```
+
 ### Open the Application
 
-Open **<http://localhost:5173>** in your browser.
+Open **<https://localhost:5173>** in your browser.
 
 **Available Routes:**
+
 - `/` - Home page
 - `/projects` - Projects management page
 - `/projects/:projectId` - Project details with assignments
@@ -201,6 +226,12 @@ Open **<http://localhost:5173>** in your browser.
 - `/showcase` - Showcase fragment full-page view
 
 **Note:** The Angular widget is embedded on `/`. The fragment route `/widget/` is used by `<web-fragment>` internally (it is not a dedicated shell page route).
+
+### HTTPS notes
+
+- Vite-based dev servers use `vite-plugin-mkcert` for local HTTPS.
+- The shell gateway fetches fragment HTML from Node.js (undici `fetch()`); Node must trust mkcert certificates.
+  The shell `yarn dev` script enables `--use-system-ca` so the system keychain CAs are used.
 
 ## What is Demonstrated?
 
@@ -266,30 +297,32 @@ Fragments are registered in the gateway (`shell/vite.config.ts`):
 
 ```typescript
 gateway.registerFragment({
-  fragmentId: 'project-assignments',
+  fragmentId: "project-assignments",
   piercingClassNames: [],
-  endpoint: 'http://localhost:5175',
+  endpoint: "https://localhost:5175",
   routePatterns: [
-    '/assignments/',
-    '/assignments/:_*',
-    '/projects/:_*/assignments/',
-    '/projects/:_*/assignments/:_*',
+    "/assignments/",
+    "/assignments/:_*",
+    "/projects/:_*/assignments/",
+    "/projects/:_*/assignments/:_*",
   ],
-})
+});
 
 gateway.registerFragment({
-  fragmentId: 'showcase-lab',
+  fragmentId: "showcase-lab",
   piercingClassNames: [],
-  endpoint: 'http://localhost:5176',
-  routePatterns: ['/showcase/', '/showcase/:_*'],
-})
+  endpoint: "https://localhost:5176",
+  routePatterns: ["/showcase/", "/showcase/:_*"],
+});
 
 gateway.registerFragment({
-  fragmentId: 'angular-widget',
+  fragmentId: "angular-widget",
   piercingClassNames: [],
-  endpoint: 'http://localhost:5177',
-  routePatterns: ['/widget/', '/widget/:_*'],
-})
+  // Default: http://localhost:5177
+  // HTTPS: WF_WIDGET_ENDPOINT=https://localhost:5177
+  endpoint: process.env.WF_WIDGET_ENDPOINT ?? "http://localhost:5177",
+  routePatterns: ["/widget/", "/widget/:_*"],
+});
 ```
 
 - **fragmentId**: Unique ID of the fragment
@@ -311,19 +344,21 @@ The element is automatically registered by `initializeWebFragments()`.
 Each fragment application uses a base path (or a gateway mount path) so asset URLs work correctly behind the shell gateway.
 
 **Assignments fragment** (`assignments-fragment/vite.config.ts`):
+
 ```typescript
 export default defineConfig({
-  base: '/assignments/',
+  base: "/assignments/",
   // ...
-})
+});
 ```
 
 **Showcase fragment** (`showcase-fragment/vite.config.ts`):
+
 ```typescript
 export default defineConfig({
-  base: '/showcase/',
+  base: "/showcase/",
   // ...
-})
+});
 ```
 
 **Widget fragment (Angular)**:
