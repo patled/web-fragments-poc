@@ -7,8 +7,6 @@ const assignmentsFragmentId = "project-assignments";
 const showcaseFragmentId = "showcase-lab";
 const angularWidgetFragmentId = "angular-widget";
 
-const angularWidgetEndpoint =
-  process.env.WF_WIDGET_ENDPOINT ?? "https://localhost:5177";
 const gateway = new FragmentGateway();
 const webFragmentsMiddleware = getWebMiddleware(gateway, {
   mode: "development",
@@ -57,7 +55,7 @@ gateway.registerFragment({
 gateway.registerFragment({
   fragmentId: angularWidgetFragmentId,
   piercingClassNames: [],
-  endpoint: angularWidgetEndpoint,
+  endpoint: "https://localhost:5177",
   routePatterns: ["/widget/", "/widget/:_*"],
 });
 
@@ -76,7 +74,7 @@ export default defineConfig({
           }
 
           const host = req.headers.host ?? "localhost:5173";
-          const url = new URL(req.url ?? "/", `http://${host}`);
+          const url = new URL(req.url ?? "/", `https://${host}`);
 
           const fragmentIdHeader = req.headers["x-web-fragment-id"];
           const requestFragmentId = Array.isArray(fragmentIdHeader)
