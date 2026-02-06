@@ -6,6 +6,9 @@ import { FragmentGateway, getWebMiddleware } from "web-fragments/gateway";
 const assignmentsFragmentId = "project-assignments";
 const showcaseFragmentId = "showcase-lab";
 const angularWidgetFragmentId = "angular-widget";
+
+const angularWidgetEndpoint =
+  process.env.WF_WIDGET_ENDPOINT ?? "https://localhost:5177";
 const gateway = new FragmentGateway();
 const webFragmentsMiddleware = getWebMiddleware(gateway, {
   mode: "development",
@@ -35,7 +38,7 @@ function toSafeHeadersInit(
 gateway.registerFragment({
   fragmentId: assignmentsFragmentId,
   piercingClassNames: [],
-  endpoint: "http://localhost:5175",
+  endpoint: "https://localhost:5175",
   routePatterns: [
     "/assignments/",
     "/assignments/:_*",
@@ -47,14 +50,14 @@ gateway.registerFragment({
 gateway.registerFragment({
   fragmentId: showcaseFragmentId,
   piercingClassNames: [],
-  endpoint: "http://localhost:5176",
+  endpoint: "https://localhost:5176",
   routePatterns: ["/showcase/", "/showcase/:_*"],
 });
 
 gateway.registerFragment({
   fragmentId: angularWidgetFragmentId,
   piercingClassNames: [],
-  endpoint: "http://localhost:5177",
+  endpoint: angularWidgetEndpoint,
   routePatterns: ["/widget/", "/widget/:_*"],
 });
 
@@ -62,7 +65,7 @@ gateway.registerFragment({
 export default defineConfig({
   plugins: [
     react(),
-    // mkcert(),
+    mkcert(),
     {
       name: "web-fragments-gateway",
       configureServer(server) {

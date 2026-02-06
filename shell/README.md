@@ -21,7 +21,7 @@ yarn install
 yarn dev
 ```
 
-Open `http://localhost:5173`.
+Open `https://localhost:5173`.
 
 To see the embedded fragments, start them as well (in separate terminals):
 
@@ -29,6 +29,19 @@ To see the embedded fragments, start them as well (in separate terminals):
 cd ../assignments-fragment && yarn install && yarn dev
 cd ../showcase-fragment && yarn install && yarn dev
 cd ../widget-fragment && yarn install && yarn dev
+```
+
+To run the Angular widget fragment over HTTPS and have the shell proxy to it:
+
+```bash
+cd ../widget-fragment && yarn install && yarn cert && yarn dev
+yarn --cwd shell dev
+```
+
+If you run the widget over HTTP, set:
+
+```bash
+WF_WIDGET_ENDPOINT=http://localhost:5177 yarn --cwd shell dev
 ```
 
 ## Local ports
@@ -58,3 +71,4 @@ The shell’s `vite.config.ts` registers fragments and proxies fragment requests
 - **“Fragment not available” overlay**: start the corresponding fragment dev server (see commands above).
 - **Port already in use**: stop the process using that port or change the port in the fragment’s config.
 - **Yarn PnP issues in IDE**: this repo uses Yarn Berry (PnP). Use the Yarn SDKs in `.yarn/sdks` if your editor needs it.
+- **HTTPS fragments fail with certificate errors**: the shell gateway fetches fragments from Node.js. The shell `yarn dev` script enables `--use-system-ca` so Node trusts mkcert certificates.
