@@ -198,7 +198,12 @@ export default function AssignmentsFragment() {
     <Container maxWidth="sm" sx={{ py: 2.5 }}>
       <Stack spacing={2}>
         {isStandalone && (
-          <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            spacing={1}
+          >
             <Typography
               variant="caption"
               sx={{
