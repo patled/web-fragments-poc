@@ -1,10 +1,14 @@
-import { loadStaff, saveProjects, replaceProject } from "../../../data/projectsStorage";
+import {
+  loadStaff,
+  saveProjects,
+  replaceProject,
+} from "../../../data/projectsStorage";
 import type { Project, Task } from "../../../data/projectsStorage";
 
 export function createProject(
   name: string,
   description: string,
-  existingProjects: Project[],
+  _existingProjects: Project[],
 ): Project {
   const currentStaff = loadStaff();
   return {
@@ -36,10 +40,7 @@ export function addTaskToProject(project: Project, task: Task): Project {
   };
 }
 
-export function toggleTaskInProject(
-  project: Project,
-  taskId: string,
-): Project {
+export function toggleTaskInProject(project: Project, taskId: string): Project {
   return {
     ...project,
     tasks: project.tasks.map((task) =>

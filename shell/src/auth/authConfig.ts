@@ -19,6 +19,15 @@ function getEnv(name: string, defaultValue: string): string {
   return (value && typeof value === "string" ? value : defaultValue) as string;
 }
 
+function resolveBrowserUrl(value: string): string {
+  if (!value) return value;
+  if (value.startsWith("/")) {
+    const origin = globalThis.location?.origin;
+    return origin ? new URL(value, origin).toString() : value;
+  }
+  return value;
+}
+
 const VALID_CACHE_LOCATIONS = [
   "localStorage",
   "sessionStorage",
@@ -43,10 +52,10 @@ export const msalConfig: Configuration = {
       .split(",")
       .map((s) => s.trim())
       .filter(Boolean),
-    redirectUri: requireEnv("VITE_REDIRECT_URI"),
+    redirectUri: resolveBrowserUrl(requireEnv("VITE_REDIRECT_URI")),
     postLogoutRedirectUri:
-      getEnv("VITE_POST_LOGOUT_REDIRECT_URI", "") ||
-      requireEnv("VITE_REDIRECT_URI"),
+      resolveBrowserUrl(getEnv("VITE_POST_LOGOUT_REDIRECT_URI", "")) ||
+      resolveBrowserUrl(requireEnv("VITE_REDIRECT_URI")),
   },
   cache: {
     cacheLocation: getValidCacheLocation(

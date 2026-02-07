@@ -14,6 +14,8 @@ const webFragmentsMiddleware = getWebMiddleware(gateway, {
 const skipHeaderName = "x-wf-skip";
 const lastGatewayErrorLogByFragment = new Map<string, number>();
 
+type RequestInitWithDuplex = RequestInit & { duplex?: "half" };
+
 function toSafeHeadersInit(
   headers: Record<string, string | string[] | undefined>,
 ): HeadersInit {
@@ -140,7 +142,7 @@ export default defineConfig({
 
           if (req.method && req.method !== "GET" && req.method !== "HEAD") {
             init.body = req as unknown as BodyInit;
-            init.duplex = "half";
+            (init as RequestInitWithDuplex).duplex = "half";
           }
 
           // Transform /projects/ID/assignments to /assignments/ID for the assignments fragment
@@ -174,6 +176,11 @@ export default defineConfig({
 
           // Transform URL to fragment endpoint
           const fragmentEndpoint = matchedFragment.endpoint;
+          if (typeof fragmentEndpoint !== "string") {
+            throw new Error(
+              `Unexpected fragment endpoint type for ${matchedFragment.fragmentId}`,
+            );
+          }
           const fragmentUrl = new URL(
             transformedPath + url.search,
             fragmentEndpoint,
@@ -230,7 +237,7 @@ export default defineConfig({
 
             if (wfRequest.method !== "GET" && wfRequest.method !== "HEAD") {
               nextInit.body = wfRequest.body;
-              nextInit.duplex = "half";
+              (nextInit as RequestInitWithDuplex).duplex = "half";
             }
 
             // Add timeout for fragment requests (5 seconds)

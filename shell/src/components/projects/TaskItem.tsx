@@ -17,7 +17,7 @@ interface TaskItemProps {
 
 export function TaskItem({
   task,
-  projectId,
+  projectId: _projectId,
   staffById,
   isDragOver,
   onToggle,
