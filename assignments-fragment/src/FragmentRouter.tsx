@@ -1,4 +1,5 @@
-import { PropsWithChildren, useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import type { PropsWithChildren } from "react";
 import { MemoryRouter, useLocation, useNavigate } from "react-router-dom";
 
 type FragmentId = "project-assignments";
@@ -62,9 +63,13 @@ function FragmentRouteSync({
     if (!channel) return;
 
     // /projects/ID/assignments -> /assignments/ID; ansonsten basePath + pathname
-    const match = location.pathname.match(/^\/projects\/([^/]+)\/assignments\/?/);
+    const match = location.pathname.match(
+      /^\/projects\/([^/]+)\/assignments\/?/,
+    );
     const pathSuffix = location.pathname === "/" ? "/" : location.pathname;
-    const fullPathname = match ? `${basePath}/${match[1]}` : `${basePath}${pathSuffix}`;
+    const fullPathname = match
+      ? `${basePath}/${match[1]}`
+      : `${basePath}${pathSuffix}`;
     const nextUrl = `${fullPathname}${location.search}${location.hash}`;
 
     channel.postMessage({

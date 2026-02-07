@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { DragEvent } from "react";
+import { useMsal } from "@azure/msal-react";
 import { useParams, useSearchParams } from "react-router-dom";
 import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
+import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import {
@@ -24,6 +26,7 @@ const ASSIGNMENTS_FRAGMENT_ID = "project-assignments";
 const STANDALONE_TIMEOUT_MS = 1000; // Timeout after 1s to wait for shell data
 
 export default function AssignmentsFragment() {
+  const { instance } = useMsal();
   const { projectId } = useParams<{ projectId: string }>();
   const [searchParams] = useSearchParams();
   const [project, setProject] = useState<Project | null>(null);
@@ -195,19 +198,29 @@ export default function AssignmentsFragment() {
     <Container maxWidth="sm" sx={{ py: 2.5 }}>
       <Stack spacing={2}>
         {isStandalone && (
-          <Typography
-            variant="caption"
-            sx={{
-              p: 1,
-              bgcolor: "info.light",
-              color: "info.dark",
-              borderRadius: 1,
-              border: "1px solid",
-              borderColor: "info.main",
-            }}
-          >
-            🧪 Standalone mode: Mock data is being used
-          </Typography>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
+            <Typography
+              variant="caption"
+              sx={{
+                p: 1,
+                bgcolor: "info.light",
+                color: "info.dark",
+                borderRadius: 1,
+                border: "1px solid",
+                borderColor: "info.main",
+              }}
+            >
+              🧪 Standalone mode: Mock data is being used
+            </Typography>
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={() => instance.logoutRedirect()}
+              sx={{ whiteSpace: "nowrap" }}
+            >
+              Abmelden
+            </Button>
+          </Stack>
         )}
         <Stack spacing={0.5}>
           <Typography variant="subtitle1">{project.name}</Typography>

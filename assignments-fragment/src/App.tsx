@@ -1,14 +1,27 @@
-import { FragmentRouter } from './FragmentRouter'
-import AssignmentsRoutes from './AssignmentsRoutes'
+import {
+  AuthenticatedTemplate,
+  UnauthenticatedTemplate,
+} from "@azure/msal-react";
+import { FragmentRouter } from "./FragmentRouter";
+import AssignmentsRoutes from "./AssignmentsRoutes";
+import { LoginPage } from "./components/LoginPage";
 
 function App() {
   return (
-    <div>
-      <FragmentRouter fragmentId="project-assignments" basePath="/assignments">
-        <AssignmentsRoutes />
-      </FragmentRouter>
-    </div>
-  )
+    <>
+      <AuthenticatedTemplate>
+        <FragmentRouter
+          fragmentId="project-assignments"
+          basePath="/assignments"
+        >
+          <AssignmentsRoutes />
+        </FragmentRouter>
+      </AuthenticatedTemplate>
+      <UnauthenticatedTemplate>
+        <LoginPage />
+      </UnauthenticatedTemplate>
+    </>
+  );
 }
 
-export default App
+export default App;

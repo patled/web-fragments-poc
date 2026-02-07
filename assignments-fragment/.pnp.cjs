@@ -28,6 +28,8 @@ const RAW_RUNTIME_STATE =
       [null, {\
         "packageLocation": "./",\
         "packageDependencies": [\
+          ["@azure/msal-browser", "npm:5.1.0"],\
+          ["@azure/msal-react", "virtual:3b0d63b94064721b4f7e8081bd22b3fa35ae157fa2f15a31ce782be3f9bd2a05a4d6d7fbdab2f3a1d02eea5760b23d1089815765ce6db657f17721915ac6dede#npm:5.0.3"],\
           ["@emotion/react", "virtual:3b0d63b94064721b4f7e8081bd22b3fa35ae157fa2f15a31ce782be3f9bd2a05a4d6d7fbdab2f3a1d02eea5760b23d1089815765ce6db657f17721915ac6dede#npm:11.14.0"],\
           ["@emotion/styled", "virtual:3b0d63b94064721b4f7e8081bd22b3fa35ae157fa2f15a31ce782be3f9bd2a05a4d6d7fbdab2f3a1d02eea5760b23d1089815765ce6db657f17721915ac6dede#npm:11.14.1"],\
           ["@eslint/js", "npm:9.39.2"],\
@@ -50,6 +52,51 @@ const RAW_RUNTIME_STATE =
           ["vite-plugin-mkcert", "virtual:3b0d63b94064721b4f7e8081bd22b3fa35ae157fa2f15a31ce782be3f9bd2a05a4d6d7fbdab2f3a1d02eea5760b23d1089815765ce6db657f17721915ac6dede#npm:1.17.9"]\
         ],\
         "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@azure/msal-browser", [\
+      ["npm:5.1.0", {\
+        "packageLocation": "../../../../.yarn/berry/cache/@azure-msal-browser-npm-5.1.0-eeab22a767-10c0.zip/node_modules/@azure/msal-browser/",\
+        "packageDependencies": [\
+          ["@azure/msal-browser", "npm:5.1.0"],\
+          ["@azure/msal-common", "npm:16.0.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@azure/msal-common", [\
+      ["npm:16.0.3", {\
+        "packageLocation": "../../../../.yarn/berry/cache/@azure-msal-common-npm-16.0.3-67b9d3bed3-10c0.zip/node_modules/@azure/msal-common/",\
+        "packageDependencies": [\
+          ["@azure/msal-common", "npm:16.0.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@azure/msal-react", [\
+      ["npm:5.0.3", {\
+        "packageLocation": "../../../../.yarn/berry/cache/@azure-msal-react-npm-5.0.3-b111ac067c-10c0.zip/node_modules/@azure/msal-react/",\
+        "packageDependencies": [\
+          ["@azure/msal-react", "npm:5.0.3"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:3b0d63b94064721b4f7e8081bd22b3fa35ae157fa2f15a31ce782be3f9bd2a05a4d6d7fbdab2f3a1d02eea5760b23d1089815765ce6db657f17721915ac6dede#npm:5.0.3", {\
+        "packageLocation": "./.yarn/__virtual__/@azure-msal-react-virtual-6c1d7c10b0/5/.yarn/berry/cache/@azure-msal-react-npm-5.0.3-b111ac067c-10c0.zip/node_modules/@azure/msal-react/",\
+        "packageDependencies": [\
+          ["@azure/msal-browser", "npm:5.1.0"],\
+          ["@azure/msal-react", "virtual:3b0d63b94064721b4f7e8081bd22b3fa35ae157fa2f15a31ce782be3f9bd2a05a4d6d7fbdab2f3a1d02eea5760b23d1089815765ce6db657f17721915ac6dede#npm:5.0.3"],\
+          ["@types/azure__msal-browser", null],\
+          ["@types/react", "npm:19.2.9"],\
+          ["react", "npm:19.2.3"]\
+        ],\
+        "packagePeers": [\
+          "@azure/msal-browser",\
+          "@types/azure__msal-browser",\
+          "@types/react",\
+          "react"\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["@babel/code-frame", [\
@@ -1947,6 +1994,8 @@ const RAW_RUNTIME_STATE =
       ["workspace:.", {\
         "packageLocation": "./",\
         "packageDependencies": [\
+          ["@azure/msal-browser", "npm:5.1.0"],\
+          ["@azure/msal-react", "virtual:3b0d63b94064721b4f7e8081bd22b3fa35ae157fa2f15a31ce782be3f9bd2a05a4d6d7fbdab2f3a1d02eea5760b23d1089815765ce6db657f17721915ac6dede#npm:5.0.3"],\
           ["@emotion/react", "virtual:3b0d63b94064721b4f7e8081bd22b3fa35ae157fa2f15a31ce782be3f9bd2a05a4d6d7fbdab2f3a1d02eea5760b23d1089815765ce6db657f17721915ac6dede#npm:11.14.0"],\
           ["@emotion/styled", "virtual:3b0d63b94064721b4f7e8081bd22b3fa35ae157fa2f15a31ce782be3f9bd2a05a4d6d7fbdab2f3a1d02eea5760b23d1089815765ce6db657f17721915ac6dede#npm:11.14.1"],\
           ["@eslint/js", "npm:9.39.2"],\
