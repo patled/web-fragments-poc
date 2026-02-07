@@ -14,13 +14,15 @@ const CHANNEL_NAME = 'angular-widget-channel';
 export class App implements OnInit, OnDestroy {
   private readonly auth = inject(AuthService);
   protected readonly isAuthenticated = this.auth.isAuthenticated;
-  protected readonly isStandalone = signal<boolean>((() => {
-    try {
-      return window.self === window.top;
-    } catch {
-      return true;
-    }
-  })());
+  protected readonly isStandalone = signal<boolean>(
+    (() => {
+      try {
+        return window.self === window.top;
+      } catch {
+        return true;
+      }
+    })(),
+  );
   protected readonly time = signal(new Date().toLocaleTimeString('de-DE'));
   protected readonly date = signal(
     new Date().toLocaleDateString('de-DE', {
