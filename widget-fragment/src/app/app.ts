@@ -1,5 +1,6 @@
-import { Component, signal, effect, OnDestroy } from '@angular/core';
+import { Component, signal, effect, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AuthService } from './auth/auth.service';
 
 const FRAGMENT_ID = 'angular-widget';
 const CHANNEL_NAME = 'angular-widget-channel';
@@ -10,7 +11,16 @@ const CHANNEL_NAME = 'angular-widget-channel';
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
-export class App implements OnDestroy {
+export class App implements OnInit, OnDestroy {
+  private readonly auth = inject(AuthService);
+  protected readonly isAuthenticated = this.auth.isAuthenticated;
+  protected readonly isStandalone = signal<boolean>((() => {
+    try {
+      return window.self === window.top;
+    } catch {
+      return true;
+    }
+  })());
   protected readonly time = signal(new Date().toLocaleTimeString('de-DE'));
   protected readonly date = signal(
     new Date().toLocaleDateString('de-DE', {
@@ -65,6 +75,10 @@ export class App implements OnDestroy {
     });
   }
 
+  async ngOnInit(): Promise<void> {
+    await this.auth.init();
+  }
+
   ngOnDestroy() {
     if (this.timeInterval) {
       clearInterval(this.timeInterval);
@@ -76,5 +90,13 @@ export class App implements OnDestroy {
 
   incrementClick() {
     this.clickCount.update((count) => count + 1);
+  }
+
+  login() {
+    void this.auth.login();
+  }
+
+  logout() {
+    void this.auth.logout();
   }
 }

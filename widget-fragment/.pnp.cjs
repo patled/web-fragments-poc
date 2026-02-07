@@ -37,6 +37,7 @@ const RAW_RUNTIME_STATE =
           ["@angular/forms", "virtual:8a168c8d39fa4c62728b754a4e6f870b723778b28db1c6f1c8a639f523b88a7d923dfef12e57557e1c1a9aa84fb2271046afe7f2d8f9e2d1aa79df783b7e1bbc#npm:21.1.1"],\
           ["@angular/platform-browser", "virtual:8a168c8d39fa4c62728b754a4e6f870b723778b28db1c6f1c8a639f523b88a7d923dfef12e57557e1c1a9aa84fb2271046afe7f2d8f9e2d1aa79df783b7e1bbc#npm:21.1.1"],\
           ["@angular/router", "virtual:8a168c8d39fa4c62728b754a4e6f870b723778b28db1c6f1c8a639f523b88a7d923dfef12e57557e1c1a9aa84fb2271046afe7f2d8f9e2d1aa79df783b7e1bbc#npm:21.1.1"],\
+          ["@azure/msal-browser", "npm:5.1.0"],\
           ["jsdom", "virtual:8a168c8d39fa4c62728b754a4e6f870b723778b28db1c6f1c8a639f523b88a7d923dfef12e57557e1c1a9aa84fb2271046afe7f2d8f9e2d1aa79df783b7e1bbc#npm:27.4.0"],\
           ["rxjs", "npm:7.8.2"],\
           ["tslib", "npm:2.8.1"],\
@@ -665,6 +666,25 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../../../.yarn/berry/cache/@asamuzakjp-nwsapi-npm-2.3.9-9247524c07-10c0.zip/node_modules/@asamuzakjp/nwsapi/",\
         "packageDependencies": [\
           ["@asamuzakjp/nwsapi", "npm:2.3.9"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@azure/msal-browser", [\
+      ["npm:5.1.0", {\
+        "packageLocation": "../../../../.yarn/berry/cache/@azure-msal-browser-npm-5.1.0-eeab22a767-10c0.zip/node_modules/@azure/msal-browser/",\
+        "packageDependencies": [\
+          ["@azure/msal-browser", "npm:5.1.0"],\
+          ["@azure/msal-common", "npm:16.0.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@azure/msal-common", [\
+      ["npm:16.0.3", {\
+        "packageLocation": "../../../../.yarn/berry/cache/@azure-msal-common-npm-16.0.3-67b9d3bed3-10c0.zip/node_modules/@azure/msal-common/",\
+        "packageDependencies": [\
+          ["@azure/msal-common", "npm:16.0.3"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -6782,6 +6802,7 @@ const RAW_RUNTIME_STATE =
           ["@angular/forms", "virtual:8a168c8d39fa4c62728b754a4e6f870b723778b28db1c6f1c8a639f523b88a7d923dfef12e57557e1c1a9aa84fb2271046afe7f2d8f9e2d1aa79df783b7e1bbc#npm:21.1.1"],\
           ["@angular/platform-browser", "virtual:8a168c8d39fa4c62728b754a4e6f870b723778b28db1c6f1c8a639f523b88a7d923dfef12e57557e1c1a9aa84fb2271046afe7f2d8f9e2d1aa79df783b7e1bbc#npm:21.1.1"],\
           ["@angular/router", "virtual:8a168c8d39fa4c62728b754a4e6f870b723778b28db1c6f1c8a639f523b88a7d923dfef12e57557e1c1a9aa84fb2271046afe7f2d8f9e2d1aa79df783b7e1bbc#npm:21.1.1"],\
+          ["@azure/msal-browser", "npm:5.1.0"],\
           ["jsdom", "virtual:8a168c8d39fa4c62728b754a4e6f870b723778b28db1c6f1c8a639f523b88a7d923dfef12e57557e1c1a9aa84fb2271046afe7f2d8f9e2d1aa79df783b7e1bbc#npm:27.4.0"],\
           ["rxjs", "npm:7.8.2"],\
           ["tslib", "npm:2.8.1"],\

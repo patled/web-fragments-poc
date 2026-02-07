@@ -1,20 +1,41 @@
-<div class="widget-container">
-  <div class="widget-header">
-    <h2>Angular Widget</h2>
-    <span class="badge">Angular {{ '21' }}</span>
-  </div>
-
-  <div class="widget-content">
-    <div class="time-section">
-      <div class="time-display">{{ time() }}</div>
-      <div class="date-display">{{ date() }}</div>
+@if (!isAuthenticated()) {
+  <div class="widget-container">
+    <div class="widget-header">
+      <h2>Anmeldung erforderlich</h2>
+      <span class="badge">Auth</span>
     </div>
-
-    <div class="click-section">
-      <p>
-        Klicks: <strong>{{ clickCount() }}</strong>
+    <div class="widget-content" style="align-items: center; text-align: center">
+      <p style="margin: 0; opacity: 0.9; max-width: 28rem">
+        Bitte melden Sie sich an, um das Widget zu nutzen.
       </p>
-      <button (click)="incrementClick()" class="click-button">Klick mich!</button>
+      <button (click)="login()" class="click-button">Anmelden</button>
     </div>
   </div>
-</div>
+} @else {
+  <div class="widget-container">
+    <div class="widget-header">
+      <h2>Angular Widget</h2>
+      <span class="badge">Angular {{ '21' }}</span>
+    </div>
+
+    <div class="widget-content">
+      <div class="time-section">
+        <div class="time-display">{{ time() }}</div>
+        <div class="date-display">{{ date() }}</div>
+      </div>
+
+      <div class="click-section">
+        <p>
+          Klicks: <strong>{{ clickCount() }}</strong>
+        </p>
+        <button (click)="incrementClick()" class="click-button">Klick mich!</button>
+      </div>
+
+      @if (isStandalone()) {
+        <div class="click-section" style="border-top: 0; padding-top: 0">
+          <button (click)="logout()" class="click-button">Abmelden</button>
+        </div>
+      }
+    </div>
+  </div>
+}
