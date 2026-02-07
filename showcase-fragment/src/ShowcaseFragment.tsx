@@ -42,7 +42,7 @@ function loadSettingsFromStorage(): {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       const parsed = JSON.parse(stored) as StoredSettings;
-      
+
       // Map accent label back to id
       let accentId = accentOptions[0].id;
       if (parsed.accent) {
@@ -53,7 +53,7 @@ function loadSettingsFromStorage(): {
           accentId = accentOption.id;
         }
       }
-      
+
       // Map density label back to id
       let densityId = densityOptions[1].id;
       if (parsed.density) {
@@ -64,7 +64,7 @@ function loadSettingsFromStorage(): {
           densityId = densityOption.id;
         }
       }
-      
+
       // Map motion label back to id
       let motionId = motionOptions[0].id;
       if (parsed.motion) {
@@ -75,18 +75,18 @@ function loadSettingsFromStorage(): {
           motionId = motionOption.id;
         }
       }
-      
+
       const counter =
         typeof parsed.counter === "number" && parsed.counter >= 0
           ? parsed.counter
           : 6;
-      
+
       return { accentId, densityId, motionId, counter };
     }
   } catch (error) {
     console.warn("Failed to load settings from localStorage", error);
   }
-  
+
   // Return defaults
   return {
     accentId: accentOptions[0].id,
@@ -128,7 +128,7 @@ export function ShowcaseFragment() {
       payload: { status: "ready" },
       timestamp: new Date().toISOString(),
     });
-    
+
     // Send current settings immediately when channel is ready
     channel.postMessage({
       type: "showcase-settings",
@@ -141,7 +141,7 @@ export function ShowcaseFragment() {
       },
       timestamp: new Date().toISOString(),
     });
-    
+
     return () => {
       channel.close();
       channelRef.current = null;
