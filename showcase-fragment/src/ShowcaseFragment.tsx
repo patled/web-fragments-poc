@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useMsal } from "@azure/msal-react";
 
 const FRAGMENT_ID = "showcase-lab";
 const CHANNEL_NAME = "showcase-fragment-channel";
@@ -96,12 +97,19 @@ function loadSettingsFromStorage(): {
 }
 
 export function ShowcaseFragment() {
+  const { instance } = useMsal();
   const loadedSettings = loadSettingsFromStorage();
   const [accentId, setAccentId] = useState(loadedSettings.accentId);
   const [densityId, setDensityId] = useState(loadedSettings.densityId);
   const [motionId, setMotionId] = useState(loadedSettings.motionId);
   const [counter, setCounter] = useState(loadedSettings.counter);
-  const [isStandalone, setIsStandalone] = useState(false);
+  const [isStandalone] = useState(() => {
+    try {
+      return window.self === window.top;
+    } catch {
+      return true;
+    }
+  });
   const channelRef = useRef<BroadcastChannel | null>(null);
 
   const accent = useMemo(
@@ -110,14 +118,6 @@ export function ShowcaseFragment() {
       accentOptions[0],
     [accentId],
   );
-
-  useEffect(() => {
-    try {
-      setIsStandalone(window.self === window.top);
-    } catch {
-      setIsStandalone(true);
-    }
-  }, []);
 
   useEffect(() => {
     const channel = new BroadcastChannel(CHANNEL_NAME);
@@ -212,7 +212,26 @@ export function ShowcaseFragment() {
             alignItems: "center",
             flexWrap: "wrap",
           }}
-        ></div>
+        >
+          {isStandalone ? (
+            <button
+              type="button"
+              onClick={() => instance.logoutRedirect()}
+              style={{
+                padding: "0.5rem 0.9rem",
+                borderRadius: "0.75rem",
+                border: "1px solid rgba(15, 23, 42, 0.18)",
+                backgroundColor: "rgba(255, 255, 255, 0.9)",
+                color: "#0f172a",
+                cursor: "pointer",
+                fontWeight: 600,
+                fontSize: "0.9rem",
+              }}
+            >
+              Abmelden
+            </button>
+          ) : null}
+        </div>
       </header>
 
       <section
