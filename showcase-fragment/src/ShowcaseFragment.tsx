@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMsal } from "@azure/msal-react";
+import { useBigCities } from "./api/bigcities";
 
 const FRAGMENT_ID = "showcase-lab";
 const CHANNEL_NAME = "showcase-fragment-channel";
@@ -98,6 +99,7 @@ function loadSettingsFromStorage(): {
 
 export function ShowcaseFragment() {
   const { instance } = useMsal();
+  const bigCitiesState = useBigCities();
   const loadedSettings = loadSettingsFromStorage();
   const [accentId, setAccentId] = useState(loadedSettings.accentId);
   const [densityId, setDensityId] = useState(loadedSettings.densityId);
@@ -380,6 +382,89 @@ export function ShowcaseFragment() {
             displayed in real time.
           </li>
         </ol>
+      </section>
+
+      <section
+        style={{
+          marginTop: "1.75rem",
+          padding: "1.25rem",
+          borderRadius: "1rem",
+          border: "1px solid rgba(15, 23, 42, 0.12)",
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
+        }}
+      >
+        <h2 style={{ margin: "0 0 0.75rem", fontSize: "1.1rem" }}>
+          Big Cities (API)
+        </h2>
+        <p
+          style={{
+            margin: "0 0 1rem",
+            color: "#475569",
+            fontSize: "0.9rem",
+          }}
+        >
+          Daten von{" "}
+          <code style={{ fontSize: "0.85em" }}>/bigcities</code> mit
+          Bearer-Token aus <code style={{ fontSize: "0.85em" }}>acquireTokenSilent</code>
+          .
+        </p>
+        {bigCitiesState.status === "loading" && (
+          <p style={{ margin: 0, color: "#64748b" }}>Lade Städte…</p>
+        )}
+        {bigCitiesState.status === "error" && (
+          <p
+            style={{
+              margin: 0,
+              color: "#dc2626",
+              fontSize: "0.9rem",
+            }}
+          >
+            Fehler: {bigCitiesState.error}
+          </p>
+        )}
+        {bigCitiesState.status === "success" && (
+          <ul
+            style={{
+              margin: 0,
+              paddingLeft: 0,
+              display: "grid",
+              gap: "0.75rem",
+              listStyle: "none",
+            }}
+          >
+            {bigCitiesState.data.map((city) => (
+              <li
+                key={city.name}
+                style={{
+                  padding: "0.6rem 0.75rem",
+                  borderRadius: "0.5rem",
+                  border: "1px solid rgba(148, 163, 184, 0.35)",
+                }}
+              >
+                <strong style={{ fontSize: "1rem" }}>{city.name}</strong>
+                <span style={{ color: "#64748b", marginLeft: "0.5rem" }}>
+                  (Einw. {city.population.toLocaleString()})
+                </span>
+                {city.weather && (
+                  <div
+                    style={{
+                      marginTop: "0.35rem",
+                      fontSize: "0.85rem",
+                      color: "#475569",
+                    }}
+                  >
+                    {city.weather.summary} —{" "}
+                    {city.weather.temperatureC}°C (
+                    {city.weather.temperatureF}°F)
+                    {city.weather.authenticationSummary && (
+                      <> · {city.weather.authenticationSummary}</>
+                    )}
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </div>
   );

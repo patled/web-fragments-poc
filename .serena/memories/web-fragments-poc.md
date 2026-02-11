@@ -1,8 +1,9 @@
-Web Fragments PoC in /Users/patrick/source/micro-frontends/web-fragments-poc:
-- shell uses web-fragments gateway in shell/vite.config.ts with getWebMiddleware and skip header x-wf-skip.
-- shell registers assignments fragmentId: project-assignments, endpoint: http://localhost:5175, routePatterns: /assignments/, /assignments/:_*, /projects/:_*/assignments/, /projects/:_*/assignments/:_*; path /projects/ID/assignments is rewritten to /assignments/ID when forwarding to the fragment; assignments-fragment uses Vite base /assignments/ and its own dev server middleware to serve SPA HTML for /assignments/*.
-- shell registers showcase fragmentId: showcase-lab, endpoint: http://localhost:5176, routePatterns: /showcase/ and /showcase/:_*; showcase-fragment uses Vite base /showcase/ and provides a top-level demo fragment embedded on HomePage and `/showcase`.
-- shell registers angular widget fragmentId: angular-widget, endpoint: http://localhost:5177, routePatterns: /widget/ and /widget/:_*; widget-fragment is an Angular app served from `/` by its dev server, so the gateway rewrites some dev-server URLs in HTML/JS responses (e.g. /@vite, /@fs) to stay under /widget/ when proxied; shell embeds it on the home page and listens on BroadcastChannel `angular-widget-channel` for click count updates.
-- shell routes /projects/:projectId/assignments and /projects/:projectId/assignments/* render ProjectsPage; assignments panel on the right is shown when URL matches /projects/ID/assignments or /assignments/ID; "Assignments" button and "Close" set URL to /projects/ID/assignments resp. /projects/ID.
-- shell gateway has resilient error handling: 5-second timeout for fragment requests, returns 503 Service Unavailable JSON response if fragment server is not available, logs errors but doesn't crash the shell.
-- shell components (HomePage, ShowcaseFragmentPage) handle missing fragments gracefully: show overlay fallback UI with instructions when fragment is unavailable, check fragment availability via BroadcastChannel messages and shadow root detection, render fragment element always but show error overlay if unavailable.
+
+
+## MSAL + Web Fragments: timed_out in embedded context
+Observed: MSAL `acquireTokenSilent` can throw `BrowserAuthError: timed_out` when used in Web Fragments setups. Stack shows Web Fragments patching DOM insertion (`appendChild` etc.) in `web-fragments.js` and MSAL hidden-iframe creation going through these patched APIs, causing `monitor_window_timeout` even though the silent redirect returns.
+
+Mitigation implemented:
+- In `shell/src/main.tsx`, capture native DOM APIs before calling `initializeWebFragments()` and store them on `globalThis.__wfNativeDom`.
+- In `shell/src/auth/fragmentTokenBroker.tsx`, wrap MSAL silent calls (`ssoSilent`, `acquireTokenSilent`) with `withNativeDom()` that temporarily restores native `Node.prototype.appendChild/insertBefore/removeChild` and `Document.prototype.createElement/createElementNS`.
+- Fragment requests tokens from host via BroadcastChannel (`showcase-fragment-channel`) only as fallback for `timed_out` in embedded contexts.
