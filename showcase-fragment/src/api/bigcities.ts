@@ -5,6 +5,7 @@ import {
   InteractionStatus,
 } from "@azure/msal-browser";
 import { loginScopes } from "../auth/authConfig";
+import { getShellAccessToken } from "../auth/tokenBroker";
 import { apiBaseUrl } from "./config";
 import type { BigCity } from "../types/bigcities";
 
@@ -26,61 +27,70 @@ export function useBigCities(): BigCitiesState {
 
   useEffect(() => {
     if (inProgress !== InteractionStatus.None || accounts.length === 0) {
-      return;
+      if (inProgress !== InteractionStatus.None) {
+        return;
+      }
     }
 
-    const account = accounts[0];
-    const request = { scopes: loginScopes, account };
+    let isActive = true;
 
-    setState({ status: "loading" });
+    const fetchWithToken = async (accessToken: string) => {
+      const response = await fetch(BIGCITIES_URL, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`API ${response.status}: ${response.statusText}`);
+      }
+      return (await response.json()) as BigCity[];
+    };
 
-    instance
-      .acquireTokenSilent(request)
-      .then((response) => {
-        return fetch(BIGCITIES_URL, {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${response.accessToken}`,
-          },
-        });
-      })
-      .then(async (res) => {
-        if (!res.ok) {
-          throw new Error(`API ${res.status}: ${res.statusText}`);
-        }
-        const data = (await res.json()) as BigCity[];
-        setState({ status: "success", data });
-      })
-      .catch((err) => {
+    const acquireLocalToken = async () => {
+      if (accounts.length === 0) {
+        throw new Error("No account available for token acquisition.");
+      }
+      const account = accounts[0];
+      const request = { scopes: loginScopes, account };
+
+      try {
+        const response = await instance.acquireTokenSilent(request);
+        return response.accessToken;
+      } catch (err) {
         if (err instanceof InteractionRequiredAuthError) {
-          instance
-            .acquireTokenPopup(request)
-            .then((response) => {
-              return fetch(BIGCITIES_URL, {
-                headers: {
-                  Accept: "application/json",
-                  Authorization: `Bearer ${response.accessToken}`,
-                },
-              });
-            })
-            .then(async (res) => {
-              if (!res.ok) throw new Error(`API ${res.status}: ${res.statusText}`);
-              const data = (await res.json()) as BigCity[];
-              setState({ status: "success", data });
-            })
-            .catch((error_) => {
-              setState({
-                status: "error",
-                error: error_ instanceof Error ? error_.message : String(error_),
-              });
-            });
-        } else {
+          const response = await instance.acquireTokenPopup(request);
+          return response.accessToken;
+        }
+        throw err;
+      }
+    };
+
+    const load = async () => {
+      setState({ status: "loading" });
+
+      try {
+        const brokerToken = await getShellAccessToken(loginScopes);
+        const accessToken = brokerToken ?? (await acquireLocalToken());
+        const data = await fetchWithToken(accessToken);
+        if (isActive) {
+          setState({ status: "success", data });
+        }
+      } catch (err) {
+        if (isActive) {
           setState({
             status: "error",
             error: err instanceof Error ? err.message : String(err),
           });
         }
-      });
+      }
+    };
+
+    void load();
+
+    return () => {
+      isActive = false;
+    };
   }, [instance, accounts, inProgress]);
 
   return state;

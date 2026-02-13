@@ -10,6 +10,7 @@ interface ImportMetaEnv {
   readonly VITE_REDIRECT_URI: string;
   readonly VITE_POST_LOGOUT_REDIRECT_URI?: string;
   readonly VITE_KNOWN_AUTHORITIES?: string;
+  readonly VITE_FRAGMENT_ORIGINS?: string;
   readonly VITE_CACHE_LOCATION?:
     | "localStorage"
     | "sessionStorage"
