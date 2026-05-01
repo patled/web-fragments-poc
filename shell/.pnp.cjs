@@ -30,15 +30,15 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@eslint/js", "npm:9.39.2"],\
           ["@types/node", "npm:24.10.9"],\
-          ["@types/react", "npm:19.2.9"],\
+          ["@types/react", "npm:19.2.14"],\
           ["@types/react-dom", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:19.2.3"],\
           ["@vitejs/plugin-react", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:5.1.2"],\
           ["eslint", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:9.39.2"],\
           ["eslint-plugin-react-hooks", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:7.0.1"],\
           ["eslint-plugin-react-refresh", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:0.4.26"],\
           ["globals", "npm:16.5.0"],\
-          ["react", "npm:19.2.3"],\
-          ["react-dom", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:19.2.3"],\
+          ["react", "npm:19.2.5"],\
+          ["react-dom", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:19.2.5"],\
           ["react-router-dom", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:7.12.0"],\
           ["shell", "workspace:."],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"],\
@@ -1104,10 +1104,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@types/react", [\
-      ["npm:19.2.9", {\
-        "packageLocation": "../../../../.yarn/berry/cache/@types-react-npm-19.2.9-38300e513e-10c0.zip/node_modules/@types/react/",\
+      ["npm:19.2.14", {\
+        "packageLocation": "../../../../.yarn/berry/cache/@types-react-npm-19.2.14-072ed0943f-10c0.zip/node_modules/@types/react/",\
         "packageDependencies": [\
-          ["@types/react", "npm:19.2.9"],\
+          ["@types/react", "npm:19.2.14"],\
           ["csstype", "npm:3.2.3"]\
         ],\
         "linkType": "HARD"\
@@ -1124,7 +1124,7 @@ const RAW_RUNTIME_STATE =
       ["virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:19.2.3", {\
         "packageLocation": "./.yarn/__virtual__/@types-react-dom-virtual-fe4cdc13c3/5/.yarn/berry/cache/@types-react-dom-npm-19.2.3-1b243fa1cb-10c0.zip/node_modules/@types/react-dom/",\
         "packageDependencies": [\
-          ["@types/react", "npm:19.2.9"],\
+          ["@types/react", "npm:19.2.14"],\
           ["@types/react-dom", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:19.2.3"]\
         ],\
         "packagePeers": [\
@@ -2758,28 +2758,28 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["react", [\
-      ["npm:19.2.3", {\
-        "packageLocation": "../../../../.yarn/berry/cache/react-npm-19.2.3-0ecd9e5a6e-10c0.zip/node_modules/react/",\
+      ["npm:19.2.5", {\
+        "packageLocation": "../../../../.yarn/berry/cache/react-npm-19.2.5-1e4f979df2-10c0.zip/node_modules/react/",\
         "packageDependencies": [\
-          ["react", "npm:19.2.3"]\
+          ["react", "npm:19.2.5"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["react-dom", [\
-      ["npm:19.2.3", {\
-        "packageLocation": "../../../../.yarn/berry/cache/react-dom-npm-19.2.3-93a2378518-10c0.zip/node_modules/react-dom/",\
+      ["npm:19.2.5", {\
+        "packageLocation": "../../../../.yarn/berry/cache/react-dom-npm-19.2.5-94c3f138c3-10c0.zip/node_modules/react-dom/",\
         "packageDependencies": [\
-          ["react-dom", "npm:19.2.3"]\
+          ["react-dom", "npm:19.2.5"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:19.2.3", {\
-        "packageLocation": "./.yarn/__virtual__/react-dom-virtual-fda584958c/5/.yarn/berry/cache/react-dom-npm-19.2.3-93a2378518-10c0.zip/node_modules/react-dom/",\
+      ["virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:19.2.5", {\
+        "packageLocation": "./.yarn/__virtual__/react-dom-virtual-59bfa8d9a1/5/.yarn/berry/cache/react-dom-npm-19.2.5-94c3f138c3-10c0.zip/node_modules/react-dom/",\
         "packageDependencies": [\
-          ["@types/react", "npm:19.2.9"],\
-          ["react", "npm:19.2.3"],\
-          ["react-dom", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:19.2.3"],\
+          ["@types/react", "npm:19.2.14"],\
+          ["react", "npm:19.2.5"],\
+          ["react-dom", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:19.2.5"],\
           ["scheduler", "npm:0.27.0"]\
         ],\
         "packagePeers": [\
@@ -2809,11 +2809,11 @@ const RAW_RUNTIME_STATE =
       ["virtual:87875def79b66cf1536101f954786b9c758cdb4351d63f0da6829c2e3cad9ffb790d49508a7970db27982faec57054595e818b4fb87a773b7038370f6502b376#npm:7.12.0", {\
         "packageLocation": "./.yarn/__virtual__/react-router-virtual-ccd05fc32c/5/.yarn/berry/cache/react-router-npm-7.12.0-e7bf49854a-10c0.zip/node_modules/react-router/",\
         "packageDependencies": [\
-          ["@types/react", "npm:19.2.9"],\
+          ["@types/react", "npm:19.2.14"],\
           ["@types/react-dom", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:19.2.3"],\
           ["cookie", "npm:1.1.1"],\
-          ["react", "npm:19.2.3"],\
-          ["react-dom", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:19.2.3"],\
+          ["react", "npm:19.2.5"],\
+          ["react-dom", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:19.2.5"],\
           ["react-router", "virtual:87875def79b66cf1536101f954786b9c758cdb4351d63f0da6829c2e3cad9ffb790d49508a7970db27982faec57054595e818b4fb87a773b7038370f6502b376#npm:7.12.0"],\
           ["set-cookie-parser", "npm:2.7.2"]\
         ],\
@@ -2837,10 +2837,10 @@ const RAW_RUNTIME_STATE =
       ["virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:7.12.0", {\
         "packageLocation": "./.yarn/__virtual__/react-router-dom-virtual-87875def79/5/.yarn/berry/cache/react-router-dom-npm-7.12.0-56055c7fac-10c0.zip/node_modules/react-router-dom/",\
         "packageDependencies": [\
-          ["@types/react", "npm:19.2.9"],\
+          ["@types/react", "npm:19.2.14"],\
           ["@types/react-dom", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:19.2.3"],\
-          ["react", "npm:19.2.3"],\
-          ["react-dom", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:19.2.3"],\
+          ["react", "npm:19.2.5"],\
+          ["react-dom", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:19.2.5"],\
           ["react-router", "virtual:87875def79b66cf1536101f954786b9c758cdb4351d63f0da6829c2e3cad9ffb790d49508a7970db27982faec57054595e818b4fb87a773b7038370f6502b376#npm:7.12.0"],\
           ["react-router-dom", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:7.12.0"]\
         ],\
@@ -2975,15 +2975,15 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@eslint/js", "npm:9.39.2"],\
           ["@types/node", "npm:24.10.9"],\
-          ["@types/react", "npm:19.2.9"],\
+          ["@types/react", "npm:19.2.14"],\
           ["@types/react-dom", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:19.2.3"],\
           ["@vitejs/plugin-react", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:5.1.2"],\
           ["eslint", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:9.39.2"],\
           ["eslint-plugin-react-hooks", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:7.0.1"],\
           ["eslint-plugin-react-refresh", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:0.4.26"],\
           ["globals", "npm:16.5.0"],\
-          ["react", "npm:19.2.3"],\
-          ["react-dom", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:19.2.3"],\
+          ["react", "npm:19.2.5"],\
+          ["react-dom", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:19.2.5"],\
           ["react-router-dom", "virtual:fd9597b05fbc72ceab184983a329a1355f0bc11f3001fe3a1935615dde78c705ae2a160a08d76d00032a4fdce490434bb1fed99d6e6f632fda185c895b4f6db3#npm:7.12.0"],\
           ["shell", "workspace:."],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"],\
